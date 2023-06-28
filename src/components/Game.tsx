@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import Board from "./Board";
-import PlayerInfo from "./PlayerInfo";
+import PlayerUI from "./PlayerUI";
 import BoardState from "../classes/BoardState";
 import PieceQueue from "../classes/PieceQueue";
 
@@ -23,7 +23,7 @@ function Game() {
 
   const boardState = useRef(new BoardState([numRows, numCols], "Pawn", "Pawn"));
 
-  function handleClick(i: number, j: number) {
+  function handleBoardClick(i: number, j: number) {
     boardState.current.attemptMove(
       [i, j],
       () => reRender({ ...render }),
@@ -31,24 +31,34 @@ function Game() {
     );
   }
 
+  function handlePieceSwapClick(white: boolean) {
+    white ? pieceQueue.current.swapWhite() : pieceQueue.current.swapBlack();
+    reRender({ ...render });
+  }
+
   return (
     <>
-      <PlayerInfo
+      <PlayerUI
         width={squareSize * numCols}
         white={false}
         pieceQueue={pieceQueue.current.getBlackQueue()}
+        onClick={() => {
+          handlePieceSwapClick(false);
+        }}
       />
       <Board
         squareSize={squareSize}
         boardState={boardState.current}
-        onClick={handleClick}
+        onClick={handleBoardClick}
       />
-      <PlayerInfo
+      <PlayerUI
         width={squareSize * numCols}
         white={true}
         pieceQueue={pieceQueue.current.getWhiteQueue()}
+        onClick={() => {
+          handlePieceSwapClick(true);
+        }}
       />
-      <div>{pieceQueue.current.getWhiteQueue()}</div>
     </>
   );
 }

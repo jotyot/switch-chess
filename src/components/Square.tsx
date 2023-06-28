@@ -8,10 +8,11 @@ interface Props {
 function Square({ color, squareSize, highlights = false, onClick }: Props) {
   return (
     <div
-      className={"rounded " + (highlights ? "btn btn-" : "bg-") + color}
+      className={"rounded btn btn-" + color}
       style={{
         height: squareSize + "px",
         width: squareSize + "px",
+        pointerEvents: highlights ? "all" : "none",
       }}
       onClick={onClick}
     ></div>

@@ -16,7 +16,7 @@ function Piece({ player, squareSize }: Props) {
   );
 
   if (incomingImage !== imageName)
-    setTimeout(() => setImageName(incomingImage), 110);
+    setTimeout(() => setImageName(incomingImage), 200);
 
   return (
     player.getAlive() && (
