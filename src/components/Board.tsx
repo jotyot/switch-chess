@@ -1,6 +1,6 @@
-import { useRef } from "react";
 import Square from "./Square";
 import BoardState from "../classes/BoardState";
+import Piece from "./Piece";
 
 interface Props {
   boardState: BoardState;
@@ -9,64 +9,39 @@ interface Props {
 }
 
 function Board({ squareSize, boardState, onClick }: Props) {
-  const highlighted = false;
+  const highlighted = true;
 
-  const contents = boardState.getBoardContents();
   const [numRows, numCols] = boardState.getBoardSize();
-  const highlights = highlighted
+  const highlights: boolean[][] = highlighted
     ? boardState.getBoardHighlights()
-    : [...Array(numRows).fill(Array(numCols).fill(false))];
-
-  const whiteOrigin = useRef([numRows - 1, ~~(numCols / 2)]);
-  const blackOrigin = useRef([0, ~~(numCols / 2) - 1]);
+    : [...Array(numRows)].fill(Array(numCols).fill(false));
 
   return (
     <div
-      className="container"
+      className="container position-relative"
       style={{
         width: squareSize * numCols + "px",
       }}
     >
-      {contents.map((row, i) => {
+      {highlights.map((row, i) => {
         return (
           <div className="row" key={i}>
             {row.map((item, j) => {
-              let offset = [0, 0];
-
-              if (item) {
-                if (item.slice(0, 5) === "White") {
-                  const [a, b] = whiteOrigin.current;
-                  offset = [a - i, b - j];
-                } else if (item.slice(0, 5) === "Black") {
-                  const [a, b] = blackOrigin.current;
-                  offset = [a - i, b - j];
-                }
-              }
-
               return (
                 <Square
                   squareSize={squareSize}
                   color={(i + j) % 2 === 0 ? "light" : "dark"}
-                  highlights={highlights[i][j]}
-                  image={item}
+                  highlights={item}
                   onClick={() => onClick(i, j)}
-                  origin={offset}
                   key={j}
-                  updateOrigins={() => {
-                    if (item) {
-                      if (item.slice(0, 5) === "White") {
-                        whiteOrigin.current = [i, j];
-                      } else if (item.slice(0, 5) === "Black") {
-                        blackOrigin.current = [i, j];
-                      }
-                    }
-                  }}
                 />
               );
             })}
           </div>
         );
       })}
+      <Piece player={boardState.getWhite()} squareSize={squareSize} />
+      <Piece player={boardState.getBlack()} squareSize={squareSize} />
     </div>
   );
 }

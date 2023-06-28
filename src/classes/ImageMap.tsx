@@ -18,14 +18,12 @@ const ImageMap = new Map([
   ["WhiteKnight", WhiteKnight],
   ["WhiteQueen", WhiteQueen],
   ["WhiteKing", WhiteKing],
-  ["White", ""],
   ["BlackPawn", BlackPawn],
   ["BlackRook", BlackRook],
   ["BlackBishop", BlackBishop],
   ["BlackKnight", BlackKnight],
   ["BlackQueen", BlackQueen],
   ["BlackKing", BlackKing],
-  ["Black", ""],
 ]);
 
 export default ImageMap;

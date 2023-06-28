@@ -18,19 +18,9 @@ class BoardState {
   }
 
   public getWhiteTurn = () => this.whiteTurn;
-
   public getBoardSize = () => this.boardSize;
-
-  public getBoardContents() {
-    const [numRows, numCols] = this.boardSize;
-    const contents = [...Array(numRows)].map(() => Array(numCols).fill(null));
-    const [wr, wc] = this.white.getPos();
-    const [br, bc] = this.black.getPos();
-
-    if (this.white.getAlive()) contents[wr][wc] = "White" + this.white.piece;
-    if (this.black.getAlive()) contents[br][bc] = "Black" + this.black.piece;
-    return contents;
-  }
+  public getWhite = () => this.white;
+  public getBlack = () => this.black;
 
   public getBoardHighlights() {
     const [numRows, numCols] = this.boardSize;

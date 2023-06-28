@@ -3,7 +3,6 @@ import Board from "./Board";
 import PlayerInfo from "./PlayerInfo";
 import BoardState from "../classes/BoardState";
 import PieceQueue from "../classes/PieceQueue";
-import "../styles/Game.css";
 
 function Game() {
   const squareSize = 100;
