@@ -14,7 +14,7 @@ function PlayerUI({ white, width, pieceQueue, onClick }: Props) {
       className="container position-relative bg-info rounded my-2"
       style={{ width: width + "px", height: width / 3 + "px" }}
     >
-      <div className="row align-items-center position-absolute top-50 end-50 translate-middle-y px-3">
+      <div className="row position-absolute top-50 end-50 translate-middle-y px-3">
         <PieceQueueUI
           squareSize={width / 4}
           color={"info-subtle"}
@@ -22,7 +22,7 @@ function PlayerUI({ white, width, pieceQueue, onClick }: Props) {
           onClick={onClick}
         />
       </div>
-      <div className="row align-items-center position-absolute top-50 start-50 translate-middle-y px-3">
+      <div className="row position-absolute top-50 start-50 translate-middle-y px-3">
         <PieceQueueUI
           squareSize={width / 6}
           color={"info-subtle"}
