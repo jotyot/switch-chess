@@ -3,6 +3,7 @@ import Board from "./Board";
 import PlayerUI from "./PlayerUI";
 import BoardState from "../classes/BoardState";
 import PieceQueue from "../classes/PieceQueue";
+import AIPlayer from "../classes/AIPlayer";
 
 function Game() {
   const squareSize = 100;
@@ -29,6 +30,15 @@ function Game() {
       () => reRender({ ...render }),
       () => popQueue(boardState.current.getWhiteTurn())
     );
+    const AIMove = AIPlayer.getRandomMove(boardState.current);
+    if (AIMove != null)
+      setTimeout(() => {
+        boardState.current.attemptMove(
+          AIMove,
+          () => reRender({ ...render }),
+          () => popQueue(boardState.current.getWhiteTurn())
+        );
+      }, 200);
   }
 
   function handlePieceSwapClick(white: boolean) {
@@ -59,6 +69,7 @@ function Game() {
           handlePieceSwapClick(true);
         }}
       />
+      <div>{}</div>
     </>
   );
 }
