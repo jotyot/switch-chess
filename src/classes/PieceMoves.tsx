@@ -4,7 +4,8 @@ class PieceMoves {
     playerPos: number[],
     otherPos: number[],
     boardSize: number[],
-    white: boolean
+    white: boolean,
+    forAI = false
   ) {
     const [numRows, numCols] = boardSize;
     const maxLength = Math.max(numRows, numCols);
@@ -12,7 +13,13 @@ class PieceMoves {
     let moves: number[][];
     switch (piece) {
       case "Pawn":
-        moves = PieceMoves.pawnMoves(playerPos, otherPos, numRows, white);
+        moves = PieceMoves.pawnMoves(
+          playerPos,
+          otherPos,
+          numRows,
+          white,
+          forAI
+        );
         break;
       case "Rook":
         moves = PieceMoves.rookMoves(playerPos, otherPos, maxLength);
@@ -44,7 +51,8 @@ class PieceMoves {
     playerPos: number[],
     otherPos: number[],
     numRows: number,
-    white: boolean
+    white: boolean,
+    forAI = false
   ) {
     const direction = white ? -1 : 1;
     const moves: number[][] = Array(0).fill(null);
@@ -62,6 +70,12 @@ class PieceMoves {
       PieceMoves.coordsEqual(otherPos, [r + direction, c - 1])
     )
       moves.push(otherPos);
+    // If this moveset was generated for AI,
+    // assume otherPos is in capture position
+    if (forAI) {
+      moves.push([r + direction, c + 1]);
+      moves.push([r + direction, c - 1]);
+    }
     return moves;
   }
 

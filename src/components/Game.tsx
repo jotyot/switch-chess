@@ -9,6 +9,8 @@ function Game() {
   const squareSize = 100;
   const [numRows, numCols] = [4, 4];
 
+  const AiOpponent = true;
+
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
   const [render, reRender] = useState([0]);
 
@@ -30,7 +32,16 @@ function Game() {
       () => reRender({ ...render }),
       () => popQueue(boardState.current.getWhiteTurn())
     );
-    const AIMove = AIPlayer.getRandomMove(boardState.current);
+    if (AiOpponent) makeAIMove();
+  }
+
+  function handlePieceSwapClick(white: boolean) {
+    white ? pieceQueue.current.swapWhite() : pieceQueue.current.swapBlack();
+    reRender({ ...render });
+  }
+
+  function makeAIMove() {
+    const AIMove = AIPlayer.randomMove(boardState.current);
     if (AIMove != null)
       setTimeout(() => {
         boardState.current.attemptMove(
@@ -39,11 +50,6 @@ function Game() {
           () => popQueue(boardState.current.getWhiteTurn())
         );
       }, 200);
-  }
-
-  function handlePieceSwapClick(white: boolean) {
-    white ? pieceQueue.current.swapWhite() : pieceQueue.current.swapBlack();
-    reRender({ ...render });
   }
 
   return (

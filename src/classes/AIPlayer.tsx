@@ -4,9 +4,8 @@ import PieceMoves from "./PieceMoves";
 class AIPlayer {
   // If a player can capture, it will. Otherwise it will try
   // not to land in a square that can be captured
-  public static getRandomMove(boardState: BoardState) {
-    if (boardState.isOver) return null;
 
+  public static possibleMoves(boardState: BoardState) {
     const [player, other] = boardState.whiteTurn
       ? [boardState.white, boardState.black]
       : [boardState.black, boardState.white];
@@ -28,15 +27,15 @@ class AIPlayer {
     playerMoves.forEach(([r, c]) => {
       if (r === or && c === oc) canCapture = true;
     });
-    if (canCapture) return otherPos;
+    if (canCapture) return [otherPos];
 
-    // Make this work with pawn
-    let otherMoves = PieceMoves.possibleMoves(
+    const otherMoves = PieceMoves.possibleMoves(
       other.getPiece(),
       otherPos,
       playerPos,
       boardState.boardSize,
-      !boardState.whiteTurn
+      !boardState.whiteTurn,
+      true
     );
 
     const safeMoves = playerMoves.filter(([r, c]) => {
@@ -46,11 +45,18 @@ class AIPlayer {
       });
       return notOverlap;
     });
-    console.log(safeMoves);
 
     if (safeMoves.length > 0) playerMoves = safeMoves;
 
-    return playerMoves[~~Math.random() * playerMoves.length];
+    return playerMoves;
+  }
+
+  public static randomMove(boardState: BoardState) {
+    if (boardState.isOver) return null;
+
+    const moves = AIPlayer.possibleMoves(boardState);
+
+    return moves[~~Math.random() * moves.length];
   }
 }
 
