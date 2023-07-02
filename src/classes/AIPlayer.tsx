@@ -6,19 +6,32 @@ class AIPlayer {
   // not to land in a square that can be captured
 
   public static possibleMoves(boardState: BoardState) {
-    const [player, other] = boardState.whiteTurn
-      ? [boardState.white, boardState.black]
-      : [boardState.black, boardState.white];
+    const [player, other] = boardState.getWhiteTurn()
+      ? [boardState.getWhite(), boardState.getBlack()]
+      : [boardState.getBlack(), boardState.getWhite()];
 
     const playerPos = player.getPos();
     const otherPos = other.getPos();
 
+    let playerPiece = player.getPiece();
+    let otherPiece = other.getPiece();
+
+    // If the pawn is at the end at the beginning of turn, it turns into a queen
+    if (
+      playerPiece === "Pawn" &&
+      ((player.getIsWhite() && playerPos[0] === 0) ||
+        (!player.getIsWhite() &&
+          playerPos[0] === boardState.getBoardSize()[0] - 1))
+    ) {
+      playerPiece = "Queen";
+    }
+
     let playerMoves = PieceMoves.possibleMoves(
-      player.getPiece(),
+      playerPiece,
       playerPos,
       otherPos,
-      boardState.boardSize,
-      boardState.whiteTurn
+      boardState.getBoardSize(),
+      boardState.getWhiteTurn()
     );
 
     // If piece can capture player
@@ -29,12 +42,22 @@ class AIPlayer {
     });
     if (canCapture) return [otherPos];
 
+    // The AI assumes the pawn will turn into the queen next turn if it can
+    if (
+      otherPiece === "Pawn" &&
+      ((other.getIsWhite() && playerPos[0] === 0) ||
+        (!other.getIsWhite() &&
+          playerPos[0] === boardState.getBoardSize()[0] - 1))
+    ) {
+      otherPiece = "Queen";
+    }
+
     const otherMoves = PieceMoves.possibleMoves(
-      other.getPiece(),
+      otherPiece,
       otherPos,
       playerPos,
-      boardState.boardSize,
-      !boardState.whiteTurn,
+      boardState.getBoardSize(),
+      !boardState.getWhiteTurn(),
       true
     );
 
@@ -52,7 +75,7 @@ class AIPlayer {
   }
 
   public static randomMove(boardState: BoardState) {
-    if (boardState.isOver) return null;
+    if (boardState.getIsOver()) return null;
 
     const moves = AIPlayer.possibleMoves(boardState);
 

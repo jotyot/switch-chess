@@ -4,6 +4,7 @@ import PlayerUI from "./PlayerUI";
 import BoardState from "../classes/BoardState";
 import PieceQueue from "../classes/PieceQueue";
 import AIPlayer from "../classes/AIPlayer";
+import ReplayButton from "./ReplayButton";
 
 function Game() {
   const squareSize = 100;
@@ -24,7 +25,7 @@ function Game() {
     else return "Pawn"; //should never happen
   }
 
-  const boardState = useRef(new BoardState([numRows, numCols], "Pawn", "Pawn"));
+  const boardState = useRef(new BoardState([numRows, numCols], "King", "King"));
 
   function handleBoardClick(i: number, j: number) {
     boardState.current.attemptMove(
@@ -75,7 +76,13 @@ function Game() {
           handlePieceSwapClick(true);
         }}
       />
-      <div>{}</div>
+      {boardState.current.getIsOver() && (
+        <ReplayButton
+          top={-(squareSize * (numRows / 2 + numCols / 3 + numCols / 9) + 16)} // idk wtf this is either
+          width={(squareSize * numCols * 2) / 3}
+          winner={boardState.current.getWinner()}
+        />
+      )}
     </>
   );
 }

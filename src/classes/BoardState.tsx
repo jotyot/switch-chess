@@ -2,11 +2,12 @@ import Player from "./Player";
 import PieceMoves from "./PieceMoves";
 
 class BoardState {
-  white: Player;
-  black: Player;
-  boardSize: number[];
-  whiteTurn: boolean = true;
-  isOver: boolean = false;
+  private white: Player;
+  private black: Player;
+  private boardSize: number[];
+  private whiteTurn: boolean = true;
+  private isOver: boolean = false;
+  private winner: boolean = true; // winner ? white : black
 
   constructor(
     [numRows, numCols]: number[],
@@ -22,6 +23,8 @@ class BoardState {
   public getBoardSize = () => this.boardSize;
   public getWhite = () => this.white;
   public getBlack = () => this.black;
+  public getIsOver = () => this.isOver;
+  public getWinner = () => this.winner;
 
   public getBoardHighlights() {
     const [numRows, numCols] = this.boardSize;
@@ -60,6 +63,7 @@ class BoardState {
     if (PieceMoves.coordsEqual(player.getPos(), other.getPos())) {
       other.die();
       this.isOver = true;
+      this.winner = this.whiteTurn;
     }
 
     if (this.whiteTurn) this.white.setPiece(targetPiece);
@@ -78,15 +82,32 @@ class BoardState {
 
     const playerPos = player.getPos();
     const otherPos = other.getPos();
-    const piece = player.getPiece();
+    let piece = player.getPiece();
 
-    return PieceMoves.possibleMoves(
+    // If the pawn is at the end at the beginning of turn, it turns into a queen
+    if (
+      piece === "Pawn" &&
+      ((player.getIsWhite() && playerPos[0] === 0) ||
+        (!player.getIsWhite() && playerPos[0] === this.boardSize[0] - 1))
+    ) {
+      piece = "Queen";
+      player.setPiece(piece);
+    }
+
+    const possibleMoves = PieceMoves.possibleMoves(
       piece,
       playerPos,
       otherPos,
       this.boardSize,
       this.whiteTurn
     );
+
+    if (possibleMoves.length < 1) {
+      this.isOver = true;
+      this.winner = !this.whiteTurn;
+    }
+
+    return possibleMoves;
   }
 }
 

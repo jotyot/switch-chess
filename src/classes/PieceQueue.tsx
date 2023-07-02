@@ -1,8 +1,8 @@
 const PossiblePieces = ["Pawn", "Rook", "Bishop", "Knight", "Queen", "King"];
 
 class PieceQueue {
-  blackQueue: string[] = PieceQueue.shuffledPieces();
-  whiteQueue: string[] = PieceQueue.shuffledPieces();
+  private blackQueue: string[] = PieceQueue.shuffledPieces();
+  private whiteQueue: string[] = PieceQueue.shuffledPieces();
 
   public getWhiteQueue = () => this.whiteQueue;
   public getBlackQueue = () => this.blackQueue;

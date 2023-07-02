@@ -9,10 +9,10 @@ interface Props {
 
 function Piece({ player, squareSize }: Props) {
   const incomingImage =
-    (player.isWhite ? "White" : "Black") + player.getPiece();
+    (player.getIsWhite() ? "White" : "Black") + player.getPiece();
   const [row, col] = player.getPos();
   const [imageName, setImageName] = useState(
-    (player.isWhite ? "White" : "Black") + "Pawn"
+    (player.getIsWhite() ? "White" : "Black") + "Pawn"
   );
 
   if (incomingImage !== imageName)

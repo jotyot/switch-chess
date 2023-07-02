@@ -1,8 +1,8 @@
 class Player {
-  isAlive: boolean = true;
-  isWhite: boolean;
-  position: number[];
-  piece: string;
+  private isAlive: boolean = true;
+  private isWhite: boolean;
+  private position: number[];
+  private piece: string;
 
   constructor(isWhite: boolean, piece: string, [numRows, numCols]: number[]) {
     this.isWhite = isWhite;
@@ -22,6 +22,7 @@ class Player {
     this.position = position;
   }
 
+  public getIsWhite = () => this.isWhite;
   public getAlive = () => this.isAlive;
   public die = () => (this.isAlive = false);
 }
