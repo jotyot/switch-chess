@@ -64,8 +64,9 @@ class PieceMoves {
       moves.push([r + direction, c]);
     if (
       // 0 is the top row
-      ((white && r == numRows - 1) || (!white && r == 0)) &&
-      !PieceMoves.coordsEqual(otherPos, [r + direction * 2, c])
+      !PieceMoves.coordsEqual(otherPos, [r + direction * 2, c]) &&
+      !PieceMoves.coordsEqual(otherPos, [r + direction, c]) &&
+      ((white && r == numRows - 1) || (!white && r == 0))
     )
       moves.push([r + direction * 2, c]);
     if (
