@@ -26,7 +26,7 @@ function Game() {
   }
 
   const boardState = useRef(
-    new BoardState([numRows, numCols], "King", "King", () => {
+    new BoardState([numRows, numCols], "Pawn", "Pawn", () => {
       reRender({ ...render });
     })
   );
@@ -57,8 +57,8 @@ function Game() {
   function resetBoard() {
     boardState.current = new BoardState(
       [numRows, numCols],
-      "King",
-      "King",
+      "Pawn",
+      "Pawn",
       () => {
         reRender({ ...render });
       }
