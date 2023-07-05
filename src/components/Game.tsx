@@ -25,13 +25,15 @@ function Game() {
     else return "Pawn"; //should never happen
   }
 
-  const boardState = useRef(new BoardState([numRows, numCols], "King", "King"));
+  const boardState = useRef(
+    new BoardState([numRows, numCols], "King", "King", () => {
+      reRender({ ...render });
+    })
+  );
 
   function handleBoardClick(i: number, j: number) {
-    boardState.current.attemptMove(
-      [i, j],
-      () => reRender({ ...render }),
-      () => popQueue(boardState.current.getWhiteTurn())
+    boardState.current.attemptMove([i, j], () =>
+      popQueue(boardState.current.getWhiteTurn())
     );
     if (AiOpponent) makeAIMove();
   }
@@ -43,18 +45,30 @@ function Game() {
 
   function makeAIMove() {
     const AIMove = AIPlayer.randomMove(boardState.current);
-    if (AIMove != null)
+    if (AIMove != null) {
       setTimeout(() => {
-        boardState.current.attemptMove(
-          AIMove,
-          () => reRender({ ...render }),
-          () => popQueue(boardState.current.getWhiteTurn())
+        boardState.current.attemptMove(AIMove, () =>
+          popQueue(boardState.current.getWhiteTurn())
         );
       }, 200);
+    } else reRender({ ...render });
+  }
+
+  function resetBoard() {
+    boardState.current = new BoardState(
+      [numRows, numCols],
+      "King",
+      "King",
+      () => {
+        reRender({ ...render });
+      }
+    );
+    pieceQueue.current = new PieceQueue();
+    reRender({ ...render });
   }
 
   return (
-    <>
+    <div className="position-relative">
       <PlayerUI
         width={squareSize * numCols}
         white={false}
@@ -78,12 +92,12 @@ function Game() {
       />
       {boardState.current.getIsOver() && (
         <ReplayButton
-          top={-(squareSize * (numRows / 2 + numCols / 3 + numCols / 9) + 16)} // idk wtf this is either
+          onClick={resetBoard}
           width={(squareSize * numCols * 2) / 3}
           winner={boardState.current.getWinner()}
         />
       )}
-    </>
+    </div>
   );
 }
 

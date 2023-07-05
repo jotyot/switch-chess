@@ -7,16 +7,19 @@ class BoardState {
   private boardSize: number[];
   private whiteTurn: boolean = true;
   private isOver: boolean = false;
-  private winner: boolean = true; // winner ? white : black
+  private winner: string = ""; // winner ? white : black
+  private updateBoard: () => void;
 
   constructor(
     [numRows, numCols]: number[],
     whiteStart: string,
-    blackStart: string
+    blackStart: string,
+    updateBoard: () => void
   ) {
     this.boardSize = [numRows, numCols];
     this.white = new Player(true, whiteStart, this.boardSize);
     this.black = new Player(false, blackStart, this.boardSize);
+    this.updateBoard = updateBoard;
   }
 
   public getWhiteTurn = () => this.whiteTurn;
@@ -38,23 +41,15 @@ class BoardState {
     return highlights;
   }
 
-  public attemptMove(
-    target: number[],
-    updateBoard: () => void,
-    popQueue: () => string
-  ) {
+  public attemptMove(target: number[], popQueue: () => string) {
     this.possibleMoves().forEach((move) => {
       if (PieceMoves.coordsEqual(target, move)) {
-        this.movePlayer(target, popQueue(), updateBoard);
+        this.movePlayer(target, popQueue());
       }
     });
   }
 
-  private movePlayer(
-    target: number[],
-    targetPiece: string,
-    updateBoard: () => void
-  ) {
+  private movePlayer(target: number[], targetPiece: string) {
     const [player, other] = this.whiteTurn
       ? [this.white, this.black]
       : [this.black, this.white];
@@ -63,14 +58,14 @@ class BoardState {
     if (PieceMoves.coordsEqual(player.getPos(), other.getPos())) {
       other.die();
       this.isOver = true;
-      this.winner = this.whiteTurn;
+      this.winner = this.whiteTurn ? "White" : "Black";
     }
 
     if (this.whiteTurn) this.white.setPiece(targetPiece);
     else this.black.setPiece(targetPiece);
 
     this.whiteTurn = !this.whiteTurn;
-    updateBoard();
+    this.updateBoard();
   }
 
   private possibleMoves() {
@@ -104,7 +99,8 @@ class BoardState {
 
     if (possibleMoves.length < 1) {
       this.isOver = true;
-      this.winner = !this.whiteTurn;
+      this.winner = "";
+      this.updateBoard();
     }
 
     return possibleMoves;

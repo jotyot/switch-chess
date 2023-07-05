@@ -1,7 +1,7 @@
 import ImageMap from "../classes/ImageMap";
+import Colors from "../classes/Colors";
 
 interface Props {
-  color: string;
   extraClasses?: string;
   image: string;
   squareSize: number;
@@ -9,7 +9,6 @@ interface Props {
 }
 
 function PieceQueueUI({
-  color,
   image,
   squareSize,
   extraClasses = "",
@@ -17,10 +16,11 @@ function PieceQueueUI({
 }: Props) {
   return (
     <div
-      className={"rounded bg-" + color + " " + extraClasses}
+      className={"rounded bg-" + " " + extraClasses}
       style={{
         height: squareSize + "px",
         width: squareSize + "px",
+        backgroundColor: Colors.secondary,
       }}
       onClick={onClick}
     >
