@@ -16,16 +16,6 @@ class AIPlayer {
     let playerPiece = player.getPiece();
     let otherPiece = other.getPiece();
 
-    // If the pawn is at the end at the beginning of turn, it turns into a queen
-    if (
-      playerPiece === "Pawn" &&
-      ((player.getIsWhite() && playerPos[0] === 0) ||
-        (!player.getIsWhite() &&
-          playerPos[0] === boardState.getBoardSize()[0] - 1))
-    ) {
-      playerPiece = "Queen";
-    }
-
     let playerMoves = PieceMoves.possibleMoves(
       playerPiece,
       playerPos,
@@ -41,16 +31,6 @@ class AIPlayer {
       if (r === or && c === oc) canCapture = true;
     });
     if (canCapture) return [otherPos];
-
-    // The AI assumes the pawn will turn into the queen next turn if it can
-    if (
-      otherPiece === "Pawn" &&
-      ((other.getIsWhite() && playerPos[0] === 0) ||
-        (!other.getIsWhite() &&
-          playerPos[0] === boardState.getBoardSize()[0] - 1))
-    ) {
-      otherPiece = "Queen";
-    }
 
     const otherMoves = PieceMoves.possibleMoves(
       otherPiece,

@@ -60,9 +60,16 @@ class BoardState {
       this.isOver = true;
       this.winner = this.whiteTurn ? "White" : "Black";
     }
+    player.setPiece(targetPiece);
 
-    if (this.whiteTurn) this.white.setPiece(targetPiece);
-    else this.black.setPiece(targetPiece);
+    // If the pawn is at the end at the beginning of turn, it turns into a queen
+    if (
+      player.getPiece() === "Pawn" &&
+      ((player.getIsWhite() && player.getPos()[0] === 0) ||
+        (!player.getIsWhite() && player.getPos()[0] === this.boardSize[0] - 1))
+    ) {
+      player.setPiece("SuperPawn");
+    }
 
     this.whiteTurn = !this.whiteTurn;
     this.updateBoard();
@@ -75,24 +82,10 @@ class BoardState {
       ? [this.white, this.black]
       : [this.black, this.white];
 
-    const playerPos = player.getPos();
-    const otherPos = other.getPos();
-    let piece = player.getPiece();
-
-    // If the pawn is at the end at the beginning of turn, it turns into a queen
-    if (
-      piece === "Pawn" &&
-      ((player.getIsWhite() && playerPos[0] === 0) ||
-        (!player.getIsWhite() && playerPos[0] === this.boardSize[0] - 1))
-    ) {
-      piece = "Queen";
-      player.setPiece(piece);
-    }
-
     const possibleMoves = PieceMoves.possibleMoves(
-      piece,
-      playerPos,
-      otherPos,
+      player.getPiece(),
+      player.getPos(),
+      other.getPos(),
       this.boardSize,
       this.whiteTurn
     );

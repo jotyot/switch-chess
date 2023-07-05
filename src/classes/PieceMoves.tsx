@@ -36,6 +36,9 @@ class PieceMoves {
       case "King":
         moves = PieceMoves.kingMoves(playerPos);
         break;
+      case "SuperPawn":
+        moves = PieceMoves.superPawnMoves(playerPos, otherPos, maxLength);
+        break;
       default:
         moves = [[]];
         break;
@@ -62,7 +65,7 @@ class PieceMoves {
     if (
       // 0 is the top row
       ((white && r == numRows - 1) || (!white && r == 0)) &&
-      !this.coordsEqual(otherPos, [r + direction * 2, c])
+      !PieceMoves.coordsEqual(otherPos, [r + direction * 2, c])
     )
       moves.push([r + direction * 2, c]);
     if (
@@ -164,6 +167,17 @@ class PieceMoves {
     moves.push([r, c + 1]);
     moves.push([r, c - 1]);
     return moves;
+  }
+
+  public static superPawnMoves(
+    playerPos: number[],
+    otherPos: number[],
+    maxLength: number
+  ) {
+    return [
+      ...PieceMoves.queenMoves(playerPos, otherPos, maxLength),
+      ...PieceMoves.knightMoves(playerPos),
+    ];
   }
 
   public static coordsEqual(a: number[], b: number[]) {

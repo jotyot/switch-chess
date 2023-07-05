@@ -22,11 +22,11 @@ function Game() {
       ? pieceQueue.current.getNextWhite()
       : pieceQueue.current.getNextBlack();
     if (piece) return piece;
-    else return "Pawn"; //should never happen
+    else return "King"; //should never happen
   }
 
   const boardState = useRef(
-    new BoardState([numRows, numCols], "Pawn", "Pawn", () => {
+    new BoardState([numRows, numCols], "King", "King", () => {
       reRender({ ...render });
     })
   );
@@ -57,8 +57,8 @@ function Game() {
   function resetBoard() {
     boardState.current = new BoardState(
       [numRows, numCols],
-      "Pawn",
-      "Pawn",
+      "King",
+      "King",
       () => {
         reRender({ ...render });
       }
