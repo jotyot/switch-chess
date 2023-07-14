@@ -1,4 +1,4 @@
-import ImageMap from "../classes/ImageMap";
+import ImageMap from "../config/ImageMap";
 import Player from "../classes/Player";
 import { useState } from "react";
 

@@ -1,35 +1,15 @@
 const PossiblePieces = ["Pawn", "Rook", "Bishop", "Knight", "Queen", "King"];
 
 class PieceQueue {
-  private blackQueue: string[] = PieceQueue.shuffledPieces();
-  private whiteQueue: string[] = PieceQueue.shuffledPieces();
+  private queue: string[] = PieceQueue.shuffledPieces();
 
-  public getWhiteQueue = () => this.whiteQueue;
-  public getBlackQueue = () => this.blackQueue;
-
-  public getNextWhite() {
-    if (this.whiteQueue.length === 2)
-      this.whiteQueue = [...this.whiteQueue, ...PieceQueue.shuffledPieces()];
-    return this.whiteQueue.shift();
+  public popQueue(): string {
+    if (this.queue.length === 1)
+      this.queue = [...this.queue, ...PieceQueue.shuffledPieces()];
+    let piece = this.queue.shift();
+    piece = piece ? piece : "Pawn"; // should never happen
+    return piece;
   }
-  public getNextBlack() {
-    if (this.blackQueue.length === 2)
-      this.blackQueue = [...this.blackQueue, ...PieceQueue.shuffledPieces()];
-    return this.blackQueue.shift();
-  }
-
-  public swapWhite = () =>
-    ([this.whiteQueue[0], this.whiteQueue[1]] = [
-      this.whiteQueue[1],
-      this.whiteQueue[0],
-    ]);
-
-  public swapBlack = () =>
-    ([this.blackQueue[0], this.blackQueue[1]] = [
-      this.blackQueue[1],
-      this.blackQueue[0],
-    ]);
-
   public static getRandomPiece = () =>
     PossiblePieces[~~(Math.random() * PossiblePieces.length)];
 

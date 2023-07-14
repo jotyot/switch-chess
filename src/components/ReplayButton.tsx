@@ -1,4 +1,4 @@
-import Colors from "../classes/Colors";
+import Colors from "../config/Colors";
 
 interface Props {
   width: number;

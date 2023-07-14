@@ -1,14 +1,15 @@
 import PieceQueueUI from "./PieceQueueUI";
-import Colors from "../classes/Colors";
+import Hand from "../classes/Hand";
+import Colors from "../config/Colors";
 
 interface Props {
+  hand: Hand;
+  onClick: (white: boolean, index: number) => void;
   width: number;
   white: boolean;
-  onClick: () => void;
-  pieceQueue: string[];
 }
 
-function PlayerUI({ white, width, pieceQueue, onClick }: Props) {
+function PlayerUI({ white, width, hand, onClick }: Props) {
   const pieceColor = white ? "White" : "Black";
   return (
     <div
@@ -19,20 +20,17 @@ function PlayerUI({ white, width, pieceQueue, onClick }: Props) {
         backgroundColor: Colors.primary,
       }}
     >
-      <div className="row position-absolute top-50 end-50 translate-middle-y px-3">
-        <PieceQueueUI
-          squareSize={width / 4}
-          image={pieceColor + pieceQueue[0]}
-          onClick={onClick}
-        />
-      </div>
-      <div className="row position-absolute top-50 start-50 translate-middle-y px-3">
-        <PieceQueueUI
-          squareSize={width / 6}
-          image={pieceColor + pieceQueue[1]}
-          extraClasses=""
-          onClick={onClick}
-        />
+      <div className="row position-absolute translate-middle-x start-50 top-50">
+        {hand.getHand().map((piece, index) => {
+          const scale = hand.getSelected() === index ? 0.25 : 0.18;
+          return (
+            <PieceQueueUI
+              squareSize={width * scale}
+              image={pieceColor + piece}
+              onClick={() => onClick(white, index)}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -2,25 +2,28 @@ import { useRef, useState } from "react";
 import Board from "./Board";
 import PlayerUI from "./PlayerUI";
 import BoardState from "../classes/BoardState";
-import PieceQueue from "../classes/PieceQueue";
+import Hand from "../classes/Hand";
 import AIPlayer from "../classes/AIPlayer";
 import ReplayButton from "./ReplayButton";
 
 function Game() {
   const squareSize = 100;
   const [numRows, numCols] = [4, 4];
+  const handSize = 2;
+  const AiSpeed = 300;
 
   const AiOpponent = true;
 
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
   const [render, reRender] = useState([0]);
 
-  const pieceQueue = useRef(new PieceQueue());
+  const whiteHand = useRef(new Hand(handSize));
+  const blackHand = useRef(new Hand(handSize));
 
-  function popQueue(white: boolean) {
+  function newPiece(white: boolean) {
     const piece = white
-      ? pieceQueue.current.getNextWhite()
-      : pieceQueue.current.getNextBlack();
+      ? whiteHand.current.popSelected()
+      : blackHand.current.popSelected();
     if (piece) return piece;
     else return "King"; //should never happen
   }
@@ -33,13 +36,15 @@ function Game() {
 
   function handleBoardClick(i: number, j: number) {
     boardState.current.attemptMove([i, j], () =>
-      popQueue(boardState.current.getWhiteTurn())
+      newPiece(boardState.current.getWhiteTurn())
     );
     if (AiOpponent) makeAIMove();
   }
 
-  function handlePieceSwapClick(white: boolean) {
-    white ? pieceQueue.current.swapWhite() : pieceQueue.current.swapBlack();
+  function handleHandClick(white: boolean, index: number) {
+    white
+      ? whiteHand.current.setSelected(index)
+      : blackHand.current.setSelected(index);
     reRender({ ...render });
   }
 
@@ -48,9 +53,9 @@ function Game() {
     if (AIMove != null) {
       setTimeout(() => {
         boardState.current.attemptMove(AIMove, () =>
-          popQueue(boardState.current.getWhiteTurn())
+          newPiece(boardState.current.getWhiteTurn())
         );
-      }, 200);
+      }, AiSpeed);
     } else reRender({ ...render });
   }
 
@@ -63,19 +68,20 @@ function Game() {
         reRender({ ...render });
       }
     );
-    pieceQueue.current = new PieceQueue();
+    whiteHand.current = new Hand(handSize);
+    blackHand.current = new Hand(handSize);
     reRender({ ...render });
   }
+
+  for (const piece in whiteHand.current.getHand()) console.log(piece);
 
   return (
     <div className="position-relative">
       <PlayerUI
         width={squareSize * numCols}
         white={false}
-        pieceQueue={pieceQueue.current.getBlackQueue()}
-        onClick={() => {
-          handlePieceSwapClick(false);
-        }}
+        hand={blackHand.current}
+        onClick={handleHandClick}
       />
       <Board
         squareSize={squareSize}
@@ -85,10 +91,8 @@ function Game() {
       <PlayerUI
         width={squareSize * numCols}
         white={true}
-        pieceQueue={pieceQueue.current.getWhiteQueue()}
-        onClick={() => {
-          handlePieceSwapClick(true);
-        }}
+        hand={whiteHand.current}
+        onClick={handleHandClick}
       />
       {boardState.current.getIsOver() && (
         <ReplayButton

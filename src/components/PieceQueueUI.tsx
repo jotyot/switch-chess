@@ -1,5 +1,5 @@
-import ImageMap from "../classes/ImageMap";
-import Colors from "../classes/Colors";
+import ImageMap from "../config/ImageMap";
+import Colors from "../config/Colors";
 
 interface Props {
   extraClasses?: string;
@@ -16,7 +16,7 @@ function PieceQueueUI({
 }: Props) {
   return (
     <div
-      className={"rounded bg-" + " " + extraClasses}
+      className={"rounded translate-middle-y mx-1 bg-" + " " + extraClasses}
       style={{
         height: squareSize + "px",
         width: squareSize + "px",
