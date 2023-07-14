@@ -17,6 +17,9 @@ function PieceQueueUI({ image, squareSize, onClick }: Props) {
         height: squareSize + "px",
         width: squareSize + "px",
         backgroundColor: Colors.secondary,
+        transitionProperty: "all",
+        transitionDuration: "0.1s",
+        transitionTimingFunction: "ease-out",
       }}
       onClick={onClick}
     >
@@ -28,6 +31,9 @@ function PieceQueueUI({ image, squareSize, onClick }: Props) {
           style={{
             height: "auto",
             width: squareSize + "px",
+            transitionProperty: "all",
+            transitionDuration: "0.1s",
+            transitionTimingFunction: "ease-out",
           }}
         ></img>
       )}
