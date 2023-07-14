@@ -20,7 +20,7 @@ function PlayerUI({ white, width, hand, onClick }: Props) {
         backgroundColor: Colors.primary,
       }}
     >
-      <div className="row position-absolute translate-middle-x start-50 top-50">
+      <div className="d-flex justify-content-center position-absolute translate-middle-x start-50 top-50">
         {hand.getHand().map((piece, index) => {
           const scale = hand.getSelected() === index ? 0.25 : 0.18;
           return (

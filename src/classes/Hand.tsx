@@ -18,7 +18,7 @@ class Hand {
 
     // change selected 'card' to something else, then change what 'card' is selected
     this.hand.set(this.selected, this.pieceQueue.popQueue());
-    //this.selected += this.selected === 0 ? 1 : -1;
+    // this.selected += this.selected === 0 ? 1 : -1;
 
     return piece;
   }

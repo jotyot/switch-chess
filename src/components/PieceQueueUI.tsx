@@ -2,21 +2,17 @@ import ImageMap from "../config/ImageMap";
 import Colors from "../config/Colors";
 
 interface Props {
-  extraClasses?: string;
   image: string;
   squareSize: number;
   onClick: () => void;
 }
 
-function PieceQueueUI({
-  image,
-  squareSize,
-  extraClasses = "",
-  onClick,
-}: Props) {
+function PieceQueueUI({ image, squareSize, onClick }: Props) {
   return (
     <div
-      className={"rounded translate-middle-y mx-1 bg-" + " " + extraClasses}
+      className={
+        "d-flex justify-content-center rounded translate-middle-y mx-1"
+      }
       style={{
         height: squareSize + "px",
         width: squareSize + "px",
