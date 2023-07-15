@@ -11,10 +11,10 @@ function Game() {
   const squareSize = 100;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
-  const aiSpeed = 500;
   const winningTotal = 10;
 
   const aiOpponent = true;
+  const aiDelay = 500;
 
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
   const [render, reRender] = useState([0]);
@@ -59,6 +59,8 @@ function Game() {
   }
 
   function handleHandClick(white: boolean, index: number) {
+    if (aiOpponent && !white) return;
+
     white
       ? whiteHand.current.setSelected(index)
       : blackHand.current.setSelected(index);
@@ -72,7 +74,7 @@ function Game() {
         boardState.current.attemptMove(AIMove, () =>
           newPiece(boardState.current.getWhiteTurn())
         );
-      }, aiSpeed);
+      }, aiDelay);
     }
   }
 
