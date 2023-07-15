@@ -10,43 +10,22 @@ class PieceMoves {
     const [numRows, numCols] = boardSize;
     const maxLength = Math.max(numRows, numCols);
 
-    let moves: number[][];
-    switch (piece) {
-      case "Pawn":
-        moves = PieceMoves.pawnMoves(
-          playerPos,
-          otherPos,
-          numRows,
-          white,
-          forAI
-        );
-        break;
-      case "Rook":
-        moves = PieceMoves.rookMoves(playerPos, otherPos, maxLength);
-        break;
-      case "Bishop":
-        moves = PieceMoves.bishopMoves(playerPos, otherPos, maxLength);
-        break;
-      case "Knight":
-        moves = PieceMoves.knightMoves(playerPos);
-        break;
-      case "Queen":
-        moves = PieceMoves.queenMoves(playerPos, otherPos, maxLength);
-        break;
-      case "King":
-        moves = PieceMoves.kingMoves(playerPos);
-        break;
-      case "SuperPawn":
-        moves = PieceMoves.superPawnMoves(playerPos, otherPos, maxLength);
-        break;
-      default:
-        moves = [[]];
-        break;
-    }
+    const pieceMoves = new Map([
+      [
+        "Pawn",
+        PieceMoves.pawnMoves(playerPos, otherPos, numRows, white, forAI),
+      ],
+      ["Rook", PieceMoves.rookMoves(playerPos, otherPos, maxLength)],
+      ["Bishop", PieceMoves.bishopMoves(playerPos, otherPos, maxLength)],
+      ["Knight", PieceMoves.knightMoves(playerPos)],
+      ["Queen", PieceMoves.queenMoves(playerPos, otherPos, maxLength)],
+      ["King", PieceMoves.kingMoves(playerPos)],
+      ["SuperPawn", PieceMoves.superPawnMoves(playerPos, otherPos, maxLength)],
+    ]);
+    let moves = pieceMoves.get(piece) || [[]];
     moves = moves.filter(
       ([r, c]) => r > -1 && r < numRows && c > -1 && c < numCols
     );
-
     return moves;
   }
 

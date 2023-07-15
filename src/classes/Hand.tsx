@@ -13,8 +13,7 @@ class Hand {
   public setSelected = (index: number) => (this.selected = index);
   public popSelected(): string {
     // save output piece. Should never be null
-    let piece = this.hand.get(this.selected);
-    piece = piece ? piece : "Pawn";
+    let piece = this.hand.get(this.selected) || "Pawn";
 
     // change selected 'card' to something else, then change what 'card' is selected
     this.hand.set(this.selected, this.pieceQueue.popQueue());

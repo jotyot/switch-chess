@@ -7,19 +7,22 @@ class BoardState {
   private boardSize: number[];
   private whiteTurn: boolean = true;
   private isOver: boolean = false;
-  private winner: string = ""; // winner ? white : black
+
   private updateBoard: () => void;
+  private newRound: (winner: boolean, piece: string) => void;
 
   constructor(
     [numRows, numCols]: number[],
     whiteStart: string,
     blackStart: string,
-    updateBoard: () => void
+    updateBoard: () => void,
+    newRound: (winner: boolean, piece: string) => void
   ) {
     this.boardSize = [numRows, numCols];
     this.white = new Player(true, whiteStart, this.boardSize);
     this.black = new Player(false, blackStart, this.boardSize);
     this.updateBoard = updateBoard;
+    this.newRound = newRound;
   }
 
   public getWhiteTurn = () => this.whiteTurn;
@@ -27,7 +30,6 @@ class BoardState {
   public getWhite = () => this.white;
   public getBlack = () => this.black;
   public getIsOver = () => this.isOver;
-  public getWinner = () => this.winner;
 
   public getBoardHighlights() {
     const [numRows, numCols] = this.boardSize;
@@ -58,7 +60,7 @@ class BoardState {
     if (PieceMoves.coordsEqual(player.getPos(), other.getPos())) {
       other.die();
       this.isOver = true;
-      this.winner = this.whiteTurn ? "White" : "Black";
+      this.newRound(this.whiteTurn, other.getPiece());
     }
     player.setPiece(targetPiece);
 
@@ -92,8 +94,8 @@ class BoardState {
 
     if (possibleMoves.length < 1) {
       this.isOver = true;
-      this.winner = "";
       this.updateBoard();
+      this.newRound(this.whiteTurn, "N/A");
     }
 
     return possibleMoves;

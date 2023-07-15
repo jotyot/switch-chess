@@ -6,8 +6,7 @@ class PieceQueue {
   public popQueue(): string {
     if (this.queue.length === 1)
       this.queue = [...this.queue, ...PieceQueue.shuffledPieces()];
-    let piece = this.queue.shift();
-    piece = piece ? piece : "Pawn"; // should never happen
+    let piece = this.queue.shift() || "Pawn";
     return piece;
   }
   public static getRandomPiece = () =>

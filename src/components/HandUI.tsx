@@ -7,19 +7,23 @@ interface Props {
   onClick: () => void;
 }
 
-function PieceQueueUI({ image, squareSize, onClick }: Props) {
+function HandUI({ image, squareSize, onClick }: Props) {
+  const dynamicSquare = {
+    height: squareSize + "px",
+    width: squareSize + "px",
+    transitionProperty: "all",
+    transitionDuration: "0.05s",
+    transitionTimingFunction: "ease-out",
+  };
+
   return (
     <div
       className={
         "d-flex justify-content-center rounded translate-middle-y mx-1"
       }
       style={{
-        height: squareSize + "px",
-        width: squareSize + "px",
         backgroundColor: Colors.secondary,
-        transitionProperty: "all",
-        transitionDuration: "0.1s",
-        transitionTimingFunction: "ease-out",
+        ...dynamicSquare,
       }}
       onClick={onClick}
     >
@@ -29,11 +33,7 @@ function PieceQueueUI({ image, squareSize, onClick }: Props) {
           alt=""
           className="row"
           style={{
-            height: "auto",
-            width: squareSize + "px",
-            transitionProperty: "all",
-            transitionDuration: "0.1s",
-            transitionTimingFunction: "ease-out",
+            ...dynamicSquare,
           }}
         ></img>
       )}
@@ -41,4 +41,4 @@ function PieceQueueUI({ image, squareSize, onClick }: Props) {
   );
 }
 
-export default PieceQueueUI;
+export default HandUI;
