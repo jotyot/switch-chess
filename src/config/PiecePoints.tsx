@@ -1,5 +1,8 @@
 // [points to the capturer, points to the captured]
 
+/**
+ * Maps a piece ("Pawn", etc) to [points the capturer gets, points the captured gets]
+ */
 const PiecePoints = new Map([
   ["Pawn", [3, 0]],
   ["Bishop", [1, 0]],
