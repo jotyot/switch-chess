@@ -8,6 +8,8 @@ import ReplayButton from "./ReplayButton";
 import PiecePoints from "../config/PiecePoints";
 
 /**
+ * @todo players switch sides every round
+ *
  * A functional game with its own score, etc. Play against AI or on same device player
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */

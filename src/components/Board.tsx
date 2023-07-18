@@ -16,12 +16,8 @@ interface Props {
  * @returns A JSX element containing information about the state of the chess board + pieces
  */
 function Board({ squareSize, boardState, onClick }: Props) {
-  const highlighted = true;
-
-  const [numRows, numCols] = boardState.getBoardSize();
-  const highlights: boolean[][] = highlighted
-    ? boardState.getBoardHighlights()
-    : [...Array(numRows)].fill(Array(numCols).fill(false));
+  const numCols = boardState.getBoardSize()[1];
+  const highlights: boolean[][] = boardState.getBoardHighlights();
 
   return (
     <div
