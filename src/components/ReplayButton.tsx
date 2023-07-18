@@ -6,6 +6,13 @@ interface Props {
   onClick: () => void;
 }
 
+/**
+ * A ui element that shows up to reset the board when there is a winner/draw
+ * @param width width of the ui element in px
+ * @param winner "White" "Black" ""
+ * @param onClick function thatexecutes when you press the button
+ * @returns A JSX element of the replay button
+ */
 function ReplayButton({ winner, width, onClick }: Props) {
   return (
     <div

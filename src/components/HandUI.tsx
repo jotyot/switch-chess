@@ -6,7 +6,13 @@ interface Props {
   squareSize: number;
   onClick: () => void;
 }
-
+/**
+ * An individual "card" of a hand
+ * @param image "Pawn", "Knight", etc
+ * @param squareSize length of one side in px
+ * @param onClick a function that executes on click of an individual "card"
+ * @returns A JSX element of an individual card
+ */
 function HandUI({ image, squareSize, onClick }: Props) {
   const dynamicSquare = {
     height: squareSize + "px",

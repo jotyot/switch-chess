@@ -3,6 +3,10 @@ const PossiblePieces = ["Pawn", "Rook", "Bishop", "Knight", "Queen", "King"];
 class PieceQueue {
   private queue: string[] = PieceQueue.shuffledPieces();
 
+  /**
+   * Gets the front of the PieceQueue and removes it, shifting everything else forward
+   * @returns the front string of the queue
+   */
   public popQueue(): string {
     if (this.queue.length === 1)
       this.queue = [...this.queue, ...PieceQueue.shuffledPieces()];

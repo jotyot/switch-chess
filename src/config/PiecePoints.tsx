@@ -1,6 +1,9 @@
 // [points to the capturer, points to the captured]
 
-const PiecePoints = new Map([
+/**
+ * Maps a piece ("Pawn", etc) to [points the capturer gets, points the captured gets]
+ */
+const PiecePoints = new Map<string, [number, number]>([
   ["Pawn", [5, 0]],
   ["Bishop", [4, 0]],
   ["Knight", [4, 0]],

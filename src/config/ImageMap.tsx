@@ -13,6 +13,9 @@ import BlackQueen from "../assets/bQ.png";
 import BlackKing from "../assets/bK.png";
 import BlackSuperPawn from "../assets/bSP.png";
 
+/**
+ * Maps a string to its image. ex. get("WhitePawn") returns its corresponding image
+ */
 const ImageMap = new Map([
   ["WhitePawn", WhitePawn],
   ["WhiteRook", WhiteRook],
