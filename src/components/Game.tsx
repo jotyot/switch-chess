@@ -7,6 +7,12 @@ import AIPlayer from "../classes/AIPlayer";
 import ReplayButton from "./ReplayButton";
 import PiecePoints from "../config/PiecePoints";
 
+/**
+ * @todo players switch sides every round
+ *
+ * A functional game with its own score, etc. Play against AI or on same device player
+ * @returns A collection of board and playerUI JSX elements that constitute a game.
+ */
 function Game() {
   const squareSize = 100;
   const [numRows, numCols] = [4, 4];
@@ -22,8 +28,11 @@ function Game() {
   const whiteHand = useRef(new Hand(handSize));
   const blackHand = useRef(new Hand(handSize));
 
+  /**
+   * Arguments for a default board in a tuple so I dont have to repeat this monstrosity twice
+   */
   const defualtBoard: [
-    number[],
+    [number, number],
     string,
     string,
     () => void,
@@ -43,13 +52,24 @@ function Game() {
   const gameOver = useRef(false);
   const gameWinner = useRef("White");
 
+  /**
+   * Shorthand for getting the next piece swap
+   * Modifies the queue for white or black depending on the turn
+   * @param white Is it white's turn?
+   * @returns A string of the new piece
+   */
   function newPiece(white: boolean) {
     return white
       ? whiteHand.current.popSelected()
       : blackHand.current.popSelected();
   }
 
-  function handleBoardClick(i: number, j: number) {
+  /**
+   * Handles clicking of the board
+   * @param i Row of the square clicked
+   * @param j Column of the square clicked
+   */
+  function handleBoardClick(i: number, j: number): void {
     if (aiOpponent && !boardState.current.getWhiteTurn()) return;
 
     boardState.current.attemptMove([i, j], () =>
@@ -58,8 +78,14 @@ function Game() {
     if (aiOpponent) makeAIMove();
   }
 
-  function handleHandClick(white: boolean, index: number) {
-    //if (aiOpponent && !white) return;
+  /**
+   * Handles clicking of the pieces in hand
+   * modifies the selected index of the hand to whatever was clicked
+   * @param white Is this the white or black hand?
+   * @param index Which piece was clicked on
+   */
+  function handleHandClick(white: boolean, index: number): void {
+    if (aiOpponent && !white) return;
 
     white
       ? whiteHand.current.setSelected(index)
@@ -67,7 +93,10 @@ function Game() {
     reRender({ ...render });
   }
 
-  function makeAIMove() {
+  /**
+   * Generates an AI move and moves the pieces on the board accordingly after a delay.
+   */
+  function makeAIMove(): void {
     const AIMove = AIPlayer.randomMove(boardState.current);
     if (AIMove != null) {
       setTimeout(() => {
@@ -78,14 +107,22 @@ function Game() {
     }
   }
 
-  function resetBoard() {
+  /**
+   * Remakes the board with new boardstate and new hands, but score is preserved
+   */
+  function resetBoard(): void {
     boardState.current = new BoardState(...defualtBoard);
     whiteHand.current = new Hand(handSize);
     blackHand.current = new Hand(handSize);
     reRender({ ...render });
   }
 
-  function newRound(winner: boolean, piece: string) {
+  /**
+   * Updates the score, starts a new board, sets gameOver to true if win threshold has been passed.
+   * @param winner Did white or black win that round? (Captured the other's piece)
+   * @param piece What piece got captured
+   */
+  function newRound(winner: boolean, piece: string): void {
     let scoreMod = PiecePoints.get(piece) || [0, 0];
     scoreMod = winner ? scoreMod : [scoreMod[1], scoreMod[0]];
     scores.current = scores.current.map((num, i) => num + scoreMod[i]);
@@ -99,7 +136,10 @@ function Game() {
     }, 500);
   }
 
-  function resetGame() {
+  /**
+   * Resets the board and resets the score. Called by the reset button
+   */
+  function resetGame(): void {
     resetBoard();
     gameOver.current = false;
     scores.current = [0, 0];

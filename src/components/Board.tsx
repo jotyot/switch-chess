@@ -8,13 +8,16 @@ interface Props {
   onClick: (i: number, j: number) => void;
 }
 
+/**
+ * A grid of squares with players that reflect the boardState.
+ * @param squareSize number of px the squares on the board are
+ * @param boardState a boardState class instance
+ * @param onClick a function that can be mapped to an individual square
+ * @returns A JSX element containing information about the state of the chess board + pieces
+ */
 function Board({ squareSize, boardState, onClick }: Props) {
-  const highlighted = true;
-
-  const [numRows, numCols] = boardState.getBoardSize();
-  const highlights: boolean[][] = highlighted
-    ? boardState.getBoardHighlights()
-    : [...Array(numRows)].fill(Array(numCols).fill(false));
+  const numCols = boardState.getBoardSize()[1];
+  const highlights: boolean[][] = boardState.getBoardHighlights();
 
   return (
     <div

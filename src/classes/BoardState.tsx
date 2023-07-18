@@ -4,15 +4,17 @@ import PieceMoves from "./PieceMoves";
 class BoardState {
   private white: Player;
   private black: Player;
-  private boardSize: number[];
+  private boardSize: [number, number];
   private whiteTurn: boolean = true;
   private isOver: boolean = false;
 
+  /**A function that reRenders the board */
   private updateBoard: () => void;
+  /**A function that starts a new round after the game is over */
   private newRound: (winner: boolean, piece: string) => void;
 
   constructor(
-    [numRows, numCols]: number[],
+    [numRows, numCols]: [number, number],
     whiteStart: string,
     blackStart: string,
     updateBoard: () => void,
@@ -31,7 +33,11 @@ class BoardState {
   public getBlack = () => this.black;
   public getIsOver = () => this.isOver;
 
-  public getBoardHighlights() {
+  /**
+   *
+   * @returns A 2d array of trues/falses determining that the corresponding square on the board can have a piece move to it
+   */
+  public getBoardHighlights(): boolean[][] {
     const [numRows, numCols] = this.boardSize;
     const highlights = [...Array(numRows)].map(() =>
       Array(numCols).fill(false)
@@ -43,7 +49,12 @@ class BoardState {
     return highlights;
   }
 
-  public attemptMove(target: number[], popQueue: () => string) {
+  /**
+   * Checks if a move can actually be made to the target location, then executes movePlayer accordingly
+   * @param target The [row, col] of the location of the next move
+   * @param popQueue A function that pops off the piece in the pieceQueue
+   */
+  public attemptMove(target: [number, number], popQueue: () => string): void {
     this.possibleMoves().forEach((move) => {
       if (PieceMoves.coordsEqual(target, move)) {
         this.movePlayer(target, popQueue());
@@ -51,7 +62,12 @@ class BoardState {
     });
   }
 
-  private movePlayer(target: number[], targetPiece: string) {
+  /**
+   * Sets the position of the piece to be moved + handles any capturing and new turn logic
+   * @param target The [row, col] of the location of the next move
+   * @param targetPiece The piece the player will turn into after moving
+   */
+  private movePlayer(target: [number, number], targetPiece: string): void {
     const [player, other] = this.whiteTurn
       ? [this.white, this.black]
       : [this.black, this.white];
@@ -77,8 +93,12 @@ class BoardState {
     this.updateBoard();
   }
 
-  private possibleMoves() {
-    if (this.isOver) return [[]];
+  /**
+   * Gets the possible places a player can move to on a given turn + handles draw logic
+   * @returns An array of [row, col] pairs someone can move to
+   */
+  private possibleMoves(): [number, number][] {
+    if (this.isOver) return [];
 
     const [player, other] = this.whiteTurn
       ? [this.white, this.black]
