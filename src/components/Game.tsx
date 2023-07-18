@@ -59,7 +59,7 @@ function Game() {
   }
 
   function handleHandClick(white: boolean, index: number) {
-    if (aiOpponent && !white) return;
+    //if (aiOpponent && !white) return;
 
     white
       ? whiteHand.current.setSelected(index)
