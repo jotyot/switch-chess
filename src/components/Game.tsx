@@ -77,7 +77,7 @@ function Game() {
   function handleBoardClick(i: number, j: number): void {
     const whiteTurn = boardState.current.getWhiteTurn();
 
-    if (aiOpponent && playerSwap.current ? whiteTurn : !whiteTurn) return;
+    if (aiOpponent && (playerSwap.current ? whiteTurn : !whiteTurn)) return;
 
     boardState.current.attemptMove([i, j], () =>
       newPiece(boardState.current.getWhiteTurn())
@@ -92,7 +92,7 @@ function Game() {
    * @param index Which piece was clicked on
    */
   function handleHandClick(white: boolean, index: number): void {
-    if (aiOpponent && playerSwap.current ? white : !white) return;
+    if (aiOpponent && (playerSwap.current ? white : !white)) return;
 
     white
       ? whiteHand.current.setSelected(index)
@@ -126,7 +126,7 @@ function Game() {
     blackHand.current = new Hand(handSize);
     reRender({ ...render });
 
-    if (playerSwap.current) makeAIMove();
+    if (aiOpponent && playerSwap.current) makeAIMove();
   }
 
   /**
