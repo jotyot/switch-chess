@@ -12,6 +12,7 @@ interface Props {
  * A piece on the board that can be moved
  * @param player An instance of the Player class. Contains white/black and position info
  * @param squareSize Size of the piece in px
+ * @param flipped Is the display flipped?
  * @returns A JSX element of a chess piece
  */
 function Piece({ player, squareSize, flipped }: Props) {

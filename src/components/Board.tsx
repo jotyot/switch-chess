@@ -39,7 +39,7 @@ function Board({ squareSize, boardState, flipped, onClick }: Props) {
               return (
                 <Square
                   squareSize={squareSize}
-                  color={(r + c) % 2 === 0 ? "light" : "dark"}
+                  color={(r + c) % 2 === 0 ? "White" : "Black"}
                   highlights={item}
                   onClick={() => onClick(r, c)}
                   key={j}

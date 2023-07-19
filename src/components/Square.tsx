@@ -1,3 +1,5 @@
+import ImageMap from "../config/ImageMap";
+
 interface Props {
   color: string;
   squareSize: number;
@@ -16,14 +18,28 @@ interface Props {
 function Square({ color, squareSize, highlights = false, onClick }: Props) {
   return (
     <div
-      className={"rounded btn btn-" + color}
+      className="rounded btn position-relative hover-overlay"
       style={{
         height: squareSize + "px",
         width: squareSize + "px",
         pointerEvents: highlights ? "all" : "none",
       }}
       onClick={onClick}
-    ></div>
+    >
+      <img
+        className="rounded position-absolute top-0 start-0"
+        src={ImageMap.get(color + "Square")}
+        style={{
+          height: squareSize + "px",
+          width: "auto",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        className="mask"
+        style={{ backgroundColor: "rgba(251, 251, 251, 0.3)" }}
+      ></div>
+    </div>
   );
 }
 
