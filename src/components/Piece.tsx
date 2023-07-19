@@ -1,6 +1,6 @@
 import ImageMap from "../config/ImageMap";
 import Player from "../classes/Player";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface Props {
   flipped: boolean;
@@ -15,16 +15,21 @@ interface Props {
  * @returns A JSX element of a chess piece
  */
 function Piece({ player, squareSize, flipped }: Props) {
-  const incomingImage =
-    (player.getIsWhite() ? "White" : "Black") + player.getPiece();
-  const [row, col] = player.getPos();
-  const [imageName, setImageName] = useState(
-    (player.getIsWhite() ? "White" : "Black") + "Pawn"
-  );
+  const color = player.getIsWhite() ? "White" : "Black";
 
-  if (incomingImage !== imageName)
+  const incomingImage = color + player.getPiece();
+  const [imageName, setImageName] = useState(color + player.getPiece());
+
+  const incomingPosition = player.getPos();
+  const position = useRef(player.getPos());
+
+  // Triggers when piece moves
+  if (incomingPosition !== position.current) {
+    position.current = incomingPosition;
     setTimeout(() => setImageName(incomingImage), 200);
+  }
 
+  const [row, col] = position.current;
   const vertical = row * squareSize + "px";
   const horizontal = col * squareSize + "px";
 
