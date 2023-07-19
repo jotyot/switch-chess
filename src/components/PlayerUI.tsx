@@ -41,7 +41,6 @@ function PlayerUI({ score, white, width, hand, onClick }: Props) {
                 squareSize={width * scale}
                 image={pieceColor + piece}
                 onClick={() => onClick(white, index)}
-                key={index}
               />
             );
           })
