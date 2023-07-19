@@ -1,0 +1,19 @@
+.pieceTransition {
+    --origin-left : 0px ;
+    --origin-top : 0px ;
+    animation-duration: .2s;
+    animation-name: slidein;
+    animation-timing-function: ease-out;
+}
+
+@keyframes slidein  {
+    from {
+      left: var(--origin-left);
+      top: var(--origin-top)
+    }
+  
+    to {
+      left: 0px;
+      top: 0px
+    }
+}
