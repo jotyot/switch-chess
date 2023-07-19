@@ -23,9 +23,12 @@ function ReplayButton({ winner, width, onClick }: Props) {
         backgroundColor: Colors.primary,
       }}
     >
-      <h1 className="position-absolute translate-middle-y top-50 mx-1">
+      <div
+        className="position-absolute translate-middle-y top-50 mx-1"
+        style={{ fontSize: "25px" }}
+      >
         {winner ? winner + " Wins" : "Draw"}
-      </h1>
+      </div>
       <button
         className="position-absolute translate-middle-y top-50 end-0 rounded btn mx-3 text-center fs-1 fw-bold"
         style={{

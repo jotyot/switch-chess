@@ -52,6 +52,11 @@ function Game() {
   const gameOver = useRef(false);
   const gameWinner = useRef("White");
 
+  /** use .current */
+  const displayFlip = useRef(false);
+  /** use .current */
+  const playerSwap = useRef(false);
+
   /**
    * Shorthand for getting the next piece swap
    * Modifies the queue for white or black depending on the turn
@@ -70,7 +75,9 @@ function Game() {
    * @param j Column of the square clicked
    */
   function handleBoardClick(i: number, j: number): void {
-    if (aiOpponent && !boardState.current.getWhiteTurn()) return;
+    const whiteTurn = boardState.current.getWhiteTurn();
+
+    if (aiOpponent && playerSwap.current ? whiteTurn : !whiteTurn) return;
 
     boardState.current.attemptMove([i, j], () =>
       newPiece(boardState.current.getWhiteTurn())
@@ -85,7 +92,7 @@ function Game() {
    * @param index Which piece was clicked on
    */
   function handleHandClick(white: boolean, index: number): void {
-    if (aiOpponent && !white) return;
+    if (aiOpponent && playerSwap.current ? white : !white) return;
 
     white
       ? whiteHand.current.setSelected(index)
@@ -111,10 +118,15 @@ function Game() {
    * Remakes the board with new boardstate and new hands, but score is preserved
    */
   function resetBoard(): void {
+    displayFlip.current = !displayFlip.current;
+    playerSwap.current = !playerSwap.current;
+
     boardState.current = new BoardState(...defualtBoard);
     whiteHand.current = new Hand(handSize);
     blackHand.current = new Hand(handSize);
     reRender({ ...render });
+
+    if (playerSwap.current) makeAIMove();
   }
 
   /**
@@ -123,13 +135,15 @@ function Game() {
    * @param piece What piece got captured
    */
   function newRound(winner: boolean, piece: string): void {
+    if (playerSwap.current) winner = !winner;
+
     let scoreMod = PiecePoints.get(piece) || [0, 0];
     scoreMod = winner ? scoreMod : [scoreMod[1], scoreMod[0]];
     scores.current = scores.current.map((num, i) => num + scoreMod[i]);
 
     setTimeout(() => {
       if (Math.max(...scores.current) >= winningTotal) {
-        gameWinner.current = winner ? "White" : "Black";
+        gameWinner.current = winner ? "Player 1" : "Player 2";
         gameOver.current = true;
         reRender({ ...render });
       } else resetBoard();
@@ -141,31 +155,43 @@ function Game() {
    */
   function resetGame(): void {
     resetBoard();
+    displayFlip.current = false;
+    playerSwap.current = false;
+
     gameOver.current = false;
     scores.current = [0, 0];
   }
 
+  const whiteUI = (
+    <PlayerUI
+      score={scores.current[playerSwap.current ? 1 : 0]}
+      width={squareSize * numCols}
+      white={true}
+      hand={whiteHand.current}
+      onClick={handleHandClick}
+    />
+  );
+
+  const blackUI = (
+    <PlayerUI
+      score={scores.current[playerSwap.current ? 0 : 1]}
+      width={squareSize * numCols}
+      white={false}
+      hand={blackHand.current}
+      onClick={handleHandClick}
+    />
+  );
+
   return (
     <div className="position-relative">
-      <PlayerUI
-        score={scores.current[1]}
-        width={squareSize * numCols}
-        white={false}
-        hand={blackHand.current}
-        onClick={handleHandClick}
-      />
+      {displayFlip.current ? whiteUI : blackUI}
       <Board
+        flipped={displayFlip.current}
         squareSize={squareSize}
         boardState={boardState.current}
         onClick={handleBoardClick}
       />
-      <PlayerUI
-        score={scores.current[0]}
-        width={squareSize * numCols}
-        white={true}
-        hand={whiteHand.current}
-        onClick={handleHandClick}
-      />
+      {displayFlip.current ? blackUI : whiteUI}
       {gameOver.current && (
         <ReplayButton
           onClick={resetGame}
