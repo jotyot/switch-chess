@@ -1,3 +1,8 @@
+.hover:not(:hover) {
+    transition-property: all;
+    transition-duration: 0.2s;
+}
+
 .hover:hover {
     background-color: black;
     opacity: 0.7;

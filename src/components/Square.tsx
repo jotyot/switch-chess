@@ -9,7 +9,7 @@ interface Props {
 
 /**
  * An individual chess board square
- * @param color a bpotstrap color I should change this
+ * @param color "White" "Black"
  * @param squareSize size of a side of the square in px
  * @param highlights whether the square shows clickability
  * @param onClick function that executes on click of the square
