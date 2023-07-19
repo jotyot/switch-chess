@@ -18,7 +18,7 @@ interface Props {
 function Square({ color, squareSize, highlights = false, onClick }: Props) {
   return (
     <div
-      className="rounded btn position-relative hover-overlay"
+      className="rounded btn position-relative hover"
       style={{
         height: squareSize + "px",
         width: squareSize + "px",
@@ -35,10 +35,6 @@ function Square({ color, squareSize, highlights = false, onClick }: Props) {
           pointerEvents: "none",
         }}
       />
-      <div
-        className="mask"
-        style={{ backgroundColor: "rgba(251, 251, 251, 0.3)" }}
-      ></div>
     </div>
   );
 }
