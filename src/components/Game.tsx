@@ -49,13 +49,11 @@ function Game() {
 
   const boardState = useRef(new BoardState(...defualtBoard));
   const scores = useRef([0, 0]);
-  const gameOver = useRef(false);
   const gameWinner = useRef("White");
 
-  /** use .current */
-  const displayFlip = useRef(false);
-  /** use .current */
-  const playerSwap = useRef(false);
+  /** .CURRENT */ const gameOver = useRef(false);
+  /** .CURRENT */ const displayFlip = useRef(false);
+  /** .CURRENT */ const playerSwap = useRef(false);
 
   /**
    * Shorthand for getting the next piece swap
@@ -126,7 +124,7 @@ function Game() {
     blackHand.current = new Hand(handSize);
     reRender({ ...render });
 
-    if (!gameOver.current && aiOpponent && playerSwap.current) makeAIMove();
+    if (aiOpponent && !gameOver.current && playerSwap.current) makeAIMove();
   }
 
   /**
