@@ -126,7 +126,7 @@ function Game() {
     blackHand.current = new Hand(handSize);
     reRender({ ...render });
 
-    if (aiOpponent && playerSwap.current && !gameOver) makeAIMove();
+    if (!gameOver.current && aiOpponent && playerSwap.current) makeAIMove();
   }
 
   /**
