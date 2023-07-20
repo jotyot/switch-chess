@@ -15,7 +15,7 @@ import PiecePoints from "../config/PiecePoints";
  */
 function Game() {
   const squareSize = 100;
-  const [numRows, numCols] = [4, 4];
+  const [numRows, numCols] = [3, 4];
   const handSize = 2;
   const winningTotal = 10;
 
@@ -141,7 +141,8 @@ function Game() {
 
     setTimeout(() => {
       if (Math.max(...scores.current) >= winningTotal) {
-        gameWinner.current = winner ? "Player 1" : "Player 2";
+        const [score1, score2] = scores.current;
+        gameWinner.current = score1 > score2 ? "Player 1" : "Player 2";
         gameOver.current = true;
         reRender({ ...render });
       } else resetBoard();
