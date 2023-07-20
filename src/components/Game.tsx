@@ -107,12 +107,19 @@ function Game() {
     blackHand.current = new Hand(handSize, reRender);
     reRender();
 
-    if (aiOpponent && !gameOver.current && playerSwap.current)
+    if (aiOpponent && !gameOver.current && playerSwap.current) {
+      // a little annoying but to prevent white Ai start from using blackhand
+      const aiPlayer = new AIPlayer(
+        boardState,
+        playerSwap.current ? whiteHand : blackHand
+      );
       aiPlayer.makeAIMove();
+    }
   }
 
   /**
    * Updates the score, starts a new board, sets gameOver to true if win threshold has been passed.
+   * @remarks called from inside BoardState
    * @param winner Did white or black win that round? (Captured the other's piece)
    * @param piece What piece got captured
    */

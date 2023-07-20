@@ -95,33 +95,36 @@ class AIPlayer {
     return moves[~~(Math.random() * moves.length)];
   }
 
-  /**
-   * Generates an AI move and moves the pieces on the board accordingly after a delay.
-   */
+  /** Generates an AI move and moves the pieces on the board accordingly after a delay. */
   public makeAIMove(): void {
     const board = this.boardState.current;
     const hand = this.hand.current;
 
     const AIMove = this.randomMove();
 
-    // If going to lose, switches pieces to minimize loss
-    if (this.inDanger) {
-      /** Converted hand to its corresponding point value to opponent */
-      const handToPoints = hand
-        .getHand()
-        .map((piece) => (PiecePoints.get(piece) || [0, 0])[0]);
-      /** The index of the handToPoints that matches the min number of handToPoints */
-      const index = handToPoints.findIndex(
-        (num) => num === Math.min(...handToPoints)
-      );
-
-      setTimeout(() => hand.setSelected(index), this.AISelectDelay);
-    }
+    this.minimizeLoss();
 
     if (AIMove !== null) {
       setTimeout(() => {
         board.attemptMove(AIMove, () => hand.popSelected());
       }, this.AISelectDelay + this.AIMoveDelay);
+    }
+  }
+
+  /** If going to lose, switches pieces to minimize loss */
+  private minimizeLoss(): void {
+    const hand = this.hand.current;
+    if (this.inDanger) {
+      const handStrings = hand.getHand();
+      /** Converted hand to its corresponding point value to opponent */
+      const handToPoints = handStrings.map(
+        (piece) => (PiecePoints.get(piece) || [0, 0])[0]
+      );
+      /** The index of the handToPoints that matches the min number of handToPoints */
+      const index = handToPoints.findIndex(
+        (num) => num === Math.min(...handToPoints)
+      );
+      setTimeout(() => hand.setSelected(index), this.AISelectDelay);
     }
   }
 }
