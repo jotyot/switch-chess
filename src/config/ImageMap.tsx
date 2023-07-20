@@ -1,21 +1,21 @@
-import WhitePawn from "./wP.png";
-import WhiteRook from "./wR.png";
-import WhiteBishop from "./wB.png";
-import WhiteKnight from "./wKn.png";
-import WhiteQueen from "./wQ.png";
-import WhiteKing from "./wK.png";
-import WhiteSuperPawn from "./wSP.png";
+import WhitePawn from "../assets/wP.png";
+import WhiteRook from "../assets/wR.png";
+import WhiteBishop from "../assets/wB.png";
+import WhiteKnight from "../assets/wKn.png";
+import WhiteQueen from "../assets/wQ.png";
+import WhiteKing from "../assets/wK.png";
+import WhiteSuperPawn from "../assets/wSP.png";
 
-import BlackPawn from "./bP.png";
-import BlackRook from "./bR.png";
-import BlackBishop from "./bB.png";
-import BlackKnight from "./bKn.png";
-import BlackQueen from "./bQ.png";
-import BlackKing from "./bK.png";
-import BlackSuperPawn from "./bSP.png";
+import BlackPawn from "../assets/bP.png";
+import BlackRook from "../assets/bR.png";
+import BlackBishop from "../assets/bB.png";
+import BlackKnight from "../assets/bKn.png";
+import BlackQueen from "../assets/bQ.png";
+import BlackKing from "../assets/bK.png";
+import BlackSuperPawn from "../assets/bSP.png";
 
-import WhiteSquare from "./wS.png";
-import BlackSquare from "./bS.png";
+import WhiteSquare from "../assets/wS.png";
+import BlackSquare from "../assets/bS.png";
 
 /**
  * Maps a string to its image. ex. get("WhitePawn") returns its corresponding image
