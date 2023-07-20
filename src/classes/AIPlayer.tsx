@@ -78,7 +78,7 @@ class AIPlayer {
 
     const moves = AIPlayer.possibleMoves(boardState);
 
-    return moves[~~Math.random() * moves.length];
+    return moves[~~(Math.random() * moves.length)];
   }
 }
 
