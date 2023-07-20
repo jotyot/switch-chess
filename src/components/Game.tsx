@@ -88,7 +88,7 @@ function Game() {
    * @param index Which piece was clicked on
    */
   function handleHandClick(white: boolean, index: number): void {
-    if (aiOpponent && (playerSwap.current ? white : !white)) return;
+    //if (aiOpponent && (playerSwap.current ? white : !white)) return;
 
     white
       ? whiteHand.current.setSelected(index)
