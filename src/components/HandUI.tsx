@@ -1,10 +1,13 @@
 import ImageMap from "../config/ImageMap";
 import Colors from "../config/Colors";
+import Timings from "../config/Timings";
+import { useState } from "react";
 
 interface Props {
   image: string;
   squareSize: number;
   onClick: () => void;
+  animate?: boolean;
 }
 /**
  * An individual "card" of a hand
@@ -13,33 +16,46 @@ interface Props {
  * @param onClick a function that executes on click of an individual "card"
  * @returns A JSX element of an individual card
  */
-function HandUI({ image, squareSize, onClick }: Props) {
-  const dynamicSquare = {
-    height: squareSize + "px",
-    width: squareSize + "px",
+function HandUI({ image, squareSize, onClick, animate = false }: Props) {
+  const incomingImage = image;
+  const [imageName, setImageName] = useState(image);
+
+  if (incomingImage !== imageName)
+    setTimeout(
+      () => setImageName(incomingImage),
+      Timings.moveDuration + Timings.popDelay
+    );
+
+  const transition = {
     transitionProperty: "all",
-    transitionDuration: "0.05s",
     transitionTimingFunction: "ease-out",
   };
 
   return (
     <div
       className={
-        "d-flex justify-content-center rounded translate-middle-y mx-1"
+        "d-flex justify-content-center rounded translate-middle-y mx-1 position-relative"
       }
       style={{
         backgroundColor: Colors.secondary,
-        ...dynamicSquare,
+        height: squareSize + "px",
+        width: squareSize + "px",
+        ...transition,
+        transitionDuration: "0.05s",
       }}
       onClick={onClick}
     >
       {image && (
         <img
-          src={ImageMap.get(image)}
+          src={ImageMap.get(imageName)}
           alt=""
-          className="row"
+          className="translate-middle top-50 start-50 position-absolute"
           style={{
-            ...dynamicSquare,
+            height: squareSize * (animate ? 0.1 : 1) + "px",
+            ...transition,
+            transitionDuration:
+              // to preserve the normal switch hands size change speed
+              (animate ? Timings.popDuration / 1000 : 0.05) + "s",
           }}
         ></img>
       )}

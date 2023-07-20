@@ -4,6 +4,8 @@ class Hand {
   private pieceQueue = new PieceQueue();
   private hand = new Map<number, string>();
   private selected = 0;
+  /** Exclusively used to the pop animation in PlayerUI */
+  private animate = () => {};
   constructor(handSize: number) {
     for (let i = 0; i < handSize; i++) {
       this.hand.set(i, this.pieceQueue.popQueue());
@@ -19,10 +21,9 @@ class Hand {
   public popSelected(): string {
     // save output piece. Should never be null
     let piece = this.hand.get(this.selected) || "Pawn";
-
+    this.animate();
     // change selected 'card' to something else, then change what 'card' is selected
     this.hand.set(this.selected, this.pieceQueue.popQueue());
-
     return piece;
   }
   /**
@@ -33,5 +34,6 @@ class Hand {
     return [...this.hand.values()];
   }
   public getSelected = () => this.selected;
+  public setAnimation = (animate: () => void) => (this.animate = animate);
 }
 export default Hand;

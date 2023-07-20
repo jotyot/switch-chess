@@ -53,11 +53,13 @@ function Board({ squareSize, boardState, flipped, onClick }: Props) {
         player={boardState.getWhite()}
         squareSize={squareSize}
         flipped={flipped}
+        boardSize={[numRows, numCols]}
       />
       <Piece
         player={boardState.getBlack()}
         squareSize={squareSize}
         flipped={flipped}
+        boardSize={[numRows, numCols]}
       />
     </div>
   );

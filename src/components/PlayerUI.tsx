@@ -1,6 +1,8 @@
 import HandUI from "./HandUI";
 import Hand from "../classes/Hand";
 import Colors from "../config/Colors";
+import Timings from "../config/Timings";
+import { useState } from "react";
 
 interface Props {
   hand: Hand;
@@ -21,6 +23,18 @@ interface Props {
  */
 function PlayerUI({ score, white, width, hand, onClick }: Props) {
   const pieceColor = white ? "White" : "Black";
+
+  const [animate, setAnimate] = useState(false);
+
+  const popStart = Timings.moveDuration + Timings.popDelay;
+
+  function animation() {
+    setTimeout(() => setAnimate(true), popStart);
+    setTimeout(() => setAnimate(false), popStart + Timings.popDuration);
+  }
+
+  hand.setAnimation(animation);
+
   return (
     <div
       className="container position-relative rounded my-2"
@@ -35,13 +49,15 @@ function PlayerUI({ score, white, width, hand, onClick }: Props) {
         {
           // Selected element is larger
           hand.getHand().map((piece, index) => {
-            const scale = hand.getSelected() === index ? 0.25 : 0.18;
+            const selected = hand.getSelected() === index;
+            const scale = selected ? 0.25 : 0.18;
             return (
               <HandUI
                 squareSize={width * scale}
                 image={pieceColor + piece}
                 onClick={() => onClick(white, index)}
                 key={index}
+                animate={selected && animate}
               />
             );
           })
