@@ -1,24 +1,37 @@
 import BoardState from "./BoardState";
+import Hand from "./Hand";
 import PieceMoves from "./PieceMoves";
+import PiecePoints from "../config/PiecePoints";
 
 /**
  * Contains functions for generating a move according to an ai player
  */
 class AIPlayer {
-  // If a player can capture, it will. Otherwise it will try
-  // not to land in a square that can be captured
+  private boardState: React.MutableRefObject<BoardState>;
+  private hand: React.MutableRefObject<Hand>;
+  private AISelectDelay = 300;
+  private AIMoveDelay = 300;
+  private inDanger = false;
+  constructor(
+    boardState: React.MutableRefObject<BoardState>,
+    hand: React.MutableRefObject<Hand>
+  ) {
+    this.boardState = boardState;
+    this.hand = hand;
+  }
 
   /**
    * Gets the possible moves of the current player that won't get immediately captured
    * @remarks if the player can capture, the only possible move will reduce to that move
    * if the player avoid being captured, it returns the normal possible moveset.
-   * @param boardState an instance of the BoardState class
    * @returns array of possible positions that won't get immediately captured
    */
-  public static possibleMoves(boardState: BoardState): [number, number][] {
-    const [player, other] = boardState.getWhiteTurn()
-      ? [boardState.getWhite(), boardState.getBlack()]
-      : [boardState.getBlack(), boardState.getWhite()];
+  private possibleMoves(): [number, number][] {
+    const board = this.boardState.current;
+
+    const [player, other] = board.getWhiteTurn()
+      ? [board.getWhite(), board.getBlack()]
+      : [board.getBlack(), board.getWhite()];
 
     const playerPos = player.getPos();
     const otherPos = other.getPos();
@@ -30,8 +43,8 @@ class AIPlayer {
       playerPiece,
       playerPos,
       otherPos,
-      boardState.getBoardSize(),
-      boardState.getWhiteTurn()
+      board.getBoardSize(),
+      board.getWhiteTurn()
     );
 
     // If piece can capture player
@@ -47,8 +60,8 @@ class AIPlayer {
       otherPiece,
       otherPos,
       playerPos,
-      boardState.getBoardSize(),
-      !boardState.getWhiteTurn(),
+      board.getBoardSize(),
+      !board.getWhiteTurn(),
       true
     );
 
@@ -63,7 +76,10 @@ class AIPlayer {
       return notOverlap;
     });
 
-    if (safeMoves.length > 0) playerMoves = safeMoves;
+    if (safeMoves.length > 0) {
+      playerMoves = safeMoves;
+      this.inDanger = false;
+    } else this.inDanger = true;
 
     return playerMoves;
   }
@@ -73,12 +89,40 @@ class AIPlayer {
    * @param boardState instance of boardState class
    * @returns one position randomly chosen from the possible moves
    */
-  public static randomMove(boardState: BoardState) {
-    if (boardState.getIsOver()) return null;
-
-    const moves = AIPlayer.possibleMoves(boardState);
+  private randomMove() {
+    const moves = this.possibleMoves();
 
     return moves[~~(Math.random() * moves.length)];
+  }
+
+  /**
+   * Generates an AI move and moves the pieces on the board accordingly after a delay.
+   */
+  public makeAIMove(): void {
+    const board = this.boardState.current;
+    const hand = this.hand.current;
+
+    const AIMove = this.randomMove();
+
+    // If going to lose, switches pieces to minimize loss
+    if (this.inDanger) {
+      /** Converted hand to its corresponding point value to opponent */
+      const handToPoints = hand
+        .getHand()
+        .map((piece) => (PiecePoints.get(piece) || [0, 0])[0]);
+      /** The index of the handToPoints that matches the min number of handToPoints */
+      const index = handToPoints.findIndex(
+        (num) => num === Math.min(...handToPoints)
+      );
+
+      setTimeout(() => hand.setSelected(index), this.AISelectDelay);
+    }
+
+    if (AIMove !== null) {
+      setTimeout(() => {
+        board.attemptMove(AIMove, () => hand.popSelected());
+      }, this.AISelectDelay + this.AIMoveDelay);
+    }
   }
 }
 

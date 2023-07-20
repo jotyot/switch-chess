@@ -20,13 +20,18 @@ function Game() {
   const winningTotal = 10;
 
   const aiOpponent = true;
-  const aiDelay = 500;
 
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
-  const [render, reRender] = useState([0]);
+  const [render, setRender] = useState([0]);
 
-  const whiteHand = useRef(new Hand(handSize));
-  const blackHand = useRef(new Hand(handSize));
+  const scores = useRef([0, 0]);
+  const gameWinner = useRef("White");
+
+  /** .CURRENT */ const gameOver = useRef(false);
+  /** .CURRENT */ const displayFlip = useRef(false);
+  /** .CURRENT */ const playerSwap = useRef(false);
+
+  const reRender = () => setRender({ ...render });
 
   /**
    * Arguments for a default board in a tuple so I dont have to repeat this monstrosity twice
@@ -37,23 +42,16 @@ function Game() {
     string,
     () => void,
     (winner: boolean, piece: string) => void
-  ] = [
-    [numRows, numCols],
-    "King",
-    "King",
-    () => {
-      reRender({ ...render });
-    },
-    newRound,
-  ];
-
+  ] = [[numRows, numCols], "King", "King", reRender, newRound];
   const boardState = useRef(new BoardState(...defualtBoard));
-  const scores = useRef([0, 0]);
-  const gameWinner = useRef("White");
 
-  /** .CURRENT */ const gameOver = useRef(false);
-  /** .CURRENT */ const displayFlip = useRef(false);
-  /** .CURRENT */ const playerSwap = useRef(false);
+  const whiteHand = useRef(new Hand(handSize, reRender));
+  const blackHand = useRef(new Hand(handSize, reRender));
+
+  const aiPlayer = new AIPlayer(
+    boardState,
+    playerSwap.current ? whiteHand : blackHand
+  );
 
   /**
    * Shorthand for getting the next piece swap
@@ -80,7 +78,7 @@ function Game() {
     boardState.current.attemptMove([i, j], () =>
       newPiece(boardState.current.getWhiteTurn())
     );
-    if (aiOpponent) makeAIMove();
+    if (aiOpponent) aiPlayer.makeAIMove();
   }
 
   /**
@@ -95,21 +93,6 @@ function Game() {
     white
       ? whiteHand.current.setSelected(index)
       : blackHand.current.setSelected(index);
-    reRender({ ...render });
-  }
-
-  /**
-   * Generates an AI move and moves the pieces on the board accordingly after a delay.
-   */
-  function makeAIMove(): void {
-    const AIMove = AIPlayer.randomMove(boardState.current);
-    if (AIMove != null) {
-      setTimeout(() => {
-        boardState.current.attemptMove(AIMove, () =>
-          newPiece(boardState.current.getWhiteTurn())
-        );
-      }, aiDelay);
-    }
   }
 
   /**
@@ -120,11 +103,12 @@ function Game() {
     playerSwap.current = !playerSwap.current;
 
     boardState.current = new BoardState(...defualtBoard);
-    whiteHand.current = new Hand(handSize);
-    blackHand.current = new Hand(handSize);
-    reRender({ ...render });
+    whiteHand.current = new Hand(handSize, reRender);
+    blackHand.current = new Hand(handSize, reRender);
+    reRender();
 
-    if (aiOpponent && !gameOver.current && playerSwap.current) makeAIMove();
+    if (aiOpponent && !gameOver.current && playerSwap.current)
+      aiPlayer.makeAIMove();
   }
 
   /**
@@ -144,7 +128,7 @@ function Game() {
         const [score1, score2] = scores.current;
         gameWinner.current = score1 > score2 ? "Player 1" : "Player 2";
         gameOver.current = true;
-        reRender({ ...render });
+        reRender();
       } else resetBoard();
     }, 500);
   }

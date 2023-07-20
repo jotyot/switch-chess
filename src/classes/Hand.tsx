@@ -4,15 +4,20 @@ class Hand {
   private pieceQueue = new PieceQueue();
   private hand = new Map<number, string>();
   private selected = 0;
+  private reRender: () => void;
   /** Exclusively used to the pop animation in PlayerUI */
   private animate = () => {};
-  constructor(handSize: number) {
+  constructor(handSize: number, reRender: () => void) {
     for (let i = 0; i < handSize; i++) {
       this.hand.set(i, this.pieceQueue.popQueue());
     }
+    this.reRender = reRender;
   }
 
-  public setSelected = (index: number) => (this.selected = index);
+  public setSelected = (index: number) => {
+    this.selected = index;
+    this.reRender();
+  };
 
   /**
    * Gets the piece of the selected card and replaces it from the queue
