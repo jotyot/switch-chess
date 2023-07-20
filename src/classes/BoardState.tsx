@@ -43,7 +43,7 @@ class BoardState {
       Array(numCols).fill(false)
     );
     this.possibleMoves().forEach(([r, c]) => {
-      if (r > -1 && r < numCols && c > -1 && c < numCols)
+      if (r > -1 && r < numRows && c > -1 && c < numCols)
         highlights[r][c] = true;
     });
     return highlights;
