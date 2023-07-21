@@ -7,7 +7,7 @@ class PieceMoves {
   public static movesFromBoardState(
     boardState: BoardState,
     playerTurn: boolean,
-    attacks = true
+    attack = true
   ): [number, number][] {
     const white = boardState.getWhite();
     const black = boardState.getBlack();
@@ -25,7 +25,8 @@ class PieceMoves {
       playerPos,
       otherPos,
       [numRows, numCols],
-      isWhite
+      isWhite,
+      attack
     );
   }
 
@@ -37,6 +38,7 @@ class PieceMoves {
    * @param boardSize [numRows, numCols]
    * @param isWhite is this piece white or black?
    * @param obstructed is the moveset affected by where the other player is?
+   * @param attack basically return the pawn's capture moves or noncapture moves
    * @returns An array of positions the player can move to
    */
   public static possibleMoves(
@@ -45,7 +47,8 @@ class PieceMoves {
     otherPos: [number, number],
     boardSize: [number, number],
     isWhite: boolean,
-    obstructed = true
+    obstructed = true,
+    attack = true
   ): [number, number][] {
     const [numRows, numCols] = boardSize;
     const maxLength = Math.max(numRows, numCols);
@@ -53,7 +56,14 @@ class PieceMoves {
     const pieceMoves = new Map([
       [
         "Pawn",
-        PieceMoves.pawnMoves(playerPos, otherPos, numRows, isWhite, obstructed),
+        PieceMoves.pawnMoves(
+          playerPos,
+          otherPos,
+          numRows,
+          isWhite,
+          obstructed,
+          attack
+        ),
       ],
       [
         "Rook",
@@ -98,7 +108,8 @@ class PieceMoves {
     otherPos: [number, number],
     numRows: number,
     isWhite: boolean,
-    obstructed = false
+    obstructed = true,
+    attacks = true
   ) {
     const direction = isWhite ? -1 : 1;
     const moves: [number, number][] = Array(0).fill(null);
@@ -119,7 +130,7 @@ class PieceMoves {
       moves.push(otherPos);
     // If this moveset was generated for AI,
     // assume otherPos is in capture position
-    if (obstructed) {
+    if (!obstructed && attacks) {
       moves.push([r + direction, c + 1]);
       moves.push([r + direction, c - 1]);
     }
