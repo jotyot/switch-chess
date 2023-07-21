@@ -34,29 +34,12 @@ class BoardState {
   public getIsOver = () => this.isOver;
 
   /**
-   * @param isWhite the highlights for the white player? or black?
-   * @param [forAI=false] enable to assume the other player has no impact on movement
-   * @returns A 2d array of trues/falses determining that the corresponding square on the board can have a piece move to it
-   */
-  public getBoardHighlights(isWhite: boolean, forAI = false): boolean[][] {
-    const [numRows, numCols] = this.boardSize;
-    const highlights = [...Array(numRows)].map(() =>
-      Array(numCols).fill(false)
-    );
-    this.possibleMoves(isWhite, forAI).forEach(([r, c]) => {
-      if (r > -1 && r < numRows && c > -1 && c < numCols)
-        highlights[r][c] = true;
-    });
-    return highlights;
-  }
-
-  /**
    * Checks if a move can actually be made to the target location, then executes movePlayer accordingly
    * @param target The [row, col] of the location of the next move
    * @param popQueue A function that pops off the piece in the pieceQueue
    */
   public attemptMove(target: [number, number], popQueue: () => string): void {
-    this.possibleMoves(this.whiteTurn).forEach((move) => {
+    this.possibleMoves().forEach((move) => {
       if (PieceMoves.coordsEqual(target, move)) {
         this.movePlayer(target, popQueue());
       }
@@ -100,21 +83,10 @@ class BoardState {
    * @param [forAI=false] considers *every* possible move the piece can make
    * @returns An array of [row, col] pairs someone can move to
    */
-  private possibleMoves(isWhite: boolean, forAI = false): [number, number][] {
+  private possibleMoves(): [number, number][] {
     if (this.isOver) return [];
 
-    const [player, other] = isWhite
-      ? [this.white, this.black]
-      : [this.black, this.white];
-
-    const possibleMoves = PieceMoves.possibleMoves(
-      player.getPiece(),
-      player.getPos(),
-      other.getPos(),
-      this.boardSize,
-      isWhite,
-      forAI
-    );
+    const possibleMoves = PieceMoves.movesFromBoardState(this, true);
 
     if (possibleMoves.length < 1) {
       this.isOver = true;

@@ -4,6 +4,18 @@ import BoardState from "./BoardState";
  * Contains methods for getting the possible moves of pieces given a bunch of properties.
  */
 class PieceMoves {
+  public static movesToMap(
+    moves: [number, number][],
+    boardSize: [number, number]
+  ): boolean[][] {
+    const [numRows, numCols] = boardSize;
+    let map = [...Array(numRows)].map(() => Array(numCols).fill(false));
+
+    moves.forEach(([r, c]) => (map[r][c] = true));
+
+    return map;
+  }
+
   public static movesFromBoardState(
     boardState: BoardState,
     playerTurn: boolean,
@@ -26,6 +38,7 @@ class PieceMoves {
       otherPos,
       [numRows, numCols],
       isWhite,
+      playerTurn,
       attack
     );
   }
@@ -100,7 +113,7 @@ class PieceMoves {
    * @param otherPos [row, col] of the opponents's position
    * @param numRows How many rows the board has
    * @param isWhite Is the player isWhite?
-   * @param obstructed Is this used for AI?
+   * @param obstructed is the moveset obstructed
    * @returns An array of positions
    */
   public static pawnMoves(
@@ -109,7 +122,7 @@ class PieceMoves {
     numRows: number,
     isWhite: boolean,
     obstructed = true,
-    attacks = true
+    attack = true
   ) {
     const direction = isWhite ? -1 : 1;
     const moves: [number, number][] = Array(0).fill(null);
@@ -117,10 +130,11 @@ class PieceMoves {
     if (!PieceMoves.coordsEqual(otherPos, [r + direction, c]))
       moves.push([r + direction, c]);
     if (
+      (!obstructed && !attack) ||
       // 0 is the top row
-      !PieceMoves.coordsEqual(otherPos, [r + direction * 2, c]) &&
-      !PieceMoves.coordsEqual(otherPos, [r + direction, c]) &&
-      ((isWhite && r == numRows - 1) || (!isWhite && r == 0))
+      (!PieceMoves.coordsEqual(otherPos, [r + direction * 2, c]) &&
+        !PieceMoves.coordsEqual(otherPos, [r + direction, c]) &&
+        ((isWhite && r == numRows - 1) || (!isWhite && r == 0)))
     )
       moves.push([r + direction * 2, c]);
     if (
@@ -130,7 +144,7 @@ class PieceMoves {
       moves.push(otherPos);
     // If this moveset was generated for AI,
     // assume otherPos is in capture position
-    if (!obstructed && attacks) {
+    if (!obstructed && attack) {
       moves.push([r + direction, c + 1]);
       moves.push([r + direction, c - 1]);
     }

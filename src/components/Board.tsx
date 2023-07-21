@@ -2,6 +2,7 @@ import Square from "./Square";
 import BoardState from "../classes/BoardState";
 import Piece from "./Piece";
 import { useState } from "react";
+import PieceMoves from "../classes/PieceMoves";
 
 interface Props {
   boardState: BoardState;
@@ -19,12 +20,10 @@ interface Props {
  */
 function Board({ squareSize, boardState, flipped, onClick }: Props) {
   const [numRows, numCols] = boardState.getBoardSize();
+  const playerMoves = PieceMoves.movesFromBoardState(boardState, true);
 
-  let highlights: boolean[][] = boardState.getBoardHighlights(
-    boardState.getWhiteTurn()
-  );
+  let highlights = PieceMoves.movesToMap(playerMoves, [numRows, numCols]);
   if (flipped) highlights = highlights.map((row) => row.reverse()).reverse();
-
   const [guides, setGuides] = useState(
     [...Array(numRows)].map(() => Array(numCols).fill(false))
   );
@@ -34,11 +33,10 @@ function Board({ squareSize, boardState, flipped, onClick }: Props) {
    * @param isWhite are we getting the guides of the white piece?
    */
   function showGuides(isWhite: boolean): void {
-    let guides = boardState.getBoardHighlights(
-      isWhite,
-      // for AI when it's currently not their turn
-      boardState.getWhiteTurn() ? !isWhite : isWhite
-    );
+    const isPlayer = boardState.getWhiteTurn() ? isWhite : !isWhite;
+    const moves = PieceMoves.movesFromBoardState(boardState, isPlayer);
+
+    let guides = PieceMoves.movesToMap(moves, [numRows, numCols]);
     if (flipped) guides = guides.map((row) => row.reverse()).reverse();
     setGuides(guides);
   }
