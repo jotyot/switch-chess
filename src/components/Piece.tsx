@@ -6,6 +6,8 @@ import { useState, useRef } from "react";
 interface Props {
   boardSize: [number, number];
   flipped: boolean;
+  onHover: () => void;
+  offHover: () => void;
   player: Player;
   squareSize: number;
 }
@@ -17,7 +19,14 @@ interface Props {
  * @param flipped Is the display flipped?
  * @returns A JSX element of a chess piece
  */
-function Piece({ player, squareSize, flipped, boardSize }: Props) {
+function Piece({
+  player,
+  squareSize,
+  flipped,
+  boardSize,
+  onHover,
+  offHover,
+}: Props) {
   const color = player.getIsWhite() ? "White" : "Black";
   const [numRows, numCols] = boardSize;
 
@@ -46,27 +55,44 @@ function Piece({ player, squareSize, flipped, boardSize }: Props) {
 
   return (
     player.getAlive() && (
-      <img
-        className="position-absolute translate-middle"
-        src={ImageMap.get(imageName)}
+      <div
+        className="position-absolute"
         style={{
           top: row * squareSize + squareSize / 2 + "px",
           left: col * squareSize + squareSize / 2 + "px",
-
-          width: squareSize * (animate ? 0.1 : 1) + "px",
-          pointerEvents: "none",
-
-          transitionProperty: "left, top, width",
+          transitionProperty: "left, top",
           transitionDuration:
             Timings.moveDuration / 1000 +
             "s," +
             Timings.moveDuration / 1000 +
-            "s," +
-            Timings.popDuration / 1000 +
             "s",
           transitionTimingFunction: "ease-out",
+          pointerEvents: "none",
         }}
-      ></img>
+      >
+        <img
+          className="position-absolute translate-middle"
+          src={ImageMap.get(imageName)}
+          style={{
+            width: squareSize * (animate ? 0.1 : 1) + "px",
+            transitionProperty: "width",
+            transitionDuration: Timings.popDuration / 1000 + "s",
+            transitionTimingFunction: "ease-out",
+            pointerEvents: "none",
+          }}
+        />
+        <div
+          className="position-absolute translate-middle"
+          style={{
+            // smaller area that can be hovered over
+            width: squareSize * 0.4,
+            height: squareSize * 0.4,
+            pointerEvents: "all",
+          }}
+          onMouseOver={onHover}
+          onMouseLeave={offHover}
+        ></div>
+      </div>
     )
   );
 }

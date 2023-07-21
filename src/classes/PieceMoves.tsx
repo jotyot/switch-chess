@@ -28,12 +28,15 @@ class PieceMoves {
         "Pawn",
         PieceMoves.pawnMoves(playerPos, otherPos, numRows, white, forAI),
       ],
-      ["Rook", PieceMoves.rookMoves(playerPos, otherPos, maxLength)],
-      ["Bishop", PieceMoves.bishopMoves(playerPos, otherPos, maxLength)],
+      ["Rook", PieceMoves.rookMoves(playerPos, otherPos, maxLength, forAI)],
+      ["Bishop", PieceMoves.bishopMoves(playerPos, otherPos, maxLength, forAI)],
       ["Knight", PieceMoves.knightMoves(playerPos)],
-      ["Queen", PieceMoves.queenMoves(playerPos, otherPos, maxLength)],
+      ["Queen", PieceMoves.queenMoves(playerPos, otherPos, maxLength, forAI)],
       ["King", PieceMoves.kingMoves(playerPos)],
-      ["SuperPawn", PieceMoves.superPawnMoves(playerPos, otherPos, maxLength)],
+      [
+        "SuperPawn",
+        PieceMoves.superPawnMoves(playerPos, otherPos, maxLength, forAI),
+      ],
     ]);
     let moves = pieceMoves.get(piece) || [];
     moves = moves.filter(
@@ -97,7 +100,8 @@ class PieceMoves {
   public static rookMoves(
     playerPos: [number, number],
     otherPos: [number, number],
-    maxLength: number
+    maxLength: number,
+    forAI = false
   ): [number, number][] {
     const moves: [number, number][] = Array(0).fill(null);
     const [r, c] = playerPos;
@@ -111,7 +115,7 @@ class PieceMoves {
       ];
       directions.forEach((direction, index) => {
         if (clear_path[index]) moves.push(direction);
-        if (PieceMoves.coordsEqual(direction, otherPos))
+        if (!forAI && PieceMoves.coordsEqual(direction, otherPos))
           clear_path[index] = false;
       });
     }
@@ -128,7 +132,8 @@ class PieceMoves {
   public static bishopMoves(
     playerPos: [number, number],
     otherPos: [number, number],
-    maxLength: number
+    maxLength: number,
+    forAI = false
   ) {
     const moves: [number, number][] = Array(0).fill(null);
     const [r, c] = playerPos;
@@ -142,7 +147,7 @@ class PieceMoves {
       ];
       directions.forEach((direction, index) => {
         if (clear_path[index]) moves.push(direction);
-        if (PieceMoves.coordsEqual(direction, otherPos))
+        if (!forAI && PieceMoves.coordsEqual(direction, otherPos))
           clear_path[index] = false;
       });
     }
@@ -178,11 +183,12 @@ class PieceMoves {
   public static queenMoves(
     playerPos: [number, number],
     otherPos: [number, number],
-    maxLength: number
+    maxLength: number,
+    forAI = false
   ) {
     return [
-      ...PieceMoves.rookMoves(playerPos, otherPos, maxLength),
-      ...PieceMoves.bishopMoves(playerPos, otherPos, maxLength),
+      ...PieceMoves.rookMoves(playerPos, otherPos, maxLength, forAI),
+      ...PieceMoves.bishopMoves(playerPos, otherPos, maxLength, forAI),
     ];
   }
 
@@ -215,10 +221,11 @@ class PieceMoves {
   public static superPawnMoves(
     playerPos: [number, number],
     otherPos: [number, number],
-    maxLength: number
+    maxLength: number,
+    forAI = false
   ) {
     return [
-      ...PieceMoves.queenMoves(playerPos, otherPos, maxLength),
+      ...PieceMoves.queenMoves(playerPos, otherPos, maxLength, forAI),
       ...PieceMoves.knightMoves(playerPos),
     ];
   }

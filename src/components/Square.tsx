@@ -2,8 +2,9 @@ import ImageMap from "../config/ImageMap";
 
 interface Props {
   color: string;
+  clickable: boolean;
   squareSize: number;
-  highlights: boolean;
+  guides: boolean;
   onClick: () => void;
 }
 
@@ -11,31 +12,46 @@ interface Props {
  * An individual chess board square
  * @param color "White" "Black"
  * @param squareSize size of a side of the square in px
- * @param highlights whether the square shows clickability
+ * @param clickable whether the square shows clickability
  * @param onClick function that executes on click of the square
  * @returns a JSX element of the chess board square
  */
-function Square({ color, squareSize, highlights = false, onClick }: Props) {
+function Square({ color, squareSize, clickable, guides, onClick }: Props) {
   return (
-    <div
-      className="rounded btn position-relative hover"
-      style={{
-        height: squareSize + "px",
-        width: squareSize + "px",
-        pointerEvents: highlights ? "all" : "none",
-      }}
-      onClick={onClick}
-    >
-      <img
-        className="rounded position-absolute top-0 start-0"
-        src={ImageMap.get(color + "Square")}
+    <>
+      <div
+        className="rounded btn position-relative hover"
         style={{
           height: squareSize + "px",
-          width: "auto",
-          pointerEvents: "none",
+          width: squareSize + "px",
+          pointerEvents: clickable ? "all" : "none",
         }}
-      />
-    </div>
+        onClick={onClick}
+      >
+        <img
+          className="rounded position-absolute top-0 start-0"
+          src={ImageMap.get(color + "Square")}
+          style={{
+            height: squareSize + "px",
+            width: "auto",
+            pointerEvents: "none",
+          }}
+        />
+        <div
+          className="rounded position-absolute top-0 start-0"
+          style={{
+            height: squareSize + "px",
+            width: squareSize + "px",
+            backgroundColor: "blue",
+            opacity: guides ? "0.1" : "0",
+            transitionProperty: "opacity",
+            transitionDuration: "0.2s",
+            transitionTimingFunction: "ease-out",
+            pointerEvents: "none",
+          }}
+        />
+      </div>
+    </>
   );
 }
 

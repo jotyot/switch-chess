@@ -15,7 +15,7 @@ import PiecePoints from "../config/PiecePoints";
  */
 function Game() {
   const squareSize = 100;
-  const [numRows, numCols] = [4, 4];
+  const [numRows, numCols] = [3, 4];
   const handSize = 2;
   const winningTotal = 10;
 

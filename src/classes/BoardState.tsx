@@ -34,15 +34,16 @@ class BoardState {
   public getIsOver = () => this.isOver;
 
   /**
-   *
+   * @param white the highlights for the white player? or black?
+   * @param [forAI=false] enable to assume the other player has no impact on movement
    * @returns A 2d array of trues/falses determining that the corresponding square on the board can have a piece move to it
    */
-  public getBoardHighlights(): boolean[][] {
+  public getBoardHighlights(white: boolean, forAI = false): boolean[][] {
     const [numRows, numCols] = this.boardSize;
     const highlights = [...Array(numRows)].map(() =>
       Array(numCols).fill(false)
     );
-    this.possibleMoves().forEach(([r, c]) => {
+    this.possibleMoves(white, forAI).forEach(([r, c]) => {
       if (r > -1 && r < numRows && c > -1 && c < numCols)
         highlights[r][c] = true;
     });
@@ -55,7 +56,7 @@ class BoardState {
    * @param popQueue A function that pops off the piece in the pieceQueue
    */
   public attemptMove(target: [number, number], popQueue: () => string): void {
-    this.possibleMoves().forEach((move) => {
+    this.possibleMoves(this.whiteTurn).forEach((move) => {
       if (PieceMoves.coordsEqual(target, move)) {
         this.movePlayer(target, popQueue());
       }
@@ -95,12 +96,13 @@ class BoardState {
 
   /**
    * Gets the possible places a player can move to on a given turn + handles draw logic
+   * @param isWhite the moves of the white player? or black?
    * @returns An array of [row, col] pairs someone can move to
    */
-  private possibleMoves(): [number, number][] {
+  private possibleMoves(isWhite: boolean, forAI = false): [number, number][] {
     if (this.isOver) return [];
 
-    const [player, other] = this.whiteTurn
+    const [player, other] = isWhite
       ? [this.white, this.black]
       : [this.black, this.white];
 
@@ -109,7 +111,8 @@ class BoardState {
       player.getPos(),
       other.getPos(),
       this.boardSize,
-      this.whiteTurn
+      isWhite,
+      forAI
     );
 
     if (possibleMoves.length < 1) {
