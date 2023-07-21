@@ -66,38 +66,60 @@ class PieceMoves {
     const [numRows, numCols] = boardSize;
     const maxLength = Math.max(numRows, numCols);
 
-    const pieceMoves = new Map([
-      [
-        "Pawn",
-        PieceMoves.pawnMoves(
+    let moves: [number, number][];
+    switch (piece) {
+      case "Pawn":
+        moves = PieceMoves.pawnMoves(
           playerPos,
           otherPos,
           numRows,
           isWhite,
           obstructed,
           attack
-        ),
-      ],
-      [
-        "Rook",
-        PieceMoves.rookMoves(playerPos, otherPos, maxLength, obstructed),
-      ],
-      [
-        "Bishop",
-        PieceMoves.bishopMoves(playerPos, otherPos, maxLength, obstructed),
-      ],
-      ["Knight", PieceMoves.knightMoves(playerPos)],
-      [
-        "Queen",
-        PieceMoves.queenMoves(playerPos, otherPos, maxLength, obstructed),
-      ],
-      ["King", PieceMoves.kingMoves(playerPos)],
-      [
-        "SuperPawn",
-        PieceMoves.superPawnMoves(playerPos, otherPos, maxLength, obstructed),
-      ],
-    ]);
-    let moves = pieceMoves.get(piece) || [];
+        );
+        break;
+      case "Rook":
+        moves = PieceMoves.rookMoves(
+          playerPos,
+          otherPos,
+          maxLength,
+          obstructed
+        );
+        break;
+      case "Bishop":
+        moves = PieceMoves.bishopMoves(
+          playerPos,
+          otherPos,
+          maxLength,
+          obstructed
+        );
+        break;
+      case "Knight":
+        moves = PieceMoves.knightMoves(playerPos);
+        break;
+      case "Queen":
+        moves = PieceMoves.queenMoves(
+          playerPos,
+          otherPos,
+          maxLength,
+          obstructed
+        );
+        break;
+      case "King":
+        moves = PieceMoves.kingMoves(playerPos);
+        break;
+      case "SuperPawn":
+        moves = PieceMoves.superPawnMoves(
+          playerPos,
+          otherPos,
+          maxLength,
+          obstructed
+        );
+        break;
+      default:
+        moves = [];
+    }
+
     moves = moves.filter(
       ([r, c]) => r > -1 && r < numRows && c > -1 && c < numCols
     );

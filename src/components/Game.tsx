@@ -19,7 +19,7 @@ function Game() {
   const handSize = 2;
   const winningTotal = 10;
 
-  const aiOpp = useRef(false);
+  const aiOpp = useRef(true);
 
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
   const [render, setRender] = useState([0]);
