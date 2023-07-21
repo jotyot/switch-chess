@@ -42,8 +42,7 @@ class AIPlayer {
     });
     if (canCapture) return [otherPos];
 
-    // Ai = true
-    const otherMoves = PieceMoves.movesFromBoardState(board, false, true);
+    const otherMoves = PieceMoves.movesFromBoardState(board, false, false);
 
     /**
      * Moves that dont overlap with opponenets move next turn

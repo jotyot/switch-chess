@@ -153,11 +153,11 @@ class PieceMoves {
     if (!PieceMoves.coordsEqual(otherPos, [r + direction, c]))
       moves.push([r + direction, c]);
     if (
-      (!obstructed && !attack) ||
-      // 0 is the top row
-      (!PieceMoves.coordsEqual(otherPos, [r + direction * 2, c]) &&
-        !PieceMoves.coordsEqual(otherPos, [r + direction, c]) &&
-        ((isWhite && r == numRows - 1) || (!isWhite && r == 0)))
+      !obstructed &&
+      !attack &&
+      !PieceMoves.coordsEqual(otherPos, [r + direction * 2, c]) &&
+      !PieceMoves.coordsEqual(otherPos, [r + direction, c]) &&
+      ((isWhite && r == numRows - 1) || (!isWhite && r == 0))
     )
       moves.push([r + direction * 2, c]);
     if (
