@@ -29,7 +29,11 @@ function Board({ squareSize, boardState, flipped, onClick }: Props) {
     [...Array(numRows)].map(() => Array(numCols).fill(false))
   );
 
-  function showGuides(isWhite: boolean) {
+  /**
+   * sets the current highlights to those of the piece we are hovering
+   * @param isWhite are we getting the guides of the white piece?
+   */
+  function showGuides(isWhite: boolean): void {
     let guides = boardState.getBoardHighlights(
       isWhite,
       boardState.getWhiteTurn() ? !isWhite : isWhite

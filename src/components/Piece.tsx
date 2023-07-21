@@ -17,6 +17,8 @@ interface Props {
  * @param player An instance of the Player class. Contains white/black and position info
  * @param squareSize Size of the piece in px
  * @param flipped Is the display flipped?
+ * @param onHover a function to invoke when the piece is hovered over
+ * @param offHover a function to invoke when the piece is stopped being hovered over
  * @returns A JSX element of a chess piece
  */
 function Piece({
@@ -54,6 +56,7 @@ function Piece({
   if (flipped) [row, col] = [numRows - row - 1, numCols - col - 1];
 
   return (
+    /** sizing and movement */
     player.getAlive() && (
       <div
         className="position-absolute"
@@ -70,6 +73,7 @@ function Piece({
           pointerEvents: "none",
         }}
       >
+        {/** image of the piece. needs to be able to "pop" */}
         <img
           className="position-absolute translate-middle"
           src={ImageMap.get(imageName)}
@@ -81,10 +85,10 @@ function Piece({
             pointerEvents: "none",
           }}
         />
+        {/** a smaller square that triggers the player guides when hovered */}
         <div
           className="position-absolute translate-middle"
           style={{
-            // smaller area that can be hovered over
             width: squareSize * 0.4,
             height: squareSize * 0.4,
             pointerEvents: "all",

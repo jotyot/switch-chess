@@ -8,7 +8,7 @@ class PieceMoves {
    * @param playerPos [row, col] of the player's position
    * @param otherPos [row, col] of the opponents's position
    * @param boardSize [numRows, numCols]
-   * @param white is this piece white or black?
+   * @param isWhite is this piece white or black?
    * @param forAI is this generated for the AI? Only used for pawn calculation
    * @returns An array of positions the player can move to
    */
@@ -17,7 +17,7 @@ class PieceMoves {
     playerPos: [number, number],
     otherPos: [number, number],
     boardSize: [number, number],
-    white: boolean,
+    isWhite: boolean,
     forAI = false
   ): [number, number][] {
     const [numRows, numCols] = boardSize;
@@ -26,7 +26,7 @@ class PieceMoves {
     const pieceMoves = new Map([
       [
         "Pawn",
-        PieceMoves.pawnMoves(playerPos, otherPos, numRows, white, forAI),
+        PieceMoves.pawnMoves(playerPos, otherPos, numRows, isWhite, forAI),
       ],
       ["Rook", PieceMoves.rookMoves(playerPos, otherPos, maxLength, forAI)],
       ["Bishop", PieceMoves.bishopMoves(playerPos, otherPos, maxLength, forAI)],
@@ -53,7 +53,7 @@ class PieceMoves {
    * @param playerPos [row, col] of the player's position
    * @param otherPos [row, col] of the opponents's position
    * @param numRows How many rows the board has
-   * @param white Is the player white?
+   * @param isWhite Is the player isWhite?
    * @param forAI Is this used for AI?
    * @returns An array of positions
    */
@@ -61,10 +61,10 @@ class PieceMoves {
     playerPos: [number, number],
     otherPos: [number, number],
     numRows: number,
-    white: boolean,
+    isWhite: boolean,
     forAI = false
   ) {
-    const direction = white ? -1 : 1;
+    const direction = isWhite ? -1 : 1;
     const moves: [number, number][] = Array(0).fill(null);
     const [r, c] = playerPos;
     if (!PieceMoves.coordsEqual(otherPos, [r + direction, c]))
@@ -73,7 +73,7 @@ class PieceMoves {
       // 0 is the top row
       !PieceMoves.coordsEqual(otherPos, [r + direction * 2, c]) &&
       !PieceMoves.coordsEqual(otherPos, [r + direction, c]) &&
-      ((white && r == numRows - 1) || (!white && r == 0))
+      ((isWhite && r == numRows - 1) || (!isWhite && r == 0))
     )
       moves.push([r + direction * 2, c]);
     if (

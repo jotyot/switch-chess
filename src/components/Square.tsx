@@ -13,6 +13,7 @@ interface Props {
  * @param color "White" "Black"
  * @param squareSize size of a side of the square in px
  * @param clickable whether the square shows clickability
+ * @param guides does this square have a highlight on it?
  * @param onClick function that executes on click of the square
  * @returns a JSX element of the chess board square
  */
