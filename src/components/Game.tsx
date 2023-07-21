@@ -19,7 +19,7 @@ function Game() {
   const handSize = 2;
   const winningTotal = 10;
 
-  const [aiOpponent, setAiOppenent] = useState(false);
+  const aiOpp = useRef(false);
 
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
   const [render, setRender] = useState([0]);
@@ -73,12 +73,12 @@ function Game() {
   function handleBoardClick(i: number, j: number): void {
     const whiteTurn = boardState.current.getWhiteTurn();
 
-    if (aiOpponent && (playerSwap.current ? whiteTurn : !whiteTurn)) return;
+    if (aiOpp.current && (playerSwap.current ? whiteTurn : !whiteTurn)) return;
 
     boardState.current.attemptMove([i, j], () =>
       newPiece(boardState.current.getWhiteTurn())
     );
-    if (aiOpponent) aiPlayer.makeAIMove();
+    if (aiOpp.current) aiPlayer.makeAIMove();
   }
 
   /**
@@ -88,7 +88,7 @@ function Game() {
    * @param index Which piece was clicked on
    */
   function handleHandClick(white: boolean, index: number): void {
-    //if (aiOpponent && (playerSwap.current ? white : !white)) return;
+    //if (aiOpp.current && (playerSwap.current ? white : !white)) return;
 
     white
       ? whiteHand.current.setSelected(index)
@@ -107,7 +107,7 @@ function Game() {
     blackHand.current = new Hand(handSize, reRender);
     reRender();
 
-    if (aiOpponent && !gameOver.current && playerSwap.current) {
+    if (aiOpp.current && !gameOver.current && playerSwap.current) {
       // a little annoying but to prevent white Ai start from using blackhand
       const aiPlayer = new AIPlayer(
         boardState,
@@ -174,8 +174,13 @@ function Game() {
 
   return (
     <div className="position-relative">
-      <button onClick={() => setAiOppenent(!aiOpponent)}>
-        {aiOpponent ? "ai" : "no"}
+      <button
+        onClick={() => {
+          aiOpp.current = !aiOpp.current;
+          reRender();
+        }}
+      >
+        {aiOpp.current ? "ai" : "no"}
       </button>
       {displayFlip.current ? whiteUI : blackUI}
       <Board
