@@ -16,10 +16,15 @@ class PieceMoves {
     return map;
   }
 
+  /**
+   * Gets the possible positions piece can move to given the board state.
+   * @param boardState the board state
+   * @param playerTurn the player's move's or the other's
+   * @returns an array of positions the player can move to
+   */
   public static movesFromBoardState(
     boardState: BoardState,
-    playerTurn: boolean,
-    attack = true
+    playerTurn: boolean
   ): [number, number][] {
     const white = boardState.getWhite();
     const black = boardState.getBlack();
@@ -38,8 +43,7 @@ class PieceMoves {
       otherPos,
       [numRows, numCols],
       isWhite,
-      playerTurn,
-      attack
+      playerTurn
     );
   }
 
@@ -60,8 +64,7 @@ class PieceMoves {
     otherPos: [number, number],
     boardSize: [number, number],
     isWhite: boolean,
-    obstructed = true,
-    attack = true
+    obstructed = true
   ): [number, number][] {
     const [numRows, numCols] = boardSize;
     const maxLength = Math.max(numRows, numCols);
@@ -74,8 +77,7 @@ class PieceMoves {
           otherPos,
           numRows,
           isWhite,
-          obstructed,
-          attack
+          obstructed
         );
         break;
       case "Rook":
@@ -128,15 +130,16 @@ class PieceMoves {
 
   /**
    * Gives the pawn's possible moves
-   * @remarks obstructed=true on gives every possible move a pawn can capture with
-   * so that an AIplayer won't move to a pawn's diagonal capture position
+   * @remarks obstructed=true doesn't show irrelevant diagonal capture
+   * and has double-jump affected by otherpos.
+   * obstructed=false shows all diagonal captures always and
+   * double jump if in the correct row regardless of otherpos
    *
    * @param playerPos [row, col] of the player's position
    * @param otherPos [row, col] of the opponents's position
    * @param numRows How many rows the board has
    * @param isWhite Is the player isWhite?
-   * @param obstructed is the moveset obstructed
-   * @param attack it SHOULD be pawn's capture moves or noncapture moves
+   * @param obstructed is this affected by otherPos?
    * @returns An array of positions
    */
   public static pawnMoves(
@@ -144,8 +147,7 @@ class PieceMoves {
     otherPos: [number, number],
     numRows: number,
     isWhite: boolean,
-    obstructed = true,
-    attack = true
+    obstructed = true
   ) {
     const direction = isWhite ? -1 : 1;
     const moves: [number, number][] = Array(0).fill(null);
@@ -153,11 +155,10 @@ class PieceMoves {
     if (!PieceMoves.coordsEqual(otherPos, [r + direction, c]))
       moves.push([r + direction, c]);
     if (
-      !obstructed &&
-      !attack &&
-      !PieceMoves.coordsEqual(otherPos, [r + direction * 2, c]) &&
-      !PieceMoves.coordsEqual(otherPos, [r + direction, c]) &&
-      ((isWhite && r == numRows - 1) || (!isWhite && r == 0))
+      ((isWhite && r == numRows - 1) || (!isWhite && r == 0)) &&
+      (!obstructed ||
+        (!PieceMoves.coordsEqual(otherPos, [r + direction * 2, c]) &&
+          !PieceMoves.coordsEqual(otherPos, [r + direction, c])))
     )
       moves.push([r + direction * 2, c]);
     if (
@@ -167,7 +168,7 @@ class PieceMoves {
       moves.push(otherPos);
     // If this moveset was generated for AI,
     // assume otherPos is in capture position
-    if (!obstructed && attack) {
+    if (!obstructed) {
       moves.push([r + direction, c + 1]);
       moves.push([r + direction, c - 1]);
     }

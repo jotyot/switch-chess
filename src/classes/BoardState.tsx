@@ -39,7 +39,8 @@ class BoardState {
    * @param popQueue A function that pops off the piece in the pieceQueue
    */
   public attemptMove(target: [number, number], popQueue: () => string): void {
-    this.possibleMoves().forEach((move) => {
+    const possibleMoves = PieceMoves.movesFromBoardState(this, true);
+    possibleMoves.forEach((move) => {
       if (PieceMoves.coordsEqual(target, move)) {
         this.movePlayer(target, popQueue());
       }
@@ -74,27 +75,16 @@ class BoardState {
     }
 
     this.whiteTurn = !this.whiteTurn;
-    this.updateBoard();
-  }
 
-  /**
-   * Gets the possible places a player can move to on a given turn + handles draw logic
-   * @param isWhite the moves of the white player? or black?
-   * @param [forAI=false] considers *every* possible move the piece can make
-   * @returns An array of [row, col] pairs someone can move to
-   */
-  private possibleMoves(): [number, number][] {
-    if (this.isOver) return [];
-
-    const possibleMoves = PieceMoves.movesFromBoardState(this, true);
-
-    if (possibleMoves.length < 1) {
+    // Draw check
+    const nextMoves = PieceMoves.movesFromBoardState(this, true);
+    if (nextMoves.length < 1) {
       this.isOver = true;
       this.updateBoard();
       this.newRound(this.whiteTurn, "N/A");
     }
 
-    return possibleMoves;
+    this.updateBoard();
   }
 }
 
