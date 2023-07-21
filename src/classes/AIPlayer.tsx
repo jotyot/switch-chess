@@ -26,7 +26,7 @@ class AIPlayer {
    * if the player avoid being captured, it returns the normal possible moveset.
    * @returns array of possible positions that won't get immediately captured
    */
-  private possibleMoves(): [number, number][] {
+  private basicMoves(): [number, number][] {
     const board = this.boardState.current;
 
     const [player, other] = board.getWhiteTurn()
@@ -90,7 +90,7 @@ class AIPlayer {
    * @returns one position randomly chosen from the possible moves
    */
   private randomMove() {
-    const moves = this.possibleMoves();
+    const moves = this.basicMoves();
 
     return moves[~~(Math.random() * moves.length)];
   }

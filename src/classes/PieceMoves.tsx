@@ -1,7 +1,34 @@
+import BoardState from "./BoardState";
+
 /**
  * Contains methods for getting the possible moves of pieces given a bunch of properties.
  */
 class PieceMoves {
+  public static movesFromBoardState(
+    boardState: BoardState,
+    playerTurn: boolean,
+    attacks = true
+  ): [number, number][] {
+    const white = boardState.getWhite();
+    const black = boardState.getBlack();
+    const whiteTurn = boardState.getWhiteTurn();
+    const [player, other] = (playerTurn ? whiteTurn : !whiteTurn)
+      ? [white, black]
+      : [black, white];
+    const playerPos = player.getPos();
+    const otherPos = other.getPos();
+    const [numRows, numCols] = boardState.getBoardSize();
+    const isWhite = player.getIsWhite();
+    const piece = player.getPiece();
+    return this.possibleMoves(
+      piece,
+      playerPos,
+      otherPos,
+      [numRows, numCols],
+      isWhite
+    );
+  }
+
   /**
    * Gets the possible positions piece can move to given the board state.
    * @param piece "Pawn", "Knight", "Rook", "Bishop", "Queen", "King", or  "SuperPawn"
@@ -9,7 +36,7 @@ class PieceMoves {
    * @param otherPos [row, col] of the opponents's position
    * @param boardSize [numRows, numCols]
    * @param isWhite is this piece white or black?
-   * @param forAI is this generated for the AI? Only used for pawn calculation
+   * @param obstructed is the moveset affected by where the other player is?
    * @returns An array of positions the player can move to
    */
   public static possibleMoves(
@@ -18,7 +45,7 @@ class PieceMoves {
     otherPos: [number, number],
     boardSize: [number, number],
     isWhite: boolean,
-    forAI = false
+    obstructed = true
   ): [number, number][] {
     const [numRows, numCols] = boardSize;
     const maxLength = Math.max(numRows, numCols);
@@ -26,16 +53,25 @@ class PieceMoves {
     const pieceMoves = new Map([
       [
         "Pawn",
-        PieceMoves.pawnMoves(playerPos, otherPos, numRows, isWhite, forAI),
+        PieceMoves.pawnMoves(playerPos, otherPos, numRows, isWhite, obstructed),
       ],
-      ["Rook", PieceMoves.rookMoves(playerPos, otherPos, maxLength, forAI)],
-      ["Bishop", PieceMoves.bishopMoves(playerPos, otherPos, maxLength, forAI)],
+      [
+        "Rook",
+        PieceMoves.rookMoves(playerPos, otherPos, maxLength, obstructed),
+      ],
+      [
+        "Bishop",
+        PieceMoves.bishopMoves(playerPos, otherPos, maxLength, obstructed),
+      ],
       ["Knight", PieceMoves.knightMoves(playerPos)],
-      ["Queen", PieceMoves.queenMoves(playerPos, otherPos, maxLength, forAI)],
+      [
+        "Queen",
+        PieceMoves.queenMoves(playerPos, otherPos, maxLength, obstructed),
+      ],
       ["King", PieceMoves.kingMoves(playerPos)],
       [
         "SuperPawn",
-        PieceMoves.superPawnMoves(playerPos, otherPos, maxLength, forAI),
+        PieceMoves.superPawnMoves(playerPos, otherPos, maxLength, obstructed),
       ],
     ]);
     let moves = pieceMoves.get(piece) || [];
@@ -47,14 +83,14 @@ class PieceMoves {
 
   /**
    * Gives the pawn's possible moves
-   * @remarks forAI=true on gives every possible move a pawn can capture with
+   * @remarks obstructed=true on gives every possible move a pawn can capture with
    * so that an AIplayer won't move to a pawn's diagonal capture position
    *
    * @param playerPos [row, col] of the player's position
    * @param otherPos [row, col] of the opponents's position
    * @param numRows How many rows the board has
    * @param isWhite Is the player isWhite?
-   * @param forAI Is this used for AI?
+   * @param obstructed Is this used for AI?
    * @returns An array of positions
    */
   public static pawnMoves(
@@ -62,7 +98,7 @@ class PieceMoves {
     otherPos: [number, number],
     numRows: number,
     isWhite: boolean,
-    forAI = false
+    obstructed = false
   ) {
     const direction = isWhite ? -1 : 1;
     const moves: [number, number][] = Array(0).fill(null);
@@ -83,7 +119,7 @@ class PieceMoves {
       moves.push(otherPos);
     // If this moveset was generated for AI,
     // assume otherPos is in capture position
-    if (forAI) {
+    if (obstructed) {
       moves.push([r + direction, c + 1]);
       moves.push([r + direction, c - 1]);
     }
@@ -101,7 +137,7 @@ class PieceMoves {
     playerPos: [number, number],
     otherPos: [number, number],
     maxLength: number,
-    forAI = false
+    obstructed = true
   ): [number, number][] {
     const moves: [number, number][] = Array(0).fill(null);
     const [r, c] = playerPos;
@@ -115,7 +151,7 @@ class PieceMoves {
       ];
       directions.forEach((direction, index) => {
         if (clear_path[index]) moves.push(direction);
-        if (!forAI && PieceMoves.coordsEqual(direction, otherPos))
+        if (obstructed && PieceMoves.coordsEqual(direction, otherPos))
           clear_path[index] = false;
       });
     }
@@ -133,7 +169,7 @@ class PieceMoves {
     playerPos: [number, number],
     otherPos: [number, number],
     maxLength: number,
-    forAI = false
+    obstructed = true
   ) {
     const moves: [number, number][] = Array(0).fill(null);
     const [r, c] = playerPos;
@@ -147,7 +183,7 @@ class PieceMoves {
       ];
       directions.forEach((direction, index) => {
         if (clear_path[index]) moves.push(direction);
-        if (!forAI && PieceMoves.coordsEqual(direction, otherPos))
+        if (obstructed && PieceMoves.coordsEqual(direction, otherPos))
           clear_path[index] = false;
       });
     }
@@ -184,11 +220,11 @@ class PieceMoves {
     playerPos: [number, number],
     otherPos: [number, number],
     maxLength: number,
-    forAI = false
+    obstructed = true
   ) {
     return [
-      ...PieceMoves.rookMoves(playerPos, otherPos, maxLength, forAI),
-      ...PieceMoves.bishopMoves(playerPos, otherPos, maxLength, forAI),
+      ...PieceMoves.rookMoves(playerPos, otherPos, maxLength, obstructed),
+      ...PieceMoves.bishopMoves(playerPos, otherPos, maxLength, obstructed),
     ];
   }
 
@@ -222,10 +258,10 @@ class PieceMoves {
     playerPos: [number, number],
     otherPos: [number, number],
     maxLength: number,
-    forAI = false
+    obstructed = true
   ) {
     return [
-      ...PieceMoves.queenMoves(playerPos, otherPos, maxLength, forAI),
+      ...PieceMoves.queenMoves(playerPos, otherPos, maxLength, obstructed),
       ...PieceMoves.knightMoves(playerPos),
     ];
   }
