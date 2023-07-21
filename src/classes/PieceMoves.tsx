@@ -32,7 +32,7 @@ class PieceMoves {
     const [numRows, numCols] = boardState.getBoardSize();
     const isWhite = player.getIsWhite();
     const piece = player.getPiece();
-    return this.possibleMoves(
+    return this.moves(
       piece,
       playerPos,
       otherPos,
@@ -54,7 +54,7 @@ class PieceMoves {
    * @param attack basically return the pawn's capture moves or noncapture moves
    * @returns An array of positions the player can move to
    */
-  public static possibleMoves(
+  public static moves(
     piece: string,
     playerPos: [number, number],
     otherPos: [number, number],
@@ -136,6 +136,7 @@ class PieceMoves {
    * @param numRows How many rows the board has
    * @param isWhite Is the player isWhite?
    * @param obstructed is the moveset obstructed
+   * @param attack it SHOULD be pawn's capture moves or noncapture moves
    * @returns An array of positions
    */
   public static pawnMoves(

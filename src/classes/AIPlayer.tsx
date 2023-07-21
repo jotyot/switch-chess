@@ -29,24 +29,11 @@ class AIPlayer {
   private basicMoves(): [number, number][] {
     const board = this.boardState.current;
 
-    const [player, other] = board.getWhiteTurn()
-      ? [board.getWhite(), board.getBlack()]
-      : [board.getBlack(), board.getWhite()];
+    const other = board.getWhiteTurn() ? board.getBlack() : board.getWhite();
 
-    const playerPos = player.getPos();
+    let playerMoves = PieceMoves.movesFromBoardState(board, true);
+
     const otherPos = other.getPos();
-
-    let playerPiece = player.getPiece();
-    let otherPiece = other.getPiece();
-
-    let playerMoves = PieceMoves.possibleMoves(
-      playerPiece,
-      playerPos,
-      otherPos,
-      board.getBoardSize(),
-      board.getWhiteTurn()
-    );
-
     // If piece can capture player
     const [or, oc] = otherPos;
     let canCapture = false;
@@ -56,14 +43,7 @@ class AIPlayer {
     if (canCapture) return [otherPos];
 
     // Ai = true
-    const otherMoves = PieceMoves.possibleMoves(
-      otherPiece,
-      otherPos,
-      playerPos,
-      board.getBoardSize(),
-      !board.getWhiteTurn(),
-      true
-    );
+    const otherMoves = PieceMoves.movesFromBoardState(board, false, true);
 
     /**
      * Moves that dont overlap with opponenets move next turn
