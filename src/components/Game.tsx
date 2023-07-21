@@ -19,7 +19,7 @@ function Game() {
   const handSize = 2;
   const winningTotal = 10;
 
-  const aiOpponent = true;
+  const [aiOpponent, setAiOppenent] = useState(false);
 
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
   const [render, setRender] = useState([0]);
@@ -174,6 +174,9 @@ function Game() {
 
   return (
     <div className="position-relative">
+      <button onClick={() => setAiOppenent(!aiOpponent)}>
+        {aiOpponent ? "ai" : "no"}
+      </button>
       {displayFlip.current ? whiteUI : blackUI}
       <Board
         flipped={displayFlip.current}
