@@ -35,6 +35,7 @@ function Piece({
   const incomingImage = color + player.getPiece();
   const [imageName, setImageName] = useState(color + player.getPiece());
 
+  // is this ref only used to tell when its position changed?yes
   const incomingPosition = player.getPos();
   const position = useRef(player.getPos());
 

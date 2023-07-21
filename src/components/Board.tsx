@@ -36,6 +36,7 @@ function Board({ squareSize, boardState, flipped, onClick }: Props) {
   function showGuides(isWhite: boolean): void {
     let guides = boardState.getBoardHighlights(
       isWhite,
+      // for AI when it's currently not their turn
       boardState.getWhiteTurn() ? !isWhite : isWhite
     );
     if (flipped) guides = guides.map((row) => row.reverse()).reverse();
