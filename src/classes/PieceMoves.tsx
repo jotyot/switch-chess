@@ -159,13 +159,13 @@ class PieceMoves {
     const direction = isWhite ? -1 : 1;
     const moves: [number, number][] = Array(0).fill(null);
     const [r, c] = playerPos;
-    if (!PieceMoves.coordsEqual(otherPos, [r + direction, c]))
+    if (obstructed && !PieceMoves.coordsEqual(otherPos, [r + direction, c]))
       moves.push([r + direction, c]);
     if (
       ((isWhite && r == numRows - 1) || (!isWhite && r == 0)) &&
-      (!obstructed ||
-        (!PieceMoves.coordsEqual(otherPos, [r + direction * 2, c]) &&
-          !PieceMoves.coordsEqual(otherPos, [r + direction, c])))
+      obstructed &&
+      !PieceMoves.coordsEqual(otherPos, [r + direction * 2, c]) &&
+      !PieceMoves.coordsEqual(otherPos, [r + direction, c])
     )
       moves.push([r + direction * 2, c]);
     if (

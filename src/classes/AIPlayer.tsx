@@ -7,8 +7,8 @@ import PiecePoints from "../config/PiecePoints";
 class AIPlayer {
   private boardState: React.MutableRefObject<BoardState>;
   private hand: React.MutableRefObject<Hand>;
-  private AISelectDelay = 500;
-  private AIMoveDelay = 600;
+  private AISelectDelay = 300;
+  private AIMoveDelay = 700;
   private inDanger = false;
 
   constructor(
@@ -74,10 +74,7 @@ class AIPlayer {
       ? [board.getWhite(), board.getBlack()]
       : [board.getBlack(), board.getWhite()];
 
-    const otherMoves = PieceMoves.movesFromBoardState(board, false, true);
     const handStrings = hand.getHand();
-
-    const numRows = board.getBoardSize()[0];
 
     /**
      * for every piece, for every move, it checks if
@@ -86,15 +83,17 @@ class AIPlayer {
     for (let i = 0; i < handStrings.length; i++) {
       for (let j = 0; j < moves.length; j++) {
         let piece = handStrings[i];
+        piece = this.specialPieces(piece, moves[j]);
 
-        // superpawn check
-        if (
-          piece === "Pawn" && player.getIsWhite()
-            ? moves[j][0] === 0
-            : moves[j][0] === numRows - 1
-        ) {
-          piece = "SuperPawn";
-        }
+        const otherMoves = PieceMoves.moves(
+          other.getPiece(),
+          other.getPos(),
+          moves[j],
+          board.getBoardSize(),
+          other.getIsWhite(),
+          true
+        );
+        console.log(piece, otherMoves);
 
         const nextMoves = PieceMoves.moves(
           piece,
@@ -106,8 +105,11 @@ class AIPlayer {
         );
         const otherSafeMoves = this.safeMoves(otherMoves, nextMoves);
 
-        if (otherSafeMoves.length < 1 && i !== hand.getSelected()) {
-          setTimeout(() => hand.setSelected(i), this.AISelectDelay);
+        if (otherSafeMoves.length < 1) {
+          console.log("found");
+          if (i !== hand.getSelected()) {
+            setTimeout(() => hand.setSelected(i), this.AISelectDelay);
+          }
           return [moves[j]];
         }
       }
@@ -160,11 +162,8 @@ class AIPlayer {
    * prolly should take a list of moves and sees if it can superpawn
    */
   private minimizeLoss(moves: [number, number][]): [number, number][] {
-    const board = this.boardState.current;
     const hand = this.hand.current;
     const handStrings = hand.getHand();
-
-    const player = board.getWhiteTurn() ? board.getWhite() : board.getBlack();
 
     const currentPiece = handStrings[hand.getSelected()];
     const currentLoss = (PiecePoints.get(currentPiece) || [0])[0];
@@ -173,18 +172,12 @@ class AIPlayer {
     let minPiece = currentPiece;
     let outMoves: [number, number][] = [];
 
-    const numRows = board.getBoardSize()[0];
-
     for (let i = 0; i < handStrings.length; i++) {
       for (let j = 0; j < moves.length; j++) {
         let piece = handStrings[i];
-        if (
-          piece === "Pawn" && player.getIsWhite()
-            ? moves[j][0] === 0
-            : moves[j][0] === numRows - 1
-        ) {
-          piece = "SuperPawn";
-        }
+
+        piece = this.specialPieces(piece, moves[j]);
+
         const points = (PiecePoints.get(piece) || [0])[0];
         if (points < minLoss) {
           outMoves = [moves[j]];
@@ -200,6 +193,18 @@ class AIPlayer {
         this.AISelectDelay
       );
     return outMoves;
+  }
+  private specialPieces(piece: string, position: [number, number]): string {
+    const board = this.boardState.current;
+    const numRows = board.getBoardSize()[0];
+    if (
+      piece === "Pawn" && board.getWhiteTurn()
+        ? position[0] === 0
+        : position[0] === numRows - 1
+    ) {
+      piece = "SuperPawn";
+    }
+    return piece;
   }
 }
 
