@@ -93,7 +93,6 @@ class AIPlayer {
           other.getIsWhite(),
           true
         );
-        console.log(piece, otherMoves);
 
         const nextMoves = PieceMoves.moves(
           piece,
@@ -158,8 +157,10 @@ class AIPlayer {
   }
 
   /**
-   * If going to get captured, but already moved, switches pieces to minimize loss
-   * prolly should take a list of moves and sees if it can superpawn
+   * swaps pieces to minimize point loss. may move in order to turn into
+   * a less point-loss piece
+   * @param moves array of moves
+   * @returns an array of a single best move or moves
    */
   private minimizeLoss(moves: [number, number][]): [number, number][] {
     const hand = this.hand.current;
@@ -194,6 +195,12 @@ class AIPlayer {
       );
     return outMoves;
   }
+  /**
+   * checks if the piece turned into something special given its position
+   * @param piece piece
+   * @param position position
+   * @returns the piece, or another one if its position changed what kind of piece it is
+   */
   private specialPieces(piece: string, position: [number, number]): string {
     const board = this.boardState.current;
     const numRows = board.getBoardSize()[0];
