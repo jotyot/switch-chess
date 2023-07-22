@@ -33,8 +33,8 @@ class AIPlayer {
   /**
    * Gets the possible moves of the current player that won't get immediately captured
    * @remarks if the player can capture, the only possible move will reduce to that move
-   * if the player avoid being captured, it returns the normal possible moveset.
-   * @returns array of possible positions that won't get immediately captured
+   * if the player can't avoid being captured, it returns the normal possible moveset.
+   * @returns array of possible piece, move combos that won't get immediately captured
    */
   private basic(): [string, number, number][] {
     const board = this.boardState.current;
@@ -76,9 +76,10 @@ class AIPlayer {
   }
 
   /**
-   * basic moves as the base, then out of those, chooses one that will
-   * mate the other
-   * @returns the winning move, the checkmate move, or a larger list
+   * given a list of moves, either returns the set of moves that can checkmate
+   * or the orignal list if it is empty
+   * @param moves a piece, move combination
+   * @returns a set of moves that can checkmate or the original moves
    */
   private checkmater(
     moves: [string, number, number][]
@@ -151,7 +152,7 @@ class AIPlayer {
   /**
    * swaps pieces to minimize point loss. may move in order to turn into
    * a less point-loss piece
-   * @param moves array of moves
+   * @param moves a piece, move combination
    * @returns an array of a single best move or moves
    */
   private minimizeLoss(
@@ -188,6 +189,11 @@ class AIPlayer {
     return outMoves;
   }
 
+  /**
+   * reduces the moveset to those that preserve the same piece as the one selected
+   * @param moves a piece, move combination
+   * @returns the same moveset or a smaller, non empty one
+   */
   private switchAverse(
     moves: [string, number, number][]
   ): [string, number, number][] {
@@ -200,8 +206,8 @@ class AIPlayer {
   }
 
   /**
-   * Chooses a random move that wont get immediately captured or the winning move if possible
-   * @param boardState instance of boardState class
+   * Chooses a random move from a moveset
+   * @param moves a piece, move combination
    * @returns one position randomly chosen from the possible moves
    */
   private randomMove(moves: [string, number, number][]) {

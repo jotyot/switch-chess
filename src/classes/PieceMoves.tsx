@@ -22,6 +22,15 @@ class PieceMoves {
     return map;
   }
 
+  /**
+   * if the piece turns into another one when in a certain position,
+   * it will return such piece. otherwise its the same
+   * @param piece original piece
+   * @param position
+   * @param boardSize
+   * @param isWhite is the piece white
+   * @returns may or may not be a different piece
+   */
   public static specialPieces(
     piece: string,
     position: [number, number],
