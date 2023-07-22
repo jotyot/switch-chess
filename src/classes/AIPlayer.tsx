@@ -7,8 +7,8 @@ import PiecePoints from "../config/PiecePoints";
 class AIPlayer {
   private boardState: React.MutableRefObject<BoardState>;
   private hand: React.MutableRefObject<Hand>;
-  private AISelectDelay = 300;
-  private AIMoveDelay = 300;
+  private AISelectDelay = 500;
+  private AIMoveDelay = 600;
   private inDanger = false;
 
   constructor(
@@ -105,7 +105,8 @@ class AIPlayer {
           false
         );
         const otherSafeMoves = this.safeMoves(otherMoves, nextMoves);
-        if (otherSafeMoves.length < 1) {
+
+        if (otherSafeMoves.length < 1 && i !== hand.getSelected()) {
           setTimeout(() => hand.setSelected(i), this.AISelectDelay);
           return [moves[j]];
         }
@@ -150,7 +151,7 @@ class AIPlayer {
     if (AIMove !== null) {
       setTimeout(() => {
         board.attemptMove(AIMove, () => hand.popSelected());
-      }, this.AISelectDelay + this.AIMoveDelay);
+      }, this.AIMoveDelay);
     }
   }
 
