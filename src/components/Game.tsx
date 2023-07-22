@@ -18,7 +18,7 @@ function Game() {
   const squareSize = 100;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
-  const winningTotal = 6;
+  const winningTotal = 10;
 
   const aiOpp = useRef(true);
 
