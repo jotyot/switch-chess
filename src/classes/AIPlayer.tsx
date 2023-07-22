@@ -71,10 +71,21 @@ class AIPlayer {
     const otherMoves = PieceMoves.movesFromBoardState(board, false, true);
     const handStrings = hand.getHand();
 
+    const numRows = board.getBoardSize()[0];
+
     for (let i = 0; i < handStrings.length; i++) {
       for (let j = 0; j < moves.length; j++) {
+        let piece = handStrings[i];
+        if (
+          piece === "Pawn" && player.getIsWhite()
+            ? moves[j][0] === 0
+            : moves[j][0] === numRows - 1
+        ) {
+          piece = "SuperPawn";
+        }
+
         const nextMoves = PieceMoves.moves(
-          handStrings[i],
+          piece,
           moves[j],
           other.getPos(),
           board.getBoardSize(),
