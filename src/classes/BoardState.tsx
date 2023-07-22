@@ -65,7 +65,7 @@ class BoardState {
     }
     player.setPiece(targetPiece);
 
-    // If the pawn is at the end at the beginning of turn, it turns into a queen
+    // if pawn is at the back row, turns into super pawn
     if (
       player.getPiece() === "Pawn" &&
       ((player.getIsWhite() && player.getPos()[0] === 0) ||

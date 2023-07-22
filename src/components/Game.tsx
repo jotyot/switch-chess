@@ -134,6 +134,7 @@ function Game() {
       if (Math.max(...scores.current) >= winningTotal) {
         const [score1, score2] = scores.current;
         gameWinner.current = score1 > score2 ? "Player 1" : "Player 2";
+        if (score1 === score2) gameWinner.current = "";
         gameOver.current = true;
         reRender();
       } else resetBoard();

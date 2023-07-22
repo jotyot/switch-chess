@@ -4,6 +4,12 @@ import BoardState from "./BoardState";
  * Contains methods for getting the possible moves of pieces given a bunch of properties.
  */
 class PieceMoves {
+  /**
+   * converts positions to a true value on a grid
+   * @param moves array of positions
+   * @param boardSize numrows, numcols
+   * @returns a numrows x numcols 2d bool array that is true where the move exists
+   */
   public static movesToMap(
     moves: [number, number][],
     boardSize: [number, number]

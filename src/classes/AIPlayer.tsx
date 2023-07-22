@@ -3,9 +3,7 @@ import Hand from "./Hand";
 import PieceMoves from "./PieceMoves";
 import PiecePoints from "../config/PiecePoints";
 
-/**
- * Contains functions for generating a move according to an ai player
- */
+/** Contains functions for generating a move according to an ai player */
 class AIPlayer {
   private boardState: React.MutableRefObject<BoardState>;
   private hand: React.MutableRefObject<Hand>;
@@ -28,9 +26,7 @@ class AIPlayer {
    */
   private basicMoves(): [number, number][] {
     const board = this.boardState.current;
-
     const other = board.getWhiteTurn() ? board.getBlack() : board.getWhite();
-
     let playerMoves = PieceMoves.movesFromBoardState(board, true);
 
     const otherPos = other.getPos();
@@ -42,19 +38,9 @@ class AIPlayer {
     });
     if (canCapture) return [otherPos];
 
-    const otherMoves = PieceMoves.movesFromBoardState(board, false, false);
-
-    /**
-     * Moves that dont overlap with opponenets move next turn
-     */
-    const safeMoves = playerMoves.filter(([r, c]) => {
-      let notOverlap = true;
-      otherMoves.forEach(([or, oc]) => {
-        if (r === or && c === oc) notOverlap = false;
-      });
-      return notOverlap;
-    });
-
+    const otherMoves = PieceMoves.movesFromBoardState(board, false);
+    /** Moves that dont overlap with opponenets move next turn */
+    const safeMoves = this.safeMoves(playerMoves, otherMoves);
     if (safeMoves.length > 0) {
       playerMoves = safeMoves;
       this.inDanger = false;
@@ -72,6 +58,25 @@ class AIPlayer {
     const moves = this.basicMoves();
 
     return moves[~~(Math.random() * moves.length)];
+  }
+
+  /**
+   * gets all the playerMoves that don't overlap with otherMoves
+   * @param playerMoves array of players possible moves
+   * @param otherMoves array of others possible moves
+   * @returns list of save moves. could be empty
+   */
+  private safeMoves(
+    playerMoves: [number, number][],
+    otherMoves: [number, number][]
+  ) {
+    return playerMoves.filter(([r, c]) => {
+      let notOverlap = true;
+      otherMoves.forEach(([or, oc]) => {
+        if (r === or && c === oc) notOverlap = false;
+      });
+      return notOverlap;
+    });
   }
 
   /** Generates an AI move and moves the pieces on the board accordingly after a delay. */
