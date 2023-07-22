@@ -27,7 +27,7 @@ class AIPlayer {
   private basicMoves(): [number, number][] {
     const board = this.boardState.current;
     const other = board.getWhiteTurn() ? board.getBlack() : board.getWhite();
-    let playerMoves = PieceMoves.movesFromBoardState(board, true);
+    let playerMoves = PieceMoves.movesFromBoardState(board, true, true);
 
     const otherPos = other.getPos();
     // If piece can capture player
@@ -38,7 +38,7 @@ class AIPlayer {
     });
     if (canCapture) return [otherPos];
 
-    const otherMoves = PieceMoves.movesFromBoardState(board, false);
+    const otherMoves = PieceMoves.movesFromBoardState(board, false, false);
     /** Moves that dont overlap with opponenets move next turn */
     const safeMoves = this.safeMoves(playerMoves, otherMoves);
     if (safeMoves.length > 0) {
@@ -54,10 +54,42 @@ class AIPlayer {
    * @param boardState instance of boardState class
    * @returns one position randomly chosen from the possible moves
    */
-  private randomMove() {
-    const moves = this.basicMoves();
-
+  private randomMove(moves: [number, number][]) {
     return moves[~~(Math.random() * moves.length)];
+  }
+
+  private mateMoves(): [number, number][] {
+    const moves = this.basicMoves();
+    if (moves.length === 1) return moves;
+
+    const board = this.boardState.current;
+    const hand = this.hand.current;
+    const [player, other] = board.getWhiteTurn()
+      ? [board.getWhite(), board.getBlack()]
+      : [board.getBlack(), board.getWhite()];
+
+    const otherMoves = PieceMoves.movesFromBoardState(board, false, true);
+    const handStrings = hand.getHand();
+
+    for (let i = 0; i < handStrings.length; i++) {
+      for (let j = 0; j < moves.length; j++) {
+        const nextMoves = PieceMoves.moves(
+          handStrings[i],
+          moves[j],
+          other.getPos(),
+          board.getBoardSize(),
+          player.getIsWhite(),
+          false
+        );
+        const otherSafeMoves = this.safeMoves(otherMoves, nextMoves);
+        if (otherSafeMoves.length < 1) {
+          hand.setSelected(i);
+          return [moves[j]];
+        }
+      }
+    }
+
+    return moves;
   }
 
   /**
@@ -84,7 +116,9 @@ class AIPlayer {
     const board = this.boardState.current;
     const hand = this.hand.current;
 
-    const AIMove = this.randomMove();
+    // insert main logic here
+
+    const AIMove = this.randomMove(this.mateMoves());
 
     this.minimizeLoss();
 

@@ -20,7 +20,7 @@ interface Props {
  */
 function Board({ squareSize, boardState, flipped, onClick }: Props) {
   const [numRows, numCols] = boardState.getBoardSize();
-  const playerMoves = PieceMoves.movesFromBoardState(boardState, true);
+  const playerMoves = PieceMoves.movesFromBoardState(boardState, true, true);
 
   let highlights = PieceMoves.movesToMap(playerMoves, [numRows, numCols]);
   if (flipped) highlights = highlights.map((row) => row.reverse()).reverse();
@@ -34,7 +34,11 @@ function Board({ squareSize, boardState, flipped, onClick }: Props) {
    */
   function showGuides(isWhite: boolean): void {
     const isPlayer = boardState.getWhiteTurn() ? isWhite : !isWhite;
-    const moves = PieceMoves.movesFromBoardState(boardState, isPlayer);
+    const moves = PieceMoves.movesFromBoardState(
+      boardState,
+      isPlayer,
+      isPlayer
+    );
 
     let guides = PieceMoves.movesToMap(moves, [numRows, numCols]);
     if (flipped) guides = guides.map((row) => row.reverse()).reverse();

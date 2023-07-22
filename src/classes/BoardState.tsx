@@ -39,7 +39,7 @@ class BoardState {
    * @param popQueue A function that pops off the piece in the pieceQueue
    */
   public attemptMove(target: [number, number], popQueue: () => string): void {
-    const possibleMoves = PieceMoves.movesFromBoardState(this, true);
+    const possibleMoves = PieceMoves.movesFromBoardState(this, true, true);
     possibleMoves.forEach((move) => {
       if (PieceMoves.coordsEqual(target, move)) {
         this.movePlayer(target, popQueue());
@@ -77,7 +77,7 @@ class BoardState {
     this.whiteTurn = !this.whiteTurn;
 
     // Draw check
-    const nextMoves = PieceMoves.movesFromBoardState(this, true);
+    const nextMoves = PieceMoves.movesFromBoardState(this, true, true);
     if (nextMoves.length < 1) {
       this.isOver = true;
       this.updateBoard();

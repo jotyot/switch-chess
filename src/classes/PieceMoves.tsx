@@ -30,7 +30,8 @@ class PieceMoves {
    */
   public static movesFromBoardState(
     boardState: BoardState,
-    playerTurn: boolean
+    playerTurn: boolean,
+    obstructions: boolean
   ): [number, number][] {
     const white = boardState.getWhite();
     const black = boardState.getBlack();
@@ -49,7 +50,7 @@ class PieceMoves {
       otherPos,
       [numRows, numCols],
       isWhite,
-      playerTurn
+      obstructions
     );
   }
 

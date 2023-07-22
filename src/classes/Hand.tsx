@@ -15,8 +15,10 @@ class Hand {
   }
 
   public setSelected = (index: number) => {
-    this.selected = index;
-    this.reRender();
+    if (index !== this.selected) {
+      this.selected = index;
+      this.reRender();
+    }
   };
 
   /**
