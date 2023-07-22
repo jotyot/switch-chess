@@ -45,7 +45,10 @@ class AIPlayer {
     if (safeMoves.length > 0) {
       playerMoves = safeMoves;
       this.inDanger = false;
-    } else this.inDanger = true;
+    } else {
+      this.inDanger = true;
+      console.log("danger");
+    }
 
     return playerMoves;
   }
@@ -105,7 +108,6 @@ class AIPlayer {
         const otherSafeMoves = this.safeMoves(otherMoves, nextMoves);
 
         if (otherSafeMoves.length < 1) {
-          console.log("found");
           if (i !== hand.getSelected()) {
             setTimeout(() => hand.setSelected(i), this.AISelectDelay);
           }
@@ -169,7 +171,7 @@ class AIPlayer {
     const currentPiece = handStrings[hand.getSelected()];
     const currentLoss = (PiecePoints.get(currentPiece) || [0])[0];
 
-    let minLoss = 9999;
+    let minLoss = currentLoss;
     let minPiece = currentPiece;
     let outMoves: [number, number][] = [];
 
