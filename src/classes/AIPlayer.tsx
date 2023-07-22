@@ -2,21 +2,25 @@ import BoardState from "./BoardState";
 import Hand from "./Hand";
 import PieceMoves from "./PieceMoves";
 import PiecePoints from "../config/PiecePoints";
+import AITraits from "./AITraits";
 
 /** Contains functions for generating a move according to an ai player */
 class AIPlayer {
   private boardState: React.MutableRefObject<BoardState>;
   private hand: React.MutableRefObject<Hand>;
+  private traits: AITraits;
   private AISelectDelay = 300;
   private AIMoveDelay = 700;
   private inDanger = false;
 
   constructor(
     boardState: React.MutableRefObject<BoardState>,
-    hand: React.MutableRefObject<Hand>
+    hand: React.MutableRefObject<Hand>,
+    traits: AITraits
   ) {
     this.boardState = boardState;
     this.hand = hand;
+    this.traits = traits;
   }
 
   /**
@@ -140,17 +144,15 @@ class AIPlayer {
 
   /** Generates an AI move and moves the pieces on the board accordingly after a delay. */
   public makeAIMove(): void {
-    const board = this.boardState.current;
-    const hand = this.hand.current;
-
-    // insert main logic here
-
-    let movePool = this.mateMoves();
-
+    let movePool = this.traits.checkmater
+      ? this.mateMoves()
+      : this.basicMoves();
     if (this.inDanger) movePool = this.minimizeLoss(movePool);
 
     const AIMove = this.randomMove(movePool);
 
+    const board = this.boardState.current;
+    const hand = this.hand.current;
     if (AIMove !== null) {
       setTimeout(() => {
         board.attemptMove(AIMove, () => hand.popSelected());

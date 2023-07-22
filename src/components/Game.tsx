@@ -6,6 +6,7 @@ import Hand from "../classes/Hand";
 import AIPlayer from "../classes/AIPlayer";
 import ReplayButton from "./ReplayButton";
 import PiecePoints from "../config/PiecePoints";
+import AITraits from "../classes/AITraits";
 
 /**
  * @todo players switch sides every round
@@ -17,7 +18,7 @@ function Game() {
   const squareSize = 100;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
-  const winningTotal = 10;
+  const winningTotal = 6;
 
   const aiOpp = useRef(true);
 
@@ -48,9 +49,12 @@ function Game() {
   const whiteHand = useRef(new Hand(handSize, reRender));
   const blackHand = useRef(new Hand(handSize, reRender));
 
+  // const traits = new AITraits([])
+  const traits = new AITraits(["checkmater"]);
   const aiPlayer = new AIPlayer(
     boardState,
-    playerSwap.current ? whiteHand : blackHand
+    playerSwap.current ? whiteHand : blackHand,
+    traits
   );
 
   /**
@@ -109,11 +113,7 @@ function Game() {
 
     if (aiOpp.current && !gameOver.current && playerSwap.current) {
       // a little annoying but to prevent white Ai start from using blackhand
-      const aiPlayer = new AIPlayer(
-        boardState,
-        playerSwap.current ? whiteHand : blackHand
-      );
-      aiPlayer.makeAIMove();
+      new AIPlayer(boardState, whiteHand, traits).makeAIMove();
     }
   }
 
