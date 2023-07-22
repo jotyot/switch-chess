@@ -176,6 +176,7 @@ function Game() {
   return (
     <div className="position-relative">
       <button
+        className="btn btn-primary"
         onClick={() => {
           aiOpp.current = !aiOpp.current;
           reRender();

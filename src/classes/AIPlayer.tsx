@@ -10,6 +10,7 @@ class AIPlayer {
   private AISelectDelay = 300;
   private AIMoveDelay = 300;
   private inDanger = false;
+
   constructor(
     boardState: React.MutableRefObject<BoardState>,
     hand: React.MutableRefObject<Hand>
@@ -58,6 +59,11 @@ class AIPlayer {
     return moves[~~(Math.random() * moves.length)];
   }
 
+  /**
+   * basic moves as the base, then out of those, chooses one that will
+   * mate the other
+   * @returns the winning move, the checkmate move, or a larger list
+   */
   private mateMoves(): [number, number][] {
     const moves = this.basicMoves();
     if (moves.length === 1) return moves;
@@ -73,9 +79,15 @@ class AIPlayer {
 
     const numRows = board.getBoardSize()[0];
 
+    /**
+     * for every piece, for every move, it checks if
+     * it can limit the other's safe moves to 0
+     */
     for (let i = 0; i < handStrings.length; i++) {
       for (let j = 0; j < moves.length; j++) {
         let piece = handStrings[i];
+
+        // superpawn check
         if (
           piece === "Pawn" && player.getIsWhite()
             ? moves[j][0] === 0
@@ -94,7 +106,7 @@ class AIPlayer {
         );
         const otherSafeMoves = this.safeMoves(otherMoves, nextMoves);
         if (otherSafeMoves.length < 1) {
-          hand.setSelected(i);
+          setTimeout(() => hand.setSelected(i), this.AISelectDelay);
           return [moves[j]];
         }
       }
@@ -129,9 +141,11 @@ class AIPlayer {
 
     // insert main logic here
 
-    const AIMove = this.randomMove(this.mateMoves());
+    let movePool = this.mateMoves();
 
-    this.minimizeLoss();
+    if (this.inDanger) movePool = this.minimizeLoss(movePool);
+
+    const AIMove = this.randomMove(movePool);
 
     if (AIMove !== null) {
       setTimeout(() => {
@@ -140,21 +154,51 @@ class AIPlayer {
     }
   }
 
-  /** If going to lose, switches pieces to minimize loss */
-  private minimizeLoss(): void {
+  /**
+   * If going to get captured, but already moved, switches pieces to minimize loss
+   * prolly should take a list of moves and sees if it can superpawn
+   */
+  private minimizeLoss(moves: [number, number][]): [number, number][] {
+    const board = this.boardState.current;
     const hand = this.hand.current;
-    if (this.inDanger) {
-      const handStrings = hand.getHand();
-      /** Converted hand to its corresponding point value to opponent */
-      const handToPoints = handStrings.map(
-        (piece) => (PiecePoints.get(piece) || [0, 0])[0]
-      );
-      /** The index of the handToPoints that matches the min number of handToPoints */
-      const index = handToPoints.findIndex(
-        (num) => num === Math.min(...handToPoints)
-      );
-      setTimeout(() => hand.setSelected(index), this.AISelectDelay);
+    const handStrings = hand.getHand();
+
+    const player = board.getWhiteTurn() ? board.getWhite() : board.getBlack();
+
+    const currentPiece = handStrings[hand.getSelected()];
+    const currentLoss = (PiecePoints.get(currentPiece) || [0])[0];
+
+    let minLoss = 9999;
+    let minPiece = currentPiece;
+    let outMoves: [number, number][] = [];
+
+    const numRows = board.getBoardSize()[0];
+
+    for (let i = 0; i < handStrings.length; i++) {
+      for (let j = 0; j < moves.length; j++) {
+        let piece = handStrings[i];
+        if (
+          piece === "Pawn" && player.getIsWhite()
+            ? moves[j][0] === 0
+            : moves[j][0] === numRows - 1
+        ) {
+          piece = "SuperPawn";
+        }
+        const points = (PiecePoints.get(piece) || [0])[0];
+        if (points < minLoss) {
+          outMoves = [moves[j]];
+          minLoss = points;
+          minPiece = handStrings[i];
+        } else if (points === minLoss) outMoves.push(moves[j]);
+      }
     }
+
+    if (minLoss !== currentLoss)
+      setTimeout(
+        () => hand.setSelected(handStrings.indexOf(minPiece)),
+        this.AISelectDelay
+      );
+    return outMoves;
   }
 }
 
