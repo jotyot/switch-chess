@@ -22,6 +22,22 @@ class PieceMoves {
     return map;
   }
 
+  public static specialPieces(
+    piece: string,
+    position: [number, number],
+    boardSize: [number, number],
+    isWhite: boolean
+  ): string {
+    const numRows = boardSize[0];
+    if (
+      piece === "Pawn" &&
+      (isWhite ? position[0] === 0 : position[0] === numRows - 1)
+    ) {
+      piece = "SuperPawn";
+    }
+    return piece;
+  }
+
   /**
    * Gets the possible positions piece can move to given the board state.
    * @param boardState the board state

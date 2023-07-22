@@ -63,16 +63,14 @@ class BoardState {
       this.isOver = true;
       this.newRound(this.whiteTurn, other.getPiece());
     }
-    player.setPiece(targetPiece);
 
-    // if pawn is at the back row, turns into super pawn
-    if (
-      player.getPiece() === "Pawn" &&
-      ((player.getIsWhite() && player.getPos()[0] === 0) ||
-        (!player.getIsWhite() && player.getPos()[0] === this.boardSize[0] - 1))
-    ) {
-      player.setPiece("SuperPawn");
-    }
+    const piece = PieceMoves.specialPieces(
+      targetPiece,
+      player.getPos(),
+      this.boardSize,
+      this.whiteTurn
+    );
+    player.setPiece(piece);
 
     this.whiteTurn = !this.whiteTurn;
 

@@ -50,7 +50,7 @@ function Game() {
   const blackHand = useRef(new Hand(handSize, reRender));
 
   // const traits = new AITraits([])
-  const traits = new AITraits(["checkmater"]);
+  const traits = new AITraits(["checkmater", "switchAverse"]);
   const aiPlayer = new AIPlayer(
     boardState,
     playerSwap.current ? whiteHand : blackHand,

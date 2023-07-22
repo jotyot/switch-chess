@@ -24,13 +24,21 @@ class AIPlayer {
   }
 
   /**
+   * checks if the piece turned into something special given its position
+   * @param piece piece
+   * @param position position
+   * @returns the piece, or another one if its position changed what kind of piece it is
+   */
+
+  /**
    * Gets the possible moves of the current player that won't get immediately captured
    * @remarks if the player can capture, the only possible move will reduce to that move
    * if the player avoid being captured, it returns the normal possible moveset.
    * @returns array of possible positions that won't get immediately captured
    */
-  private basicMoves(): [number, number][] {
+  private basic(): [string, number, number][] {
     const board = this.boardState.current;
+    const hand = this.hand.current;
     const other = board.getWhiteTurn() ? board.getBlack() : board.getWhite();
     let playerMoves = PieceMoves.movesFromBoardState(board, true, true);
 
@@ -41,7 +49,7 @@ class AIPlayer {
     playerMoves.forEach(([r, c]) => {
       if (r === or && c === oc) canCapture = true;
     });
-    if (canCapture) return [otherPos];
+    if (canCapture) return hand.getHand().map((piece) => [piece, ...otherPos]);
 
     const otherMoves = PieceMoves.movesFromBoardState(board, false, false);
     /** Moves that dont overlap with opponenets move next turn */
@@ -54,16 +62,17 @@ class AIPlayer {
       console.log("danger");
     }
 
-    return playerMoves;
-  }
-
-  /**
-   * Chooses a random move that wont get immediately captured or the winning move if possible
-   * @param boardState instance of boardState class
-   * @returns one position randomly chosen from the possible moves
-   */
-  private randomMove(moves: [number, number][]) {
-    return moves[~~(Math.random() * moves.length)];
+    let pieceMoves: [string, number, number][] = [];
+    for (const piece of hand.getHand()) {
+      pieceMoves = [
+        ...pieceMoves,
+        ...playerMoves.map((move): [string, number, number] => [
+          piece,
+          ...move,
+        ]),
+      ];
+    }
+    return pieceMoves;
   }
 
   /**
@@ -71,56 +80,53 @@ class AIPlayer {
    * mate the other
    * @returns the winning move, the checkmate move, or a larger list
    */
-  private mateMoves(): [number, number][] {
-    const moves = this.basicMoves();
+  private checkmater(
+    moves: [string, number, number][]
+  ): [string, number, number][] {
     if (moves.length === 1) return moves;
 
     const board = this.boardState.current;
-    const hand = this.hand.current;
     const [player, other] = board.getWhiteTurn()
       ? [board.getWhite(), board.getBlack()]
       : [board.getBlack(), board.getWhite()];
 
-    const handStrings = hand.getHand();
+    let outMoves: [string, number, number][] = [];
 
     /**
      * for every piece, for every move, it checks if
      * it can limit the other's safe moves to 0
      */
-    for (let i = 0; i < handStrings.length; i++) {
-      for (let j = 0; j < moves.length; j++) {
-        let piece = handStrings[i];
-        piece = this.specialPieces(piece, moves[j]);
+    for (const pieceMove of moves) {
+      let piece = pieceMove[0];
+      let move: [number, number] = [pieceMove[1], pieceMove[2]];
+      piece = PieceMoves.specialPieces(
+        piece,
+        move,
+        board.getBoardSize(),
+        board.getWhiteTurn()
+      );
 
-        const otherMoves = PieceMoves.moves(
-          other.getPiece(),
-          other.getPos(),
-          moves[j],
-          board.getBoardSize(),
-          other.getIsWhite(),
-          true
-        );
-
-        const nextMoves = PieceMoves.moves(
-          piece,
-          moves[j],
-          other.getPos(),
-          board.getBoardSize(),
-          player.getIsWhite(),
-          false
-        );
-        const otherSafeMoves = this.safeMoves(otherMoves, nextMoves);
-
-        if (otherSafeMoves.length < 1) {
-          if (i !== hand.getSelected()) {
-            setTimeout(() => hand.setSelected(i), this.AISelectDelay);
-          }
-          return [moves[j]];
-        }
-      }
+      const otherMoves = PieceMoves.moves(
+        other.getPiece(),
+        other.getPos(),
+        move,
+        board.getBoardSize(),
+        other.getIsWhite(),
+        true
+      );
+      const nextMoves = PieceMoves.moves(
+        piece,
+        move,
+        other.getPos(),
+        board.getBoardSize(),
+        player.getIsWhite(),
+        false
+      );
+      if (this.safeMoves(otherMoves, nextMoves).length < 1)
+        outMoves.push(pieceMove);
     }
-
-    return moves;
+    if (outMoves.length < 1) outMoves = moves;
+    return outMoves;
   }
 
   /**
@@ -142,31 +148,17 @@ class AIPlayer {
     });
   }
 
-  /** Generates an AI move and moves the pieces on the board accordingly after a delay. */
-  public makeAIMove(): void {
-    let movePool = this.traits.checkmater
-      ? this.mateMoves()
-      : this.basicMoves();
-    if (this.inDanger) movePool = this.minimizeLoss(movePool);
-
-    const AIMove = this.randomMove(movePool);
-
-    const board = this.boardState.current;
-    const hand = this.hand.current;
-    if (AIMove !== null) {
-      setTimeout(() => {
-        board.attemptMove(AIMove, () => hand.popSelected());
-      }, this.AIMoveDelay);
-    }
-  }
-
   /**
    * swaps pieces to minimize point loss. may move in order to turn into
    * a less point-loss piece
    * @param moves array of moves
    * @returns an array of a single best move or moves
    */
-  private minimizeLoss(moves: [number, number][]): [number, number][] {
+  private minimizeLoss(
+    moves: [string, number, number][]
+  ): [string, number, number][] {
+    const board = this.boardState.current;
+
     const hand = this.hand.current;
     const handStrings = hand.getHand();
 
@@ -174,48 +166,75 @@ class AIPlayer {
     const currentLoss = (PiecePoints.get(currentPiece) || [0])[0];
 
     let minLoss = currentLoss;
-    let minPiece = currentPiece;
-    let outMoves: [number, number][] = [];
+    let outMoves: [string, number, number][] = [];
 
-    for (let i = 0; i < handStrings.length; i++) {
-      for (let j = 0; j < moves.length; j++) {
-        let piece = handStrings[i];
+    for (const pieceMove of moves) {
+      const piece = pieceMove[0];
+      const move: [number, number] = [pieceMove[1], pieceMove[2]];
 
-        piece = this.specialPieces(piece, moves[j]);
-
-        const points = (PiecePoints.get(piece) || [0])[0];
-        if (points < minLoss) {
-          outMoves = [moves[j]];
-          minLoss = points;
-          minPiece = handStrings[i];
-        } else if (points === minLoss) outMoves.push(moves[j]);
-      }
-    }
-
-    if (minLoss !== currentLoss)
-      setTimeout(
-        () => hand.setSelected(handStrings.indexOf(minPiece)),
-        this.AISelectDelay
+      const finalPiece = PieceMoves.specialPieces(
+        piece,
+        move,
+        board.getBoardSize(),
+        board.getWhiteTurn()
       );
+      const points = (PiecePoints.get(finalPiece) || [0])[0];
+
+      if (points < minLoss) {
+        outMoves = [pieceMove];
+        minLoss = points;
+      } else if (points === minLoss) outMoves.push(pieceMove);
+    }
     return outMoves;
   }
+
+  private switchAverse(
+    moves: [string, number, number][]
+  ): [string, number, number][] {
+    const hand = this.hand.current;
+    const currentPiece = hand.getHand()[hand.getSelected()];
+
+    let outMoves = moves.filter((pieceMove) => pieceMove[0] === currentPiece);
+    if (outMoves.length < 1) outMoves = moves;
+    return outMoves;
+  }
+
   /**
-   * checks if the piece turned into something special given its position
-   * @param piece piece
-   * @param position position
-   * @returns the piece, or another one if its position changed what kind of piece it is
+   * Chooses a random move that wont get immediately captured or the winning move if possible
+   * @param boardState instance of boardState class
+   * @returns one position randomly chosen from the possible moves
    */
-  private specialPieces(piece: string, position: [number, number]): string {
+  private randomMove(moves: [string, number, number][]) {
+    return moves[~~(Math.random() * moves.length)];
+  }
+
+  /** Generates an AI move and moves the pieces on the board accordingly after a delay. */
+  public makeAIMove(): void {
+    let moves = this.basic();
+
+    if (this.traits.checkmater) moves = this.checkmater(moves);
+    if (this.inDanger) moves = this.minimizeLoss(moves);
+    if (this.traits.switchAverse) moves = this.switchAverse(moves);
+    const pieceMove = this.randomMove(moves);
+
+    const piece = pieceMove[0];
+    const move: [number, number] = [pieceMove[1], pieceMove[2]];
+
     const board = this.boardState.current;
-    const numRows = board.getBoardSize()[0];
-    if (
-      piece === "Pawn" && board.getWhiteTurn()
-        ? position[0] === 0
-        : position[0] === numRows - 1
-    ) {
-      piece = "SuperPawn";
+    const hand = this.hand.current;
+
+    if (piece !== hand.getHand()[hand.getSelected()]) {
+      setTimeout(
+        () => hand.setSelected(hand.getHand().indexOf(piece)),
+        this.AISelectDelay
+      );
     }
-    return piece;
+    if (move !== null) {
+      setTimeout(
+        () => board.attemptMove(move, () => hand.popSelected()),
+        this.AIMoveDelay
+      );
+    }
   }
 }
 
