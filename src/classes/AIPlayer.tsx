@@ -3,23 +3,26 @@ import Hand from "./Hand";
 import PieceMoves from "./PieceMoves";
 import PiecePoints from "../config/PiecePoints";
 import AITraits from "./AITraits";
+import Player from "./Player";
 
 /** Contains functions for generating a move according to an ai player */
 class AIPlayer {
-  private boardState: React.MutableRefObject<BoardState>;
-  private hand: React.MutableRefObject<Hand>;
+  private board: BoardState;
+  private hand: Hand;
+  private otherHand: Hand;
   private traits: AITraits;
   private AISelectDelay = 300;
   private AIMoveDelay = 700;
-  private inDanger = false;
 
   constructor(
-    boardState: React.MutableRefObject<BoardState>,
+    board: React.MutableRefObject<BoardState>,
     hand: React.MutableRefObject<Hand>,
+    otherHand: React.MutableRefObject<Hand>,
     traits: AITraits
   ) {
-    this.boardState = boardState;
-    this.hand = hand;
+    this.board = board.current;
+    this.hand = hand.current;
+    this.otherHand = otherHand.current;
     this.traits = traits;
   }
 
@@ -36,98 +39,25 @@ class AIPlayer {
    * if the player can't avoid being captured, it returns the normal possible moveset.
    * @returns array of possible piece, move combos that won't get immediately captured
    */
-  private basic(): [string, number, number][] {
-    const board = this.boardState.current;
-    const hand = this.hand.current;
-    const other = board.getWhiteTurn() ? board.getBlack() : board.getWhite();
-    let playerMoves = PieceMoves.movesFromBoardState(board, true, true);
-
-    const otherPos = other.getPos();
-    // If piece can capture player
-    const [or, oc] = otherPos;
-    let canCapture = false;
-    playerMoves.forEach(([r, c]) => {
-      if (r === or && c === oc) canCapture = true;
+  private basic(): [string, [number, number]][] {
+    const [player, other] = this.board.getWhiteTurn()
+      ? [this.board.getWhite(), this.board.getBlack()]
+      : [this.board.getBlack(), this.board.getWhite()];
+    const playerSafeMoves = this.safePieceMoves(
+      player,
+      other.getPos(),
+      other.getPiece(),
+      true,
+      false
+    );
+    // if get the list of moves that are just on top of the other position
+    const [or, oc] = other.getPos();
+    const captureMoves = playerSafeMoves.filter((pieceMove) => {
+      const [r, c] = pieceMove[1];
+      return r === or && c === oc;
     });
-    if (canCapture) return hand.getHand().map((piece) => [piece, ...otherPos]);
-
-    const otherMoves = PieceMoves.movesFromBoardState(board, false, false);
-    /** Moves that dont overlap with opponenets move next turn */
-    const safeMoves = this.safeMoves(playerMoves, otherMoves);
-    if (safeMoves.length > 0) {
-      playerMoves = safeMoves;
-      this.inDanger = false;
-    } else {
-      this.inDanger = true;
-      console.log("danger");
-    }
-
-    let pieceMoves: [string, number, number][] = [];
-    for (const piece of hand.getHand()) {
-      pieceMoves = [
-        ...pieceMoves,
-        ...playerMoves.map((move): [string, number, number] => [
-          piece,
-          ...move,
-        ]),
-      ];
-    }
-    return pieceMoves;
-  }
-
-  /**
-   * given a list of moves, either returns the set of moves that can checkmate
-   * or the orignal list if it is empty
-   * @param moves a piece, move combination
-   * @returns a set of moves that can checkmate or the original moves
-   */
-  private checkmater(
-    moves: [string, number, number][]
-  ): [string, number, number][] {
-    if (moves.length === 1) return moves;
-
-    const board = this.boardState.current;
-    const [player, other] = board.getWhiteTurn()
-      ? [board.getWhite(), board.getBlack()]
-      : [board.getBlack(), board.getWhite()];
-
-    let outMoves: [string, number, number][] = [];
-
-    /**
-     * for every piece, for every move, it checks if
-     * it can limit the other's safe moves to 0
-     */
-    for (const pieceMove of moves) {
-      let piece = pieceMove[0];
-      let move: [number, number] = [pieceMove[1], pieceMove[2]];
-      piece = PieceMoves.specialPieces(
-        piece,
-        move,
-        board.getBoardSize(),
-        board.getWhiteTurn()
-      );
-
-      const otherMoves = PieceMoves.moves(
-        other.getPiece(),
-        other.getPos(),
-        move,
-        board.getBoardSize(),
-        other.getIsWhite(),
-        true
-      );
-      const nextMoves = PieceMoves.moves(
-        piece,
-        move,
-        other.getPos(),
-        board.getBoardSize(),
-        player.getIsWhite(),
-        false
-      );
-      if (this.safeMoves(otherMoves, nextMoves).length < 1)
-        outMoves.push(pieceMove);
-    }
-    if (outMoves.length < 1) outMoves = moves;
-    return outMoves;
+    // if we can capture, return the capturing set, otherwise return the safemoves
+    return captureMoves.length > 0 ? captureMoves : playerSafeMoves;
   }
 
   /**
@@ -150,34 +80,180 @@ class AIPlayer {
   }
 
   /**
+   * given a list of moves, either returns the set of moves that can checkmate
+   * or the orignal list if it is empty
+   * @param moves a piece, move combination
+   * @returns a set of moves that can checkmate or the original moves
+   */
+  private checkmater(
+    moves: [string, [number, number]][]
+  ): [string, [number, number]][] {
+    if (moves.length === 1) return moves;
+
+    const other = this.board.getWhiteTurn()
+      ? this.board.getBlack()
+      : this.board.getWhite();
+
+    let outMoves = this.checkmateMoves(
+      moves,
+      !other.getIsWhite(),
+      other.getPos(),
+      other.getPiece()
+    );
+    if (outMoves.length < 1) outMoves = moves;
+    return outMoves;
+  }
+
+  /**
+   * within input moveset, gets the set of moves that will checkmate the other
+   * @param moves input moveset
+   * @param isWhite is the player white?
+   * @param otherPos the pos of opponent that may be mated
+   * @param otherPiece the piece of opp that may be mated
+   * @returns
+   */
+  private checkmateMoves(
+    moves: [string, [number, number]][],
+    isWhite: boolean,
+    otherPos: [number, number],
+    otherPiece: string
+  ) {
+    let checkmates: [string, [number, number]][] = [];
+
+    /**
+     * for every piece, for every move, it checks if
+     * it can limit the other's safe moves to 0
+     */
+    for (const pieceMove of moves) {
+      let piece = pieceMove[0];
+      let move = pieceMove[1];
+      piece = PieceMoves.specialPieces(
+        piece,
+        move,
+        this.board.getBoardSize(),
+        this.board.getWhiteTurn()
+      );
+
+      const otherMoves = PieceMoves.moves(
+        otherPiece,
+        otherPos,
+        move,
+        this.board.getBoardSize(),
+        !isWhite,
+        true
+      );
+      const nextMoves = PieceMoves.moves(
+        piece,
+        move,
+        otherPos,
+        this.board.getBoardSize(),
+        isWhite,
+        false
+      );
+      if (this.safeMoves(otherMoves, nextMoves).length < 1)
+        checkmates.push(pieceMove);
+    }
+    return checkmates;
+  }
+
+  private mateDefensive(
+    moves: [string, [number, number]][]
+  ): [string, [number, number]][] {
+    const other = this.board.getWhiteTurn()
+      ? this.board.getBlack()
+      : this.board.getWhite();
+
+    const mateDefensiveMoves = moves.filter((pieceMove) => {
+      const piece = pieceMove[0];
+      const move = pieceMove[1];
+      const otherMoves = this.safePieceMoves(other, move, piece, false, true);
+      return (
+        this.checkmateMoves(otherMoves, other.getIsWhite(), move, piece)
+          .length < 1
+      );
+    });
+    return mateDefensiveMoves.length > 0 ? mateDefensiveMoves : moves;
+  }
+
+  /**
+   * given the player, and the other's piece and position
+   * return a list of safe piece move combos
+   * @param player the player's whos move combos you're finding out
+   * @param otherPos the pos of player that treatens this moveset
+   * @param otherPiece the piece of player that threatens this moveset
+   * @param isPlayer is this the player's or the other's moves
+   * @param strict if there is no safe move, should this list be empty?
+   * @returns
+   */
+  private safePieceMoves(
+    player: Player,
+    otherPos: [number, number],
+    otherPiece: string,
+    isPlayer: boolean,
+    strict: boolean
+  ): [string, [number, number]][] {
+    const playerMoves = PieceMoves.moves(
+      player.getPiece(),
+      player.getPos(),
+      otherPos,
+      this.board.getBoardSize(),
+      player.getIsWhite(),
+      true
+    );
+    const otherMoves = PieceMoves.moves(
+      otherPiece,
+      otherPos,
+      player.getPos(),
+      this.board.getBoardSize(),
+      !player.getIsWhite(),
+      false
+    );
+    const safeMoves = this.safeMoves(playerMoves, otherMoves);
+    const finalMoves = strict || safeMoves.length > 0 ? safeMoves : playerMoves;
+
+    const hand = isPlayer ? this.hand : this.otherHand;
+    let pieceMoves: [string, [number, number]][] = [];
+    for (const piece of hand.getHand()) {
+      pieceMoves = [
+        ...pieceMoves,
+        ...finalMoves.map((move): [string, [number, number]] => [piece, move]),
+      ];
+    }
+    return pieceMoves;
+  }
+
+  private dangerCheck(): boolean {
+    const playerMoves = PieceMoves.movesFromBoardState(this.board, true, true);
+    const otherMoves = PieceMoves.movesFromBoardState(this.board, false, false);
+    return this.safeMoves(playerMoves, otherMoves).length < 1;
+  }
+
+  /**
    * swaps pieces to minimize point loss. may move in order to turn into
    * a less point-loss piece
    * @param moves a piece, move combination
    * @returns an array of a single best move or moves
    */
   private minimizeLoss(
-    moves: [string, number, number][]
-  ): [string, number, number][] {
-    const board = this.boardState.current;
+    moves: [string, [number, number]][]
+  ): [string, [number, number]][] {
+    const handStrings = this.hand.getHand();
 
-    const hand = this.hand.current;
-    const handStrings = hand.getHand();
-
-    const currentPiece = handStrings[hand.getSelected()];
+    const currentPiece = handStrings[this.hand.getSelected()];
     const currentLoss = (PiecePoints.get(currentPiece) || [0])[0];
 
     let minLoss = currentLoss;
-    let outMoves: [string, number, number][] = [];
+    let outMoves: [string, [number, number]][] = [];
 
     for (const pieceMove of moves) {
       const piece = pieceMove[0];
-      const move: [number, number] = [pieceMove[1], pieceMove[2]];
+      const move = pieceMove[1];
 
       const finalPiece = PieceMoves.specialPieces(
         piece,
         move,
-        board.getBoardSize(),
-        board.getWhiteTurn()
+        this.board.getBoardSize(),
+        this.board.getWhiteTurn()
       );
       const points = (PiecePoints.get(finalPiece) || [0])[0];
 
@@ -195,10 +271,9 @@ class AIPlayer {
    * @returns the same moveset or a smaller, non empty one
    */
   private switchAverse(
-    moves: [string, number, number][]
-  ): [string, number, number][] {
-    const hand = this.hand.current;
-    const currentPiece = hand.getHand()[hand.getSelected()];
+    moves: [string, [number, number]][]
+  ): [string, [number, number]][] {
+    const currentPiece = this.hand.getHand()[this.hand.getSelected()];
 
     let outMoves = moves.filter((pieceMove) => pieceMove[0] === currentPiece);
     if (outMoves.length < 1) outMoves = moves;
@@ -210,7 +285,7 @@ class AIPlayer {
    * @param moves a piece, move combination
    * @returns one position randomly chosen from the possible moves
    */
-  private randomMove(moves: [string, number, number][]) {
+  private randomMove(moves: [string, [number, number]][]) {
     return moves[~~(Math.random() * moves.length)];
   }
 
@@ -219,25 +294,23 @@ class AIPlayer {
     let moves = this.basic();
 
     if (this.traits.checkmater) moves = this.checkmater(moves);
-    if (this.inDanger) moves = this.minimizeLoss(moves);
+    if (this.traits.mateDefensive) moves = this.mateDefensive(moves);
+    if (this.dangerCheck()) moves = this.minimizeLoss(moves);
     if (this.traits.switchAverse) moves = this.switchAverse(moves);
     const pieceMove = this.randomMove(moves);
 
     const piece = pieceMove[0];
-    const move: [number, number] = [pieceMove[1], pieceMove[2]];
+    const move = pieceMove[1];
 
-    const board = this.boardState.current;
-    const hand = this.hand.current;
-
-    if (piece !== hand.getHand()[hand.getSelected()]) {
+    if (piece !== this.hand.getHand()[this.hand.getSelected()]) {
       setTimeout(
-        () => hand.setSelected(hand.getHand().indexOf(piece)),
+        () => this.hand.setSelected(this.hand.getHand().indexOf(piece)),
         this.AISelectDelay
       );
     }
     if (move !== null) {
       setTimeout(
-        () => board.attemptMove(move, () => hand.popSelected()),
+        () => this.board.attemptMove(move, () => this.hand.popSelected()),
         this.AIMoveDelay
       );
     }

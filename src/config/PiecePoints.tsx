@@ -10,7 +10,7 @@ const PiecePoints = new Map<string, [number, number]>([
   ["Rook", [3, 0]],
   ["Queen", [4, 0]],
   ["King", [5, 0]],
-  ["SuperPawn", [2, 2]],
+  ["SuperPawn", [1, 1]],
 ]);
 
 export default PiecePoints;

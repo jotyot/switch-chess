@@ -57,6 +57,7 @@ function Game({ onExit, aiOpponent, aiTrait = new AITraits([]) }: Props) {
   const aiPlayer = new AIPlayer(
     boardState,
     playerSwap.current ? whiteHand : blackHand,
+    playerSwap.current ? blackHand : whiteHand,
     aiTrait
   );
 
@@ -116,7 +117,7 @@ function Game({ onExit, aiOpponent, aiTrait = new AITraits([]) }: Props) {
 
     if (aiOpponent && !gameOver.current && playerSwap.current) {
       // a little annoying but to prevent white Ai start from using blackhand
-      new AIPlayer(boardState, whiteHand, aiTrait).makeAIMove();
+      new AIPlayer(boardState, whiteHand, blackHand, aiTrait).makeAIMove();
     }
   }
 

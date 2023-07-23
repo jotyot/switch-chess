@@ -5,6 +5,7 @@ const Fool: AITraits = {
   description: `offline multiplayer`,
   checkmater: false,
   switchAverse: false,
+  mateDefensive: false,
 };
 
 const Chariot: AITraits = {
@@ -13,6 +14,7 @@ const Chariot: AITraits = {
     Won't throw but doesn't know what its doing.`,
   checkmater: false,
   switchAverse: false,
+  mateDefensive: false,
 };
 
 const Hermit: AITraits = {
@@ -21,8 +23,17 @@ const Hermit: AITraits = {
     Doesn't like to switch unless it will bring a checkmate.`,
   checkmater: true,
   switchAverse: true,
+  mateDefensive: false,
 };
 
-const SpecialBots = [Fool, Chariot, Hermit];
+const Emperor: AITraits = {
+  name: "The Emperor",
+  description: `Will not put itself in checkmateable moves if it can help it.`,
+  checkmater: true,
+  switchAverse: true,
+  mateDefensive: true,
+};
+
+const SpecialBots = [Fool, Chariot, Hermit, Emperor];
 
 export default SpecialBots;
