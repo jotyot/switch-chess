@@ -7,10 +7,12 @@ import AIPlayer from "../../classes/AIPlayer";
 import ReplayButton from "./ReplayButton";
 import PiecePoints from "../../config/PiecePoints";
 import AITraits from "../../classes/AITraits";
+import BackButtonHeader from "../BackButtonHeader";
 
 interface Props {
   aiOpponent: boolean;
   aiTrait: AITraits;
+  onExit: () => void;
 }
 
 /**
@@ -18,7 +20,7 @@ interface Props {
  * A functional game with its own score, etc. Play against AI or on same device player
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */
-function Game({ aiOpponent, aiTrait = new AITraits([]) }: Props) {
+function Game({ onExit, aiOpponent, aiTrait = new AITraits([]) }: Props) {
   const squareSize = 100;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
@@ -176,12 +178,13 @@ function Game({ aiOpponent, aiTrait = new AITraits([]) }: Props) {
 
   return (
     <div className="position-relative">
-      <div
-        className="text-center"
-        style={{ fontSize: "20px", fontWeight: "bold" }}
-      >
-        {aiTrait.name}
-      </div>
+      <BackButtonHeader
+        width={squareSize * numCols}
+        height={30}
+        hasText={aiOpponent}
+        headerText={aiTrait.name}
+        onClick={onExit}
+      />
       {displayFlip.current ? whiteUI : blackUI}
       <Board
         flipped={displayFlip.current}

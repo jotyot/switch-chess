@@ -9,7 +9,11 @@ function Offline() {
   const [hovered, setHovered] = useState(-1);
 
   return play ? (
-    <Game aiOpponent={selected !== 0} aiTrait={SpecialBots[selected]} />
+    <Game
+      onExit={() => setPlay(false)}
+      aiOpponent={selected !== 0}
+      aiTrait={SpecialBots[selected]}
+    />
   ) : (
     <AISelect
       botList={SpecialBots}
