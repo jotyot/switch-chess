@@ -23,7 +23,10 @@ function AISelect({
 }: Props) {
   return (
     <div className="container position-relative">
-      <div className="d-flex justify-content-center position-relative start-50 translate-middle-x mt-5">
+      <div
+        className="d-flex justify-content-center position-relative start-50 translate-middle-x mt-5"
+        style={{ width: "400px" }}
+      >
         {botList.map((_trait, index) => {
           return (
             <BotButton

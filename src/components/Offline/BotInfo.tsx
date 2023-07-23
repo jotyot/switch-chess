@@ -7,7 +7,7 @@ interface Props {
 }
 
 function BotInfo({ botList, hovered, selected }: Props) {
-  const maxWidth = 400;
+  const maxWidth = 350;
   const maxHeight = 150;
   const nameFontSize = 40;
   const descFontSize = 20;
