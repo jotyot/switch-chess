@@ -8,6 +8,7 @@ interface Props {
 
 function BotInfo({ botList, hovered, selected }: Props) {
   const maxWidth = 400;
+  const maxHeight = 150;
   const nameFontSize = 40;
   const descFontSize = 20;
 
@@ -24,7 +25,11 @@ function BotInfo({ botList, hovered, selected }: Props) {
       <div
         className="text-center position-relative 
         start-50 translate-middle-x"
-        style={{ fontSize: descFontSize + "px", width: maxWidth + "px" }}
+        style={{
+          fontSize: descFontSize + "px",
+          width: maxWidth + "px",
+          height: maxHeight + "px",
+        }}
       >
         {hovered !== -1
           ? botList[hovered].description

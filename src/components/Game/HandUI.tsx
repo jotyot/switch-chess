@@ -7,6 +7,7 @@ interface Props {
   image: string;
   squareSize: number;
   onClick: () => void;
+  maxWidth: number;
   animate?: boolean;
 }
 /**
@@ -16,7 +17,13 @@ interface Props {
  * @param onClick a function that executes on click of an individual "card"
  * @returns A JSX element of an individual card
  */
-function HandUI({ image, squareSize, onClick, animate = false }: Props) {
+function HandUI({
+  maxWidth,
+  image,
+  squareSize,
+  onClick,
+  animate = false,
+}: Props) {
   const incomingImage = image;
   const [imageName, setImageName] = useState(image);
 
@@ -34,31 +41,39 @@ function HandUI({ image, squareSize, onClick, animate = false }: Props) {
   return (
     <div
       className={
-        "d-flex justify-content-center rounded translate-middle-y mx-1 position-relative"
+        "d-flex justify-content-center rounded translate-middle-y position-relative"
       }
       style={{
-        backgroundColor: Colors.secondary,
-        height: squareSize + "px",
-        width: squareSize + "px",
-        ...transition,
-        transitionDuration: "0.05s",
+        height: maxWidth + "px",
+        width: maxWidth + "px",
       }}
-      onClick={onClick}
     >
-      {image && (
-        <img
-          src={ImageMap.get(imageName)}
-          alt=""
-          className="translate-middle top-50 start-50 position-absolute"
-          style={{
-            height: squareSize * (animate ? 0.1 : 1) + "px",
-            ...transition,
-            transitionDuration:
-              // to preserve the normal switch hands size change speed
-              (animate ? Timings.popDuration / 1000 : 0.05) + "s",
-          }}
-        ></img>
-      )}
+      <div
+        className="d-flex justify-content-center rounded top-50 translate-middle-y position-absolute"
+        style={{
+          backgroundColor: Colors.secondary,
+          height: squareSize + "px",
+          width: squareSize + "px",
+          ...transition,
+          transitionDuration: "0.05s",
+        }}
+        onClick={onClick}
+      >
+        {image && (
+          <img
+            src={ImageMap.get(imageName)}
+            alt=""
+            className="translate-middle top-50 start-50 position-absolute"
+            style={{
+              height: squareSize * (animate ? 0.1 : 1) + "px",
+              ...transition,
+              transitionDuration:
+                // to preserve the normal switch hands size change speed
+                (animate ? Timings.popDuration / 1000 : 0.05) + "s",
+            }}
+          ></img>
+        )}
+      </div>
     </div>
   );
 }

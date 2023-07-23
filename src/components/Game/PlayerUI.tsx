@@ -23,6 +23,8 @@ interface Props {
  */
 function PlayerUI({ score, white, width, hand, onClick }: Props) {
   const pieceColor = white ? "White" : "Black";
+  const bigScale = 0.25;
+  const smallScale = 0.18;
 
   const [animate, setAnimate] = useState(false);
 
@@ -50,9 +52,10 @@ function PlayerUI({ score, white, width, hand, onClick }: Props) {
           // Selected element is larger
           hand.getHand().map((piece, index) => {
             const selected = hand.getSelected() === index;
-            const scale = selected ? 0.25 : 0.18;
+            const scale = selected ? bigScale : smallScale;
             return (
               <HandUI
+                maxWidth={width * bigScale}
                 squareSize={width * scale}
                 image={pieceColor + piece}
                 onClick={() => onClick(white, index)}
