@@ -1,6 +1,6 @@
-import ImageMap from "../config/ImageMap";
-import Colors from "../config/Colors";
-import Timings from "../config/Timings";
+import ImageMap from "../../config/ImageMap";
+import Colors from "../../config/Colors";
+import Timings from "../../config/Timings";
 import { useState } from "react";
 
 interface Props {

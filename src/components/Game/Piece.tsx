@@ -1,6 +1,6 @@
-import ImageMap from "../config/ImageMap";
-import Player from "../classes/Player";
-import Timings from "../config/Timings";
+import ImageMap from "../../config/ImageMap";
+import Player from "../../classes/Player";
+import Timings from "../../config/Timings";
 import { useState, useRef } from "react";
 
 interface Props {
@@ -95,7 +95,7 @@ function Piece({
             pointerEvents: "all",
           }}
           onMouseOver={onHover}
-          onMouseLeave={offHover}
+          onMouseOut={offHover}
         ></div>
       </div>
     )

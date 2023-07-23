@@ -1,7 +1,7 @@
 // From npm color-names
 
 const Colors = {
-  primary: "lightcoral",
+  primary: "coral",
   secondary: "linen",
 };
 

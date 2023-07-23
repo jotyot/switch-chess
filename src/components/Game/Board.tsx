@@ -1,8 +1,8 @@
 import Square from "./Square";
-import BoardState from "../classes/BoardState";
+import BoardState from "../../classes/BoardState";
 import Piece from "./Piece";
 import { useState } from "react";
-import PieceMoves from "../classes/PieceMoves";
+import PieceMoves from "../../classes/PieceMoves";
 
 interface Props {
   boardState: BoardState;

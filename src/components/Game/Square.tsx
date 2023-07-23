@@ -1,4 +1,4 @@
-import ImageMap from "../config/ImageMap";
+import ImageMap from "../../config/ImageMap";
 
 interface Props {
   color: string;

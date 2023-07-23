@@ -1,7 +1,7 @@
-import Game from "./components/Game";
+import Offline from "./components/Offline/Offline";
 
 function App() {
-  return <Game />;
+  return <Offline />;
 }
 
 export default App;

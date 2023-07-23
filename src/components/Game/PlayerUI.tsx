@@ -1,7 +1,7 @@
 import HandUI from "./HandUI";
-import Hand from "../classes/Hand";
-import Colors from "../config/Colors";
-import Timings from "../config/Timings";
+import Hand from "../../classes/Hand";
+import Colors from "../../config/Colors";
+import Timings from "../../config/Timings";
 import { useState } from "react";
 
 interface Props {

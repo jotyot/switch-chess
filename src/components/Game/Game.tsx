@@ -1,26 +1,28 @@
 import { useRef, useState } from "react";
 import Board from "./Board";
 import PlayerUI from "./PlayerUI";
-import BoardState from "../classes/BoardState";
-import Hand from "../classes/Hand";
-import AIPlayer from "../classes/AIPlayer";
+import BoardState from "../../classes/BoardState";
+import Hand from "../../classes/Hand";
+import AIPlayer from "../../classes/AIPlayer";
 import ReplayButton from "./ReplayButton";
-import PiecePoints from "../config/PiecePoints";
-import AITraits from "../classes/AITraits";
+import PiecePoints from "../../config/PiecePoints";
+import AITraits from "../../classes/AITraits";
+
+interface Props {
+  aiOpponent: boolean;
+  aiTrait: AITraits;
+}
 
 /**
- * @todo players switch sides every round
  *
  * A functional game with its own score, etc. Play against AI or on same device player
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */
-function Game() {
+function Game({ aiOpponent, aiTrait = new AITraits([]) }: Props) {
   const squareSize = 100;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
   const winningTotal = 10;
-
-  const aiOpp = useRef(true);
 
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
   const [render, setRender] = useState([0]);
@@ -50,11 +52,10 @@ function Game() {
   const blackHand = useRef(new Hand(handSize, reRender));
 
   // const traits = new AITraits([])
-  const traits = new AITraits(["checkmater", "switchAverse"]);
   const aiPlayer = new AIPlayer(
     boardState,
     playerSwap.current ? whiteHand : blackHand,
-    traits
+    aiTrait
   );
 
   /**
@@ -77,12 +78,12 @@ function Game() {
   function handleBoardClick(i: number, j: number): void {
     const whiteTurn = boardState.current.getWhiteTurn();
 
-    if (aiOpp.current && (playerSwap.current ? whiteTurn : !whiteTurn)) return;
+    if (aiOpponent && (playerSwap.current ? whiteTurn : !whiteTurn)) return;
 
     boardState.current.attemptMove([i, j], () =>
       newPiece(boardState.current.getWhiteTurn())
     );
-    if (aiOpp.current) aiPlayer.makeAIMove();
+    if (aiOpponent) aiPlayer.makeAIMove();
   }
 
   /**
@@ -92,7 +93,7 @@ function Game() {
    * @param index Which piece was clicked on
    */
   function handleHandClick(white: boolean, index: number): void {
-    //if (aiOpp.current && (playerSwap.current ? white : !white)) return;
+    //if (aiOpponent && (playerSwap.current ? white : !white)) return;
 
     white
       ? whiteHand.current.setSelected(index)
@@ -111,9 +112,9 @@ function Game() {
     blackHand.current = new Hand(handSize, reRender);
     reRender();
 
-    if (aiOpp.current && !gameOver.current && playerSwap.current) {
+    if (aiOpponent && !gameOver.current && playerSwap.current) {
       // a little annoying but to prevent white Ai start from using blackhand
-      new AIPlayer(boardState, whiteHand, traits).makeAIMove();
+      new AIPlayer(boardState, whiteHand, aiTrait).makeAIMove();
     }
   }
 
@@ -175,15 +176,12 @@ function Game() {
 
   return (
     <div className="position-relative">
-      <button
-        className="btn btn-primary"
-        onClick={() => {
-          aiOpp.current = !aiOpp.current;
-          reRender();
-        }}
+      <div
+        className="text-center"
+        style={{ fontSize: "20px", fontWeight: "bold" }}
       >
-        {aiOpp.current ? "ai" : "no"}
-      </button>
+        {aiTrait.name}
+      </div>
       {displayFlip.current ? whiteUI : blackUI}
       <Board
         flipped={displayFlip.current}
