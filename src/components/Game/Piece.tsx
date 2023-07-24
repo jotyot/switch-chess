@@ -6,6 +6,7 @@ import { useState, useRef } from "react";
 interface Props {
   boardSize: [number, number];
   flipped: boolean;
+  handleBoardClick?: (i: number, j: number) => void;
   onHover: () => void;
   offHover: () => void;
   player: Player;
@@ -28,6 +29,7 @@ function Piece({
   boardSize,
   onHover,
   offHover,
+  handleBoardClick = () => {},
 }: Props) {
   const color = player.getIsWhite() ? "White" : "Black";
   const [numRows, numCols] = boardSize;
@@ -96,6 +98,7 @@ function Piece({
           }}
           onMouseOver={onHover}
           onMouseOut={offHover}
+          onClick={() => handleBoardClick(...player.getPos())}
         ></div>
       </div>
     )

@@ -191,7 +191,7 @@ function Game({ onExit, aiOpponent, aiTrait = new AITraits([]) }: Props) {
         flipped={displayFlip.current}
         squareSize={squareSize}
         boardState={boardState.current}
-        onClick={handleBoardClick}
+        handleBoardClick={handleBoardClick}
       />
       {displayFlip.current ? blackUI : whiteUI}
       {gameOver.current && (

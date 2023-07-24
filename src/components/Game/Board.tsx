@@ -8,17 +8,17 @@ interface Props {
   boardState: BoardState;
   flipped: boolean;
   squareSize: number;
-  onClick: (i: number, j: number) => void;
+  handleBoardClick: (i: number, j: number) => void;
 }
 
 /**
  * A grid of squares with players that reflect the boardState.
  * @param squareSize number of px the squares on the board are
  * @param boardState a boardState class instance
- * @param onClick a function that can be mapped to an individual square
+ * @param handleBoardClick a function that can be mapped to an individual square
  * @returns A JSX element containing information about the state of the chess board + pieces
  */
-function Board({ squareSize, boardState, flipped, onClick }: Props) {
+function Board({ squareSize, boardState, flipped, handleBoardClick }: Props) {
   const [numRows, numCols] = boardState.getBoardSize();
   const playerMoves = PieceMoves.movesFromBoardState(boardState, true, true);
 
@@ -45,6 +45,11 @@ function Board({ squareSize, boardState, flipped, onClick }: Props) {
     setGuides(guides);
   }
 
+  const white = boardState.getWhite();
+  const black = boardState.getBlack();
+  const captureable = (pos: [number, number]) =>
+    playerMoves.some((m) => m[0] === pos[0] && m[1] === pos[1]);
+
   return (
     <div
       className="container position-relative"
@@ -64,7 +69,7 @@ function Board({ squareSize, boardState, flipped, onClick }: Props) {
                   squareSize={squareSize}
                   color={(r + c) % 2 === 0 ? "White" : "Black"}
                   clickable={item}
-                  onClick={() => onClick(r, c)}
+                  onClick={() => handleBoardClick(r, c)}
                   guides={guides[i][j]}
                   key={j}
                 />
@@ -74,7 +79,7 @@ function Board({ squareSize, boardState, flipped, onClick }: Props) {
         );
       })}
       <Piece
-        player={boardState.getWhite()}
+        player={white}
         squareSize={squareSize}
         flipped={flipped}
         boardSize={[numRows, numCols]}
@@ -82,15 +87,21 @@ function Board({ squareSize, boardState, flipped, onClick }: Props) {
         offHover={() =>
           setGuides([...Array(numRows)].map(() => Array(numCols).fill(false)))
         }
+        handleBoardClick={
+          captureable(white.getPos()) ? handleBoardClick : undefined
+        }
       />
       <Piece
-        player={boardState.getBlack()}
+        player={black}
         squareSize={squareSize}
         flipped={flipped}
         boardSize={[numRows, numCols]}
         onHover={() => showGuides(false)}
         offHover={() =>
           setGuides([...Array(numRows)].map(() => Array(numCols).fill(false)))
+        }
+        handleBoardClick={
+          captureable(black.getPos()) ? handleBoardClick : undefined
         }
       />
     </div>
