@@ -81,7 +81,11 @@ function Game({ onExit, aiOpponent, aiTrait = new AITraits([]) }: Props) {
   function handleBoardClick(i: number, j: number): void {
     const whiteTurn = boardState.current.getWhiteTurn();
 
-    if (aiOpponent && (playerSwap.current ? whiteTurn : !whiteTurn)) return;
+    if (
+      gameOver.current ||
+      (aiOpponent && (playerSwap.current ? whiteTurn : !whiteTurn))
+    )
+      return;
 
     boardState.current.attemptMove([i, j], () =>
       newPiece(boardState.current.getWhiteTurn())

@@ -11,6 +11,12 @@ class Hand {
     for (let i = 0; i < handSize; i++) {
       this.hand.set(i, this.pieceQueue.popQueue());
     }
+    const [f, s] = this.getHand();
+
+    // pawn, knight in the beginning is like insta-lose
+    if ((f === "Knight" && s === "Pawn") || (s === "Knight" && f === "Pawn"))
+      this.popSelected();
+
     this.reRender = reRender;
   }
 

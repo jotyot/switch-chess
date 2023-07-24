@@ -125,15 +125,13 @@ class AIPlayer {
      * it can limit the other's safe moves to 0
      */
     for (const pieceMove of moves) {
-      let piece = pieceMove[0];
       let move = pieceMove[1];
-      piece = PieceMoves.specialPieces(
-        piece,
+      const piece = PieceMoves.specialPieces(
+        pieceMove[0],
         move,
         this.board.getBoardSize(),
         this.board.getWhiteTurn()
       );
-
       const otherMoves = PieceMoves.moves(
         otherPiece,
         otherPos,
@@ -164,8 +162,13 @@ class AIPlayer {
       : this.board.getWhite();
 
     const mateDefensiveMoves = moves.filter((pieceMove) => {
-      const piece = pieceMove[0];
       const move = pieceMove[1];
+      const piece = PieceMoves.specialPieces(
+        pieceMove[0],
+        move,
+        this.board.getBoardSize(),
+        !other.getIsWhite()
+      );
       const otherMoves = this.safePieceMoves(other, move, piece, false, true);
       return (
         this.checkmateMoves(otherMoves, other.getIsWhite(), move, piece)
@@ -240,9 +243,8 @@ class AIPlayer {
     const handStrings = this.hand.getHand();
 
     const currentPiece = handStrings[this.hand.getSelected()];
-    const currentLoss = (PiecePoints.get(currentPiece) || [0])[0];
 
-    let minLoss = currentLoss;
+    let minLoss = (PiecePoints.get(currentPiece) || [10])[0];
     let outMoves: [string, [number, number]][] = [];
 
     for (const pieceMove of moves) {
