@@ -10,8 +10,8 @@ import AITraits from "../../classes/AITraits";
 import BackButtonHeader from "../BackButtonHeader";
 
 interface Props {
-  aiOpponent: boolean;
-  aiTrait: AITraits;
+  aiOpponent?: boolean;
+  aiTrait?: AITraits;
   onExit: () => void;
 }
 
@@ -20,8 +20,12 @@ interface Props {
  * A functional game with its own score, etc. Play against AI or on same device player
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */
-function Game({ onExit, aiOpponent, aiTrait = new AITraits([]) }: Props) {
-  const squareSize = 100;
+function Game({
+  onExit,
+  aiOpponent = false,
+  aiTrait = new AITraits([]),
+}: Props) {
+  const squareSize = 90;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
   const winningTotal = 10;
@@ -46,8 +50,9 @@ function Game({ onExit, aiOpponent, aiTrait = new AITraits([]) }: Props) {
     string,
     string,
     () => void,
-    (winner: boolean, piece: string) => void
-  ] = [[numRows, numCols], "King", "King", reRender, newRound];
+    (winner: boolean, piece: string) => void,
+    (d: number) => void
+  ] = [[numRows, numCols], "King", "King", reRender, newRound, screenShake];
   const boardState = useRef(new BoardState(...defualtBoard));
 
   const whiteHand = useRef(new Hand(handSize, reRender));
@@ -101,7 +106,6 @@ function Game({ onExit, aiOpponent, aiTrait = new AITraits([]) }: Props) {
    */
   function handleHandClick(white: boolean, index: number): void {
     //if (aiOpponent && (playerSwap.current ? white : !white)) return;
-
     white
       ? whiteHand.current.setSelected(index)
       : blackHand.current.setSelected(index);
@@ -181,8 +185,27 @@ function Game({ onExit, aiOpponent, aiTrait = new AITraits([]) }: Props) {
     />
   );
 
+  const [screenOffset, setScreenOffset] = useState(0);
+  function screenShake(delay = 0) {
+    setTimeout(() => {
+      setScreenOffset(10);
+      setTimeout(() => setScreenOffset(-10), 30);
+      setTimeout(() => setScreenOffset(0), 60);
+    }, delay);
+  }
+
   return (
-    <div className="position-relative">
+    <div
+      className="position-relative"
+      style={{
+        marginTop: screenOffset + "px",
+        backgroundColor: playerSwap.current ? "darkslategray" : "mintcream",
+        overflow: "hidden",
+        height: "100vh",
+        transitionProperty: "marginTop, background",
+        transitionDuration: "0.05s, 0.5s",
+      }}
+    >
       <BackButtonHeader
         width={squareSize * numCols}
         height={30}

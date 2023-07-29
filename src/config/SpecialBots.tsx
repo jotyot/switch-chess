@@ -2,14 +2,6 @@ import AITraits from "../classes/AITraits";
 
 const Fool: AITraits = {
   name: "The Fool",
-  description: `offline multiplayer`,
-  checkmater: false,
-  switchAverse: false,
-  mateDefensive: false,
-};
-
-const Chariot: AITraits = {
-  name: "The Chariot",
   description: `Switches pretty often, with little logic to it.
     Won't throw but doesn't know what its doing.`,
   checkmater: false,
@@ -17,8 +9,8 @@ const Chariot: AITraits = {
   mateDefensive: false,
 };
 
-const Hermit: AITraits = {
-  name: "The Hermit",
+const Chariot: AITraits = {
+  name: "The Chariot",
   description: `Knows how to checkmate, but will put itself in weak positions.
     Doesn't like to switch unless it will bring a checkmate.`,
   checkmater: true,
@@ -34,6 +26,6 @@ const Emperor: AITraits = {
   mateDefensive: true,
 };
 
-const SpecialBots = [Fool, Chariot, Hermit, Emperor];
+const SpecialBots = [Fool, Chariot, Emperor];
 
 export default SpecialBots;

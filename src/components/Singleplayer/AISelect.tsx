@@ -1,8 +1,8 @@
 import AITraits from "../../classes/AITraits";
 import BotButton from "./BotButton";
 import BotInfo from "./BotInfo";
-import PlayButton from "./PlayButton";
 import Colors from "../../config/Colors";
+import CenterButton from "../CenterButton";
 
 interface Props {
   botList: AITraits[];
@@ -24,7 +24,7 @@ function AISelect({
   return (
     <div className="container position-relative">
       <div
-        className="d-flex justify-content-center position-relative start-50 translate-middle-x mt-5"
+        className="d-flex justify-content-center position-relative start-50 translate-middle-x"
         style={{ width: "400px" }}
       >
         {botList.map((_trait, index) => {
@@ -40,7 +40,15 @@ function AISelect({
         })}
       </div>
       <BotInfo botList={botList} selected={selected} hovered={hovered} />
-      {selected !== -1 && <PlayButton onClick={() => setPlay(true)} />}
+      {selected !== -1 && (
+        <CenterButton
+          width={300}
+          height={100}
+          fontSize={30}
+          text={"Play"}
+          onClick={() => setPlay(true)}
+        />
+      )}
     </div>
   );
 }

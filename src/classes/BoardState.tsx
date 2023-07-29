@@ -1,5 +1,6 @@
 import Player from "./Player";
 import PieceMoves from "./PieceMoves";
+import Timings from "../config/Timings";
 
 class BoardState {
   private white: Player;
@@ -12,19 +13,22 @@ class BoardState {
   private updateBoard: () => void;
   /**A function that starts a new round after the game is over */
   private newRound: (winner: boolean, piece: string) => void;
+  private screenShake: (d: number) => void;
 
   constructor(
     [numRows, numCols]: [number, number],
     whiteStart: string,
     blackStart: string,
     updateBoard: () => void,
-    newRound: (winner: boolean, piece: string) => void
+    newRound: (winner: boolean, piece: string) => void,
+    screenShake: (d: number) => void
   ) {
     this.boardSize = [numRows, numCols];
     this.white = new Player(true, whiteStart, this.boardSize);
     this.black = new Player(false, blackStart, this.boardSize);
     this.updateBoard = updateBoard;
     this.newRound = newRound;
+    this.screenShake = screenShake;
   }
 
   public getWhiteTurn = () => this.whiteTurn;
@@ -70,6 +74,8 @@ class BoardState {
       this.boardSize,
       this.whiteTurn
     );
+    if (targetPiece !== piece)
+      this.screenShake(Timings.moveDuration + 1.5 * Timings.popDelay);
     player.setPiece(piece);
 
     this.whiteTurn = !this.whiteTurn;

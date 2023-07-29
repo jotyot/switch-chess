@@ -1,14 +1,20 @@
-import Colors from "../../config/Colors";
+import Colors from "../config/Colors";
 
 interface Props {
   onClick?: () => void;
+  width: number;
+  height: number;
+  fontSize: number;
+  text: string;
 }
 
-function PlayButton({ onClick = () => {} }: Props) {
-  const width = 300;
-  const height = 100;
-  const fontSize = 30;
-
+function CenterButton({
+  width,
+  height,
+  fontSize,
+  text,
+  onClick = () => {},
+}: Props) {
   return (
     <div
       className="d-flex justify-content-center start-50 translate-middle-x 
@@ -24,10 +30,10 @@ function PlayButton({ onClick = () => {} }: Props) {
         className="translate-middle-y top-50 position-absolute"
         style={{ fontSize: fontSize + "px", fontWeight: "bold" }}
       >
-        Play
+        {text}
       </div>
     </div>
   );
 }
 
-export default PlayButton;
+export default CenterButton;
