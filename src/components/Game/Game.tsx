@@ -10,7 +10,6 @@ import { AIOpponent, Opponent } from "../../classes/Opponent";
 
 interface Props {
   opponent: Opponent;
-  onSwap: () => void;
 }
 
 function instanceOfAI(object: any): object is AIOpponent {
@@ -22,7 +21,7 @@ function instanceOfAI(object: any): object is AIOpponent {
  * A functional game with its own score, etc. Play against AI or on same device player
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */
-function Game({ opponent, onSwap }: Props) {
+function Game({ opponent }: Props) {
   const squareSize = 90;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
@@ -116,7 +115,6 @@ function Game({ opponent, onSwap }: Props) {
   function resetBoard(): void {
     displayFlip.current = !displayFlip.current;
     playerSwap.current = !playerSwap.current;
-    onSwap();
 
     boardState.current = new BoardState(...defualtBoard);
     whiteHand.current = new Hand(handSize, reRender);

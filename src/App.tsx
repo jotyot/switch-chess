@@ -1,21 +1,17 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Game from "./components/Game/Game";
 import { SpecialBots } from "./config/Opponents";
 import OpponentCard from "./components/OpponentCard";
 import { Opponent } from "./classes/Opponent";
 
 function App() {
-  const sideSwap = useRef(false);
-  const [render, setRender] = useState([0]);
   const [opponent, setOpponent] = useState<Opponent>(SpecialBots[0]);
-  const [play, setPlay] = useState(true);
+  const [play, setPlay] = useState(false);
 
   return (
     <div
       style={{
-        backgroundColor: sideSwap.current ? "darkgray" : "mintcream",
-        transitionProperty: "background",
-        transitionDuration: "0.5s",
+        backgroundColor: "mintcream",
         minHeight: "100vh",
         overflow: "hidden",
       }}
@@ -25,15 +21,7 @@ function App() {
         opponent={opponent}
         setOpponent={setOpponent}
       />
-      {play && (
-        <Game
-          opponent={opponent}
-          onSwap={() => {
-            sideSwap.current = !sideSwap.current;
-            setRender({ ...render });
-          }}
-        />
-      )}
+      {play && <Game opponent={opponent} />}
     </div>
   );
 }

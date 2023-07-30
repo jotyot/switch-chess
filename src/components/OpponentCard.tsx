@@ -18,12 +18,12 @@ function OpponentCard({ width = 360, onClick, opponent, setOpponent }: Props) {
 
   const [selectedGroup, setSelectedGroup] = useState(0);
   const [selectedOpponent, setSelectedOpponent] = useState(0);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const groups = ["Bots", "Other"];
   function toggleGame() {
     setOpen(!open);
-    setTimeout(onClick, 200);
+    setTimeout(onClick, 100);
   }
 
   return (
