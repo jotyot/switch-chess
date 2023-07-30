@@ -65,6 +65,7 @@ class BoardState {
     if (PieceMoves.coordsEqual(player.getPos(), other.getPos())) {
       other.die();
       this.isOver = true;
+      this.screenShake(Timings.moveDuration + Timings.popDelay);
       this.newRound(this.whiteTurn, other.getPiece());
     }
 

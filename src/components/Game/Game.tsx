@@ -6,13 +6,15 @@ import Hand from "../../classes/Hand";
 import AIPlayer from "../../classes/AIPlayer";
 import ReplayButton from "./ReplayButton";
 import PiecePoints from "../../config/PiecePoints";
-import AITraits from "../../classes/AITraits";
-import BackButtonHeader from "../BackButtonHeader";
+import { AIOpponent, Opponent } from "../../classes/Opponent";
 
 interface Props {
-  aiOpponent?: boolean;
-  aiTrait?: AITraits;
-  onExit: () => void;
+  opponent: Opponent;
+  onSwap: () => void;
+}
+
+function instanceOfAI(object: any): object is AIOpponent {
+  return "traits" in object;
 }
 
 /**
@@ -20,15 +22,13 @@ interface Props {
  * A functional game with its own score, etc. Play against AI or on same device player
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */
-function Game({
-  onExit,
-  aiOpponent = false,
-  aiTrait = new AITraits([]),
-}: Props) {
+function Game({ opponent, onSwap }: Props) {
   const squareSize = 90;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
   const winningTotal = 10;
+
+  const aiOpponent = instanceOfAI(opponent);
 
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
   const [render, setRender] = useState([0]);
@@ -57,14 +57,6 @@ function Game({
 
   const whiteHand = useRef(new Hand(handSize, reRender));
   const blackHand = useRef(new Hand(handSize, reRender));
-
-  // const traits = new AITraits([])
-  const aiPlayer = new AIPlayer(
-    boardState,
-    playerSwap.current ? whiteHand : blackHand,
-    playerSwap.current ? blackHand : whiteHand,
-    aiTrait
-  );
 
   /**
    * Shorthand for getting the next piece swap
@@ -95,7 +87,13 @@ function Game({
     boardState.current.attemptMove([i, j], () =>
       newPiece(boardState.current.getWhiteTurn())
     );
-    if (aiOpponent) aiPlayer.makeAIMove();
+    if (aiOpponent)
+      new AIPlayer(
+        boardState,
+        playerSwap.current ? whiteHand : blackHand,
+        playerSwap.current ? blackHand : whiteHand,
+        opponent.traits
+      ).makeAIMove();
   }
 
   /**
@@ -105,7 +103,8 @@ function Game({
    * @param index Which piece was clicked on
    */
   function handleHandClick(white: boolean, index: number): void {
-    //if (aiOpponent && (playerSwap.current ? white : !white)) return;
+    if (aiOpponent && (playerSwap.current ? white : !white)) return;
+
     white
       ? whiteHand.current.setSelected(index)
       : blackHand.current.setSelected(index);
@@ -117,6 +116,7 @@ function Game({
   function resetBoard(): void {
     displayFlip.current = !displayFlip.current;
     playerSwap.current = !playerSwap.current;
+    onSwap();
 
     boardState.current = new BoardState(...defualtBoard);
     whiteHand.current = new Hand(handSize, reRender);
@@ -125,7 +125,12 @@ function Game({
 
     if (aiOpponent && !gameOver.current && playerSwap.current) {
       // a little annoying but to prevent white Ai start from using blackhand
-      new AIPlayer(boardState, whiteHand, blackHand, aiTrait).makeAIMove();
+      new AIPlayer(
+        boardState,
+        whiteHand,
+        blackHand,
+        opponent.traits
+      ).makeAIMove();
     }
   }
 
@@ -187,10 +192,16 @@ function Game({
 
   const [screenOffset, setScreenOffset] = useState(0);
   function screenShake(delay = 0) {
+    const between = 80;
     setTimeout(() => {
-      setScreenOffset(10);
-      setTimeout(() => setScreenOffset(-10), 30);
-      setTimeout(() => setScreenOffset(0), 60);
+      setScreenOffset(20);
+      setTimeout(() => setScreenOffset(-10), between * 1);
+      setTimeout(() => setScreenOffset(5), between * 2);
+      setTimeout(() => setScreenOffset(-2.5), between * 3);
+      setTimeout(() => setScreenOffset(1.25), between * 4);
+      setTimeout(() => setScreenOffset(-0.625), between * 5);
+      setTimeout(() => setScreenOffset(0.375), between * 6);
+      setTimeout(() => setScreenOffset(-0.1825), between * 7);
     }, delay);
   }
 
@@ -199,20 +210,11 @@ function Game({
       className="position-relative"
       style={{
         marginTop: screenOffset + "px",
-        backgroundColor: playerSwap.current ? "darkslategray" : "mintcream",
+        transitionProperty: "all",
+        transitionDuration: ".08s",
         overflow: "hidden",
-        height: "100vh",
-        transitionProperty: "marginTop, background",
-        transitionDuration: "0.05s, 0.5s",
       }}
     >
-      <BackButtonHeader
-        width={squareSize * numCols}
-        height={30}
-        hasText={aiOpponent}
-        headerText={aiTrait.name}
-        onClick={onExit}
-      />
       {displayFlip.current ? whiteUI : blackUI}
       <Board
         flipped={displayFlip.current}

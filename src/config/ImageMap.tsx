@@ -4,7 +4,7 @@ import WhiteBishop from "../assets/wB.png";
 import WhiteKnight from "../assets/wKn.png";
 import WhiteQueen from "../assets/wQ.png";
 import WhiteKing from "../assets/wK.png";
-import WhiteSuperPawn from "../assets/wSP.png";
+import WhiteSuperPawn from "../assets/wSP.gif";
 
 import BlackPawn from "../assets/bP.png";
 import BlackRook from "../assets/bR.png";
@@ -12,7 +12,7 @@ import BlackBishop from "../assets/bB.png";
 import BlackKnight from "../assets/bKn.png";
 import BlackQueen from "../assets/bQ.png";
 import BlackKing from "../assets/bK.png";
-import BlackSuperPawn from "../assets/bSP.png";
+import BlackSuperPawn from "../assets/bSP.gif";
 
 import WhiteSquare from "../assets/wS.png";
 import BlackSquare from "../assets/bS.png";
