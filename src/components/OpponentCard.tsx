@@ -3,6 +3,7 @@ import Colors from "../config/Colors";
 import { useState } from "react";
 import OpponentSelect from "./OpponentSelect";
 import AISelect from "./AISelect";
+import { Other, SpecialBots } from "../config/Opponents";
 
 interface Props {
   width?: number;
@@ -20,6 +21,10 @@ function OpponentCard({ width = 360, onClick, opponent, setOpponent }: Props) {
   const [open, setOpen] = useState(false);
 
   const groups = ["Bots", "Other"];
+  function toggleGame() {
+    setOpen(!open);
+    setTimeout(onClick, 200);
+  }
 
   return (
     <div
@@ -39,10 +44,7 @@ function OpponentCard({ width = 360, onClick, opponent, setOpponent }: Props) {
           fontSize: "20px",
           fontWeight: "bold",
         }}
-        onClick={() => {
-          setOpen(!open);
-          setTimeout(onClick, 200);
-        }}
+        onClick={toggleGame}
       >
         {opponent.name}
       </div>
@@ -56,12 +58,23 @@ function OpponentCard({ width = 360, onClick, opponent, setOpponent }: Props) {
           />
           {groups[selectedGroup] === "Bots" && (
             <AISelect
+              opponents={SpecialBots}
               setSelected={setOpponent}
               selectedOpponent={selectedOpponent}
               setSelectedOpponent={setSelectedOpponent}
+              toggleGame={toggleGame}
             />
           )}
-          {groups[selectedGroup] === "Other" && "other"}
+          {groups[selectedGroup] === "Other" && (
+            <AISelect
+              opponents={Other}
+              setSelected={setOpponent}
+              selectedOpponent={selectedOpponent}
+              setSelectedOpponent={setSelectedOpponent}
+              toggleGame={toggleGame}
+              offset={SpecialBots.length}
+            />
+          )}
           <div className="text-center mt-2 mx-4" style={{ fontSize: "15px" }}>
             {opponent.description}
           </div>
