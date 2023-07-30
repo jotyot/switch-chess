@@ -1,6 +1,5 @@
 import { Opponent } from "../classes/Opponent";
 import Colors from "../config/Colors";
-import { Other, SpecialBots } from "../config/Opponents";
 import { useState } from "react";
 import OpponentSelect from "./OpponentSelect";
 import AISelect from "./AISelect";
