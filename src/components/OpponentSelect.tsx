@@ -1,27 +1,53 @@
+import { Opponent } from "../classes/Opponent";
+
 interface Props {
-  groups: string[];
-  selectedGroup: number;
-  setSelectedGroup: (i: number) => void;
+  opponents: Opponent[];
+  offset?: number;
+  selectedOpponent: number;
+  setSelectedOpponent: (i: number) => void;
+  setSelected: (i: Opponent) => void;
+  toggleGame: () => void;
 }
 
-function OpponentSelect({ selectedGroup, setSelectedGroup, groups }: Props) {
+function OpponentSelect({
+  opponents,
+  offset = 0,
+  selectedOpponent,
+  setSelectedOpponent,
+  setSelected,
+  toggleGame,
+}: Props) {
+  const size = 75;
+  const small = 60;
+  const colors = ["red", "green", "blue"];
+
   return (
-    <div className="d-flex justify-content-center mt-2">
-      <div className="btn-group">
-        {groups.map((name, i) => (
+    <div className="d-flex justify-content-center position-relative mt-3">
+      {opponents.map((opp, i) => (
+        <div
+          className="d-flex justify-content-center"
+          style={{
+            width: size + "px",
+            height: size + "px",
+          }}
+        >
           <div
-            className="btn"
+            className="btn rounded position-relative translate-middle-y top-50"
             style={{
-              backgroundColor: i === selectedGroup ? "lightcoral" : "mintcream",
-              width: "120px",
+              width: (i + offset === selectedOpponent ? size : small) + "px",
+              height: (i + offset === selectedOpponent ? size : small) + "px",
+              backgroundColor: colors[i],
+              transitionProperty: "all",
+              transitionDuration: "0.05s",
             }}
-            onClick={() => setSelectedGroup(i)}
-            key={i}
-          >
-            {name}
-          </div>
-        ))}
-      </div>
+            onClick={() => {
+              setSelectedOpponent(i + offset);
+              setSelected(opp);
+              if (i + offset === selectedOpponent) toggleGame();
+            }}
+          ></div>
+        </div>
+      ))}
     </div>
   );
 }

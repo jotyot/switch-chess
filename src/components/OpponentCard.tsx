@@ -1,8 +1,8 @@
 import { Opponent } from "../classes/Opponent";
 import Colors from "../config/Colors";
 import { useState } from "react";
+import GroupSelect from "./GroupSelect";
 import OpponentSelect from "./OpponentSelect";
-import AISelect from "./AISelect";
 import { Other, SpecialBots } from "../config/Opponents";
 
 interface Props {
@@ -51,13 +51,13 @@ function OpponentCard({ width = 360, onClick, opponent, setOpponent }: Props) {
 
       {open && (
         <div>
-          <OpponentSelect
+          <GroupSelect
             groups={groups}
             selectedGroup={selectedGroup}
             setSelectedGroup={setSelectedGroup}
           />
           {groups[selectedGroup] === "Bots" && (
-            <AISelect
+            <OpponentSelect
               opponents={SpecialBots}
               setSelected={setOpponent}
               selectedOpponent={selectedOpponent}
@@ -66,7 +66,7 @@ function OpponentCard({ width = 360, onClick, opponent, setOpponent }: Props) {
             />
           )}
           {groups[selectedGroup] === "Other" && (
-            <AISelect
+            <OpponentSelect
               opponents={Other}
               setSelected={setOpponent}
               selectedOpponent={selectedOpponent}
