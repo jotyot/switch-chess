@@ -33,12 +33,12 @@ function OpponentCard({
   setPiece,
 }: Props) {
   const closeHeight = 40;
-  const openHeight = 650;
+  const openHeight = 690;
 
   const [open, setOpen] = useState(true);
   function toggleGame() {
     setOpen(!open);
-    open ? setTimeout(onClick, 300) : setTimeout(onClick, 50);
+    open ? setTimeout(onClick, 0) : setTimeout(onClick, 500);
   }
 
   const groups = ["Bots", "Other"];
@@ -57,6 +57,7 @@ function OpponentCard({
         transitionProperty: "height, padding-top",
         transitionDuration: ".5s",
         paddingTop: closeHeight / 2 - 14 + "px",
+        overflow: "hidden",
       }}
     >
       <div
@@ -64,13 +65,14 @@ function OpponentCard({
         style={{
           fontSize: "20px",
           fontWeight: "bold",
+          cursor: "pointer",
         }}
         onClick={toggleGame}
       >
         {opponent.name}
       </div>
 
-      {open && (
+      {
         <div>
           <GroupSelect
             groups={groups}
@@ -118,7 +120,7 @@ function OpponentCard({
           <PointsInfo piece={piece} />
           <GameTips />
         </div>
-      )}
+      }
     </div>
   );
 }

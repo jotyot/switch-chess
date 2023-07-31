@@ -17,19 +17,29 @@ function App() {
         backgroundColor: "mintcream",
         minHeight: "100vh",
         overflow: "hidden",
-        userSelect: "none",
       }}
     >
-      <OpponentCard
-        onClick={() => setPlay(!play)}
-        opponent={opponent}
-        setOpponent={setOpponent}
-        skin={skin}
-        setSkin={setSkin}
-        piece={piece}
-        setPiece={setPiece}
-      />
-      {play && <Game opponent={opponent} playerSkinID={skin.id} />}
+      <div
+        style={{
+          height: "700px",
+          minHeight: "700px",
+          overflow: "hidden",
+          userSelect: "none",
+        }}
+      >
+        <OpponentCard
+          onClick={() => {
+            setPlay(!play);
+          }}
+          opponent={opponent}
+          setOpponent={setOpponent}
+          skin={skin}
+          setSkin={setSkin}
+          piece={piece}
+          setPiece={setPiece}
+        />
+        {play && <Game opponent={opponent} playerSkinID={skin.id} />}
+      </div>
     </div>
   );
 }
