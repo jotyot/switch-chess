@@ -17,6 +17,7 @@ function App() {
         backgroundColor: "mintcream",
         minHeight: "100vh",
         overflow: "hidden",
+        userSelect: "none",
       }}
     >
       <OpponentCard
