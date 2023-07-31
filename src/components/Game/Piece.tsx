@@ -10,6 +10,7 @@ interface Props {
   onHover: () => void;
   offHover: () => void;
   player: Player;
+  skinID: string;
   squareSize: number;
 }
 
@@ -30,6 +31,7 @@ function Piece({
   onHover,
   offHover,
   handleBoardClick = () => {},
+  skinID,
 }: Props) {
   const color = player.getIsWhite() ? "White" : "Black";
   const [numRows, numCols] = boardSize;
@@ -79,7 +81,7 @@ function Piece({
         {/** image of the piece. needs to be able to "pop" */}
         <img
           className="position-absolute translate-middle"
-          src={ImageMap.get(imageName)}
+          src={ImageMap.get(skinID + imageName)}
           style={{
             width: squareSize * (animate ? 0.1 : 1) + "px",
             transitionProperty: "width",

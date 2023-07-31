@@ -10,10 +10,8 @@ import { AIOpponent, Opponent } from "../../classes/Opponent";
 
 interface Props {
   opponent: Opponent;
-}
-
-function instanceOfAI(object: any): object is AIOpponent {
-  return "traits" in object;
+  playerSkinID: string;
+  otherSkinID?: string;
 }
 
 /**
@@ -21,13 +19,13 @@ function instanceOfAI(object: any): object is AIOpponent {
  * A functional game with its own score, etc. Play against AI or on same device player
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */
-function Game({ opponent }: Props) {
+function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
   const squareSize = 90;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
   const winningTotal = 10;
 
-  const aiOpponent = instanceOfAI(opponent);
+  const isAI = (obj: any): obj is AIOpponent => "traits" in obj;
 
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
   const [render, setRender] = useState([0]);
@@ -79,14 +77,14 @@ function Game({ opponent }: Props) {
 
     if (
       gameOver.current ||
-      (aiOpponent && (playerSwap.current ? whiteTurn : !whiteTurn))
+      (isAI(opponent) && (playerSwap.current ? whiteTurn : !whiteTurn))
     )
       return;
 
     boardState.current.attemptMove([i, j], () =>
       newPiece(boardState.current.getWhiteTurn())
     );
-    if (aiOpponent)
+    if (isAI(opponent))
       new AIPlayer(
         boardState,
         playerSwap.current ? whiteHand : blackHand,
@@ -102,7 +100,7 @@ function Game({ opponent }: Props) {
    * @param index Which piece was clicked on
    */
   function handleHandClick(white: boolean, index: number): void {
-    if (aiOpponent && (playerSwap.current ? white : !white)) return;
+    if (isAI(opponent) && (playerSwap.current ? white : !white)) return;
 
     white
       ? whiteHand.current.setSelected(index)
@@ -121,7 +119,7 @@ function Game({ opponent }: Props) {
     blackHand.current = new Hand(handSize, reRender);
     reRender();
 
-    if (aiOpponent && !gameOver.current && playerSwap.current) {
+    if (isAI(opponent) && !gameOver.current && playerSwap.current) {
       // a little annoying but to prevent white Ai start from using blackhand
       new AIPlayer(
         boardState,
@@ -170,6 +168,7 @@ function Game({ opponent }: Props) {
 
   const whiteUI = (
     <PlayerUI
+      skinID={playerSwap.current ? otherSkinID : playerSkinID}
       score={scores.current[playerSwap.current ? 1 : 0]}
       width={squareSize * numCols}
       white={true}
@@ -180,6 +179,7 @@ function Game({ opponent }: Props) {
 
   const blackUI = (
     <PlayerUI
+      skinID={playerSwap.current ? playerSkinID : otherSkinID}
       score={scores.current[playerSwap.current ? 0 : 1]}
       width={squareSize * numCols}
       white={false}
@@ -215,6 +215,9 @@ function Game({ opponent }: Props) {
     >
       {displayFlip.current ? whiteUI : blackUI}
       <Board
+        playerSkinID={playerSkinID}
+        otherSkinID={otherSkinID}
+        whitePlayer={!playerSwap.current}
         flipped={displayFlip.current}
         squareSize={squareSize}
         boardState={boardState.current}

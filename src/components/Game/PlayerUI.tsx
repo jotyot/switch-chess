@@ -8,6 +8,7 @@ interface Props {
   hand: Hand;
   onClick: (white: boolean, index: number) => void;
   score: number;
+  skinID: string;
   width: number;
   white: boolean;
 }
@@ -21,7 +22,7 @@ interface Props {
  * @param white is this the white/black side?
  * @returns JSX element containing player information
  */
-function PlayerUI({ score, white, width, hand, onClick }: Props) {
+function PlayerUI({ score, white, width, hand, onClick, skinID }: Props) {
   const pieceColor = white ? "White" : "Black";
   const bigScale = 0.25;
   const smallScale = 0.18;
@@ -55,6 +56,7 @@ function PlayerUI({ score, white, width, hand, onClick }: Props) {
             const scale = selected ? bigScale : smallScale;
             return (
               <HandUI
+                skinID={skinID}
                 maxWidth={width * bigScale}
                 squareSize={width * scale}
                 image={pieceColor + piece}

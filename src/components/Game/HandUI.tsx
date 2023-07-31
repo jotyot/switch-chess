@@ -6,6 +6,7 @@ import { useState } from "react";
 interface Props {
   image: string;
   squareSize: number;
+  skinID: string;
   onClick: () => void;
   maxWidth: number;
   animate?: boolean;
@@ -23,6 +24,7 @@ function HandUI({
   squareSize,
   onClick,
   animate = false,
+  skinID,
 }: Props) {
   const incomingImage = image;
   const [imageName, setImageName] = useState(image);
@@ -61,7 +63,7 @@ function HandUI({
       >
         {image && (
           <img
-            src={ImageMap.get(imageName)}
+            src={ImageMap.get(skinID + imageName)}
             alt=""
             className="translate-middle top-50 start-50 position-absolute"
             style={{

@@ -2,29 +2,50 @@ import { Opponent } from "../classes/Opponent";
 import Colors from "../config/Colors";
 import { useState } from "react";
 import GroupSelect from "./GroupSelect";
-import OpponentSelect from "./OpponentSelect";
+import ItemCards from "./ItemCards";
 import { Other, SpecialBots } from "../config/Opponents";
+import Skin from "../classes/Skin";
+import Skins from "../config/Skins";
+import ItemButtons from "./ItemButtons";
+import PieceDisplay from "./PieceDisplay";
+import PointsInfo from "./PointsInfo";
+import GameTips from "./GameTips";
 
 interface Props {
   width?: number;
   onClick: () => void;
   opponent: Opponent;
   setOpponent: (o: Opponent) => void;
+  skin: Skin;
+  setSkin: (s: Skin) => void;
+  piece: string;
+  setPiece: (s: string) => void;
 }
 
-function OpponentCard({ width = 360, onClick, opponent, setOpponent }: Props) {
+function OpponentCard({
+  width = 360,
+  onClick,
+  opponent,
+  setOpponent,
+  skin,
+  setSkin,
+  piece,
+  setPiece,
+}: Props) {
   const closeHeight = 40;
-  const openHeight = 300;
+  const openHeight = 650;
 
-  const [selectedGroup, setSelectedGroup] = useState(0);
-  const [selectedOpponent, setSelectedOpponent] = useState(0);
   const [open, setOpen] = useState(true);
-
-  const groups = ["Bots", "Other"];
   function toggleGame() {
     setOpen(!open);
-    setTimeout(onClick, 100);
+    open ? setTimeout(onClick, 300) : setTimeout(onClick, 50);
   }
+
+  const groups = ["Bots", "Other"];
+  const [selectedGroup, setSelectedGroup] = useState(0);
+  const [selectedOpponent, setSelectedOpponent] = useState(0);
+
+  const [selectedSkin, setSelectedSkin] = useState(0);
 
   return (
     <div
@@ -34,7 +55,7 @@ function OpponentCard({ width = 360, onClick, opponent, setOpponent }: Props) {
         height: (open ? openHeight : closeHeight) + "px",
         backgroundColor: Colors.secondary,
         transitionProperty: "height, padding-top",
-        transitionDuration: "0.5s",
+        transitionDuration: ".5s",
         paddingTop: closeHeight / 2 - 14 + "px",
       }}
     >
@@ -57,27 +78,45 @@ function OpponentCard({ width = 360, onClick, opponent, setOpponent }: Props) {
             setSelectedGroup={setSelectedGroup}
           />
           {groups[selectedGroup] === "Bots" && (
-            <OpponentSelect
-              opponents={SpecialBots}
+            <ItemCards<Opponent>
+              list={SpecialBots}
               setSelected={setOpponent}
-              selectedOpponent={selectedOpponent}
-              setSelectedOpponent={setSelectedOpponent}
+              selectedItem={selectedOpponent}
+              setSelectedItem={setSelectedOpponent}
               toggleGame={toggleGame}
             />
           )}
           {groups[selectedGroup] === "Other" && (
-            <OpponentSelect
-              opponents={Other}
+            <ItemCards<Opponent>
+              list={Other}
               setSelected={setOpponent}
-              selectedOpponent={selectedOpponent}
-              setSelectedOpponent={setSelectedOpponent}
+              selectedItem={selectedOpponent}
+              setSelectedItem={setSelectedOpponent}
               toggleGame={toggleGame}
               offset={SpecialBots.length}
             />
           )}
-          <div className="text-center mt-2 mx-4" style={{ fontSize: "15px" }}>
+          <div
+            className="text-center mt-2 mx-4"
+            style={{ fontSize: "15px", height: "60px" }}
+          >
             {opponent.description}
           </div>
+          <div
+            className="text-center position-relative mt-5"
+            style={{ fontSize: "20px" }}
+          >
+            {"Skins"}
+          </div>
+          <ItemButtons
+            groups={Skins}
+            selectedItem={selectedSkin}
+            setSelectedItem={setSelectedSkin}
+            setSelected={setSkin}
+          />
+          <PieceDisplay skinID={skin.id} piece={piece} setPiece={setPiece} />
+          <PointsInfo piece={piece} />
+          <GameTips />
         </div>
       )}
     </div>

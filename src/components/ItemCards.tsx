@@ -1,29 +1,27 @@
-import { Opponent } from "../classes/Opponent";
-
-interface Props {
-  opponents: Opponent[];
+interface Props<T> {
+  list: T[];
   offset?: number;
-  selectedOpponent: number;
-  setSelectedOpponent: (i: number) => void;
-  setSelected: (i: Opponent) => void;
-  toggleGame: () => void;
+  selectedItem: number;
+  setSelectedItem: (i: number) => void;
+  setSelected: (i: T) => void;
+  toggleGame?: () => void;
 }
 
-function OpponentSelect({
-  opponents,
+function ItemCards<T>({
+  list,
   offset = 0,
-  selectedOpponent,
-  setSelectedOpponent,
+  selectedItem,
+  setSelectedItem,
   setSelected,
-  toggleGame,
-}: Props) {
+  toggleGame = () => {},
+}: Props<T>) {
   const size = 75;
   const small = 60;
   const colors = ["red", "green", "blue"];
 
   return (
     <div className="d-flex justify-content-center position-relative mt-3">
-      {opponents.map((opp, i) => (
+      {list.map((opp, i) => (
         <div
           className="d-flex justify-content-center"
           style={{
@@ -34,16 +32,16 @@ function OpponentSelect({
           <div
             className="btn rounded position-relative translate-middle-y top-50"
             style={{
-              width: (i + offset === selectedOpponent ? size : small) + "px",
-              height: (i + offset === selectedOpponent ? size : small) + "px",
+              width: (i + offset === selectedItem ? size : small) + "px",
+              height: (i + offset === selectedItem ? size : small) + "px",
               backgroundColor: colors[i],
               transitionProperty: "all",
               transitionDuration: "0.05s",
             }}
             onClick={() => {
-              setSelectedOpponent(i + offset);
+              setSelectedItem(i + offset);
               setSelected(opp);
-              if (i + offset === selectedOpponent) toggleGame();
+              if (i + offset === selectedItem) toggleGame();
             }}
           ></div>
         </div>
@@ -52,4 +50,4 @@ function OpponentSelect({
   );
 }
 
-export default OpponentSelect;
+export default ItemCards;

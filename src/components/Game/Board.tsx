@@ -7,8 +7,11 @@ import PieceMoves from "../../classes/PieceMoves";
 interface Props {
   boardState: BoardState;
   flipped: boolean;
+  playerSkinID: string;
+  otherSkinID: string;
   squareSize: number;
   handleBoardClick: (i: number, j: number) => void;
+  whitePlayer: boolean;
 }
 
 /**
@@ -18,7 +21,15 @@ interface Props {
  * @param handleBoardClick a function that can be mapped to an individual square
  * @returns A JSX element containing information about the state of the chess board + pieces
  */
-function Board({ squareSize, boardState, flipped, handleBoardClick }: Props) {
+function Board({
+  squareSize,
+  boardState,
+  flipped,
+  handleBoardClick,
+  playerSkinID,
+  otherSkinID,
+  whitePlayer,
+}: Props) {
   const [numRows, numCols] = boardState.getBoardSize();
   const playerMoves = PieceMoves.movesFromBoardState(boardState, true, true);
 
@@ -27,6 +38,9 @@ function Board({ squareSize, boardState, flipped, handleBoardClick }: Props) {
   const [guides, setGuides] = useState(
     [...Array(numRows)].map(() => Array(numCols).fill(false))
   );
+
+  const whiteSkinID = whitePlayer ? playerSkinID : otherSkinID;
+  const blackSkinID = whitePlayer ? otherSkinID : playerSkinID;
 
   /**
    * sets the current highlights to those of the piece we are hovering
@@ -67,7 +81,11 @@ function Board({ squareSize, boardState, flipped, handleBoardClick }: Props) {
               return (
                 <Square
                   squareSize={squareSize}
-                  color={(r + c) % 2 === 0 ? "White" : "Black"}
+                  color={
+                    (r + c) % 2 === 0
+                      ? whiteSkinID + "White"
+                      : blackSkinID + "Black"
+                  }
                   clickable={item}
                   onClick={() => handleBoardClick(r, c)}
                   guides={guides[i][j]}
@@ -79,6 +97,7 @@ function Board({ squareSize, boardState, flipped, handleBoardClick }: Props) {
         );
       })}
       <Piece
+        skinID={whiteSkinID}
         player={white}
         squareSize={squareSize}
         flipped={flipped}
@@ -92,6 +111,7 @@ function Board({ squareSize, boardState, flipped, handleBoardClick }: Props) {
         }
       />
       <Piece
+        skinID={blackSkinID}
         player={black}
         squareSize={squareSize}
         flipped={flipped}
