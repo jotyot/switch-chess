@@ -1,11 +1,11 @@
-import { Opponent } from "../classes/Opponent";
-import Colors from "../config/Colors";
+import { Opponent } from "../../classes/Opponent";
+import Colors from "../../config/Colors";
 import { useState } from "react";
 import GroupSelect from "./GroupSelect";
 import ItemCards from "./ItemCards";
-import { Other, SpecialBots } from "../config/Opponents";
-import Skin from "../classes/Skin";
-import Skins from "../config/Skins";
+import { Other, SpecialBots } from "../../config/Opponents";
+import Skin from "../../classes/Skin";
+import Skins from "../../config/Skins";
 import ItemButtons from "./ItemButtons";
 import PieceDisplay from "./PieceDisplay";
 import PointsInfo from "./PointsInfo";
@@ -60,7 +60,7 @@ function OpponentCard({
       }}
     >
       <div
-        className="text-center position-relative"
+        className="text-center position-relative hover"
         style={{
           fontSize: "20px",
           fontWeight: "bold",

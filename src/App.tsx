@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Game from "./components/Game/Game";
 import { SpecialBots } from "./config/Opponents";
-import OpponentCard from "./components/OpponentCard";
+import OpponentCard from "./components/Menu/OpponentCard";
 import { Opponent } from "./classes/Opponent";
 import Skins from "./config/Skins";
 

@@ -1,4 +1,4 @@
-import PiecePoints from "../config/PiecePoints";
+import PiecePoints from "../../config/PiecePoints";
 
 interface Props {
   piece: string;

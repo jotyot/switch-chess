@@ -1,4 +1,4 @@
-import ImageMap from "../config/ImageMap";
+import ImageMap from "../../config/ImageMap";
 import ArrowButton from "./ArrowButton";
 import { useRef } from "react";
 
@@ -18,7 +18,7 @@ function PieceDisplay({ skinID, piece, setPiece }: Props) {
     "King",
     "SuperPawn",
   ];
-  const selected = useRef(0);
+  const selected = useRef(pieces.indexOf(piece));
   const squareSize = 100;
 
   function cyclePiece(add: boolean) {
