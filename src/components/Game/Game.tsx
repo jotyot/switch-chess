@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import Board from "./Board";
 import PlayerUI from "./PlayerUI";
 import BoardState from "../../classes/BoardState";
 import Hand from "../../classes/Hand";
@@ -7,6 +6,7 @@ import AIPlayer from "../../classes/AIPlayer";
 import ReplayButton from "./ReplayButton";
 import PiecePoints from "../../config/PiecePoints";
 import { AIOpponent, Opponent } from "../../classes/Opponent";
+import BoardArea from "./BoardArea";
 
 interface Props {
   opponent: Opponent;
@@ -214,7 +214,7 @@ function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
       }}
     >
       {displayFlip.current ? whiteUI : blackUI}
-      <Board
+      <BoardArea
         playerSkinID={playerSkinID}
         otherSkinID={otherSkinID}
         whitePlayer={!playerSwap.current}

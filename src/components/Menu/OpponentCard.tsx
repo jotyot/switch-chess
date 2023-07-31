@@ -14,6 +14,7 @@ import GameTips from "./GameTips";
 interface Props {
   width?: number;
   resetGame: () => void;
+  currentOpponent: string;
   opponent: Opponent;
   setOpponent: (o: Opponent) => void;
   skin: Skin;
@@ -25,6 +26,7 @@ interface Props {
 function OpponentCard({
   width = 360,
   resetGame,
+  currentOpponent,
   opponent,
   setOpponent,
   skin,
@@ -37,7 +39,7 @@ function OpponentCard({
 
   const [open, setOpen] = useState(true);
   function toggleGame() {
-    if (open) resetGame();
+    if (open && currentOpponent !== opponent.name) resetGame();
     setOpen(!open);
   }
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Game from "./components/Game/Game";
 import { SpecialBots } from "./config/Opponents";
 import OpponentCard from "./components/Menu/OpponentCard";
@@ -8,8 +8,9 @@ import Skins from "./config/Skins";
 function App() {
   const [opponent, setOpponent] = useState<Opponent>(SpecialBots[0]);
   const [skin, setSkin] = useState(Skins[0]);
-  const [play, setPlay] = useState(false);
+  const [play, setPlay] = useState(true);
   const [piece, setPiece] = useState("Pawn");
+  const gameOpponenet = useRef(opponent.name);
 
   return (
     <div
@@ -29,6 +30,7 @@ function App() {
       >
         <OpponentCard
           resetGame={() => {
+            gameOpponenet.current = opponent.name;
             setPlay(false);
             setTimeout(() => setPlay(true), 1);
           }}
@@ -38,6 +40,7 @@ function App() {
           setSkin={setSkin}
           piece={piece}
           setPiece={setPiece}
+          currentOpponent={gameOpponenet.current}
         />
         {play && <Game opponent={opponent} playerSkinID={skin.id} />}
       </div>
