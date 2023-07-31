@@ -43,7 +43,7 @@ function OpponentCard({
     setOpen(!open);
   }
 
-  const groups = ["Bots", "Other"];
+  const groups = ["Bots", "PvP"];
   const [selectedGroup, setSelectedGroup] = useState(0);
   const [selectedOpponent, setSelectedOpponent] = useState(0);
 
@@ -90,7 +90,7 @@ function OpponentCard({
               toggleGame={toggleGame}
             />
           )}
-          {groups[selectedGroup] === "Other" && (
+          {groups[selectedGroup] === "PvP" && (
             <ItemCards<Opponent>
               list={Other}
               setSelected={setOpponent}
