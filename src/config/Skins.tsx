@@ -1,7 +1,7 @@
 import Skin from "../classes/Skin";
 
-const Default: Skin = {
-  name: "Default",
+const Classic: Skin = {
+  name: "Classic",
   id: "",
 };
 
@@ -10,5 +10,5 @@ const Neon: Skin = {
   id: "n",
 };
 
-const Skins = [Default, Neon];
+const Skins = [Classic, Neon];
 export default Skins;

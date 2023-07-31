@@ -91,6 +91,13 @@ class BoardState {
 
     this.updateBoard();
   }
+
+  public hasSuperPawn() {
+    return (
+      this.black.getPiece() === "SuperPawn" ||
+      this.white.getPiece() === "SuperPawn"
+    );
+  }
 }
 
 export default BoardState;

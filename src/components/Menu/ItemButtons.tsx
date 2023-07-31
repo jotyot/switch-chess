@@ -1,3 +1,5 @@
+import Colors from "../../config/Colors";
+
 interface Props<T> {
   groups: T[];
   selectedItem: number;
@@ -18,7 +20,8 @@ function ItemButtons<T extends object>({
           <div
             className="btn"
             style={{
-              backgroundColor: i === selectedItem ? "lightcoral" : "mintcream",
+              backgroundColor:
+                i === selectedItem ? Colors.primary : Colors.tertiary,
               width: "120px",
             }}
             onClick={() => {

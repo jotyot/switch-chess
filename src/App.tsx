@@ -4,6 +4,7 @@ import { SpecialBots } from "./config/Opponents";
 import OpponentCard from "./components/Menu/OpponentCard";
 import { Opponent } from "./classes/Opponent";
 import Skins from "./config/Skins";
+import Colors from "./config/Colors";
 
 function App() {
   const [opponent, setOpponent] = useState<Opponent>(SpecialBots[0]);
@@ -15,7 +16,7 @@ function App() {
   return (
     <div
       style={{
-        backgroundColor: "mintcream",
+        backgroundColor: Colors.tertiary,
         minHeight: "100vh",
         overflow: "hidden",
       }}

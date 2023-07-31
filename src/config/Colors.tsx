@@ -3,6 +3,7 @@
 const Colors = {
   primary: "lightcoral",
   secondary: "linen",
+  tertiary: "mintcream",
   light: "lightgray",
   dark: "darkslategray",
 };
