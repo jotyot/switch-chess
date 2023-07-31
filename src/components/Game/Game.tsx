@@ -20,7 +20,7 @@ interface Props {
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */
 function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
-  const squareSize = 90;
+  const width = 360;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
   const winningTotal = 10;
@@ -170,7 +170,7 @@ function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
     <PlayerUI
       skinID={playerSwap.current ? otherSkinID : playerSkinID}
       score={scores.current[playerSwap.current ? 1 : 0]}
-      width={squareSize * numCols}
+      width={width}
       white={true}
       hand={whiteHand.current}
       onClick={handleHandClick}
@@ -181,7 +181,7 @@ function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
     <PlayerUI
       skinID={playerSwap.current ? playerSkinID : otherSkinID}
       score={scores.current[playerSwap.current ? 0 : 1]}
-      width={squareSize * numCols}
+      width={width}
       white={false}
       hand={blackHand.current}
       onClick={handleHandClick}
@@ -219,7 +219,7 @@ function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
         otherSkinID={otherSkinID}
         whitePlayer={!playerSwap.current}
         flipped={displayFlip.current}
-        squareSize={squareSize}
+        width={width}
         boardState={boardState.current}
         handleBoardClick={handleBoardClick}
       />
@@ -227,7 +227,7 @@ function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
       {gameOver.current && (
         <ReplayButton
           onClick={resetGame}
-          width={(squareSize * numCols * 2) / 3}
+          width={(width * 2) / 3}
           winner={gameWinner.current}
         />
       )}

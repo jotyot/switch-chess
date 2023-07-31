@@ -42,16 +42,14 @@ function HandUI({
 
   return (
     <div
-      className={
-        "d-flex justify-content-center rounded translate-middle-y position-relative"
-      }
+      className="d-flex justify-content-center rounded position-relative align-items-center"
       style={{
         height: maxWidth + "px",
         width: maxWidth + "px",
       }}
     >
       <div
-        className="d-flex justify-content-center rounded top-50 translate-middle-y position-absolute"
+        className="d-flex justify-content-center rounded position-relative align-items-center"
         style={{
           backgroundColor: Colors.secondary,
           height: squareSize + "px",

@@ -9,7 +9,7 @@ interface Props {
   flipped: boolean;
   playerSkinID: string;
   otherSkinID: string;
-  squareSize: number;
+  width: number;
   handleBoardClick: (i: number, j: number) => void;
   whitePlayer: boolean;
 }
@@ -22,7 +22,7 @@ interface Props {
  * @returns A JSX element containing information about the state of the chess board + pieces
  */
 function Board({
-  squareSize,
+  width,
   boardState,
   flipped,
   handleBoardClick,
@@ -31,6 +31,7 @@ function Board({
   whitePlayer,
 }: Props) {
   const [numRows, numCols] = boardState.getBoardSize();
+  const squareSize = width / numCols;
   const playerMoves = PieceMoves.movesFromBoardState(boardState, true, true);
 
   let highlights = PieceMoves.movesToMap(playerMoves, [numRows, numCols]);

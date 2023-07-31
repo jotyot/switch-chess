@@ -23,7 +23,7 @@ import nWhiteBishop from "../assets/wB-neon.png";
 import nWhiteKnight from "../assets/wKn-neon.png";
 import nWhiteQueen from "../assets/wQ-neon.png";
 import nWhiteKing from "../assets/wK-neon.png";
-import nWhiteSuperPawn from "../assets/wSP-neon.png";
+import nWhiteSuperPawn from "../assets/wSP-neon.gif";
 
 import nBlackPawn from "../assets/bP-neon.png";
 import nBlackRook from "../assets/bR-neon.png";
@@ -31,7 +31,7 @@ import nBlackBishop from "../assets/bB-neon.png";
 import nBlackKnight from "../assets/bKn-neon.png";
 import nBlackQueen from "../assets/bQ-neon.png";
 import nBlackKing from "../assets/bK-neon.png";
-import nBlackSuperPawn from "../assets/bSP-neon.png";
+import nBlackSuperPawn from "../assets/bSP-neon.gif";
 
 import nWhiteSquare from "../assets/wS-neon.png";
 import nBlackSquare from "../assets/bS-neon.png";

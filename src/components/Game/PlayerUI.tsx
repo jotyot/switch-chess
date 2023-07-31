@@ -39,34 +39,54 @@ function PlayerUI({ score, white, width, hand, onClick, skinID }: Props) {
   hand.setAnimation(animation);
 
   return (
-    <div
-      className="container position-relative rounded my-2"
-      style={{
-        width: width + "px",
-        height: width / 3 + "px",
-        backgroundColor: Colors.primary,
-      }}
-    >
-      <h1 className="position-absolute translate-middle-y top-50">{score}</h1>
-      <div className="d-flex justify-content-center position-absolute translate-middle-x start-50 top-50">
-        {
-          // Selected element is larger
-          hand.getHand().map((piece, index) => {
-            const selected = hand.getSelected() === index;
-            const scale = selected ? bigScale : smallScale;
-            return (
-              <HandUI
-                skinID={skinID}
-                maxWidth={width * bigScale}
-                squareSize={width * scale}
-                image={pieceColor + piece}
-                onClick={() => onClick(white, index)}
-                key={index}
-                animate={selected && animate}
-              />
-            );
-          })
-        }
+    <div className="d-flex justify-content-center position-relative my-2 ">
+      <div
+        className="position-relative d-flex justify-content-center rounded align-items-center"
+        style={{
+          marginRight: 7 + "px",
+          width: 63 + "px",
+          height: width / 3 + "px",
+          backgroundColor: Colors.primary,
+        }}
+      >
+        <div
+          style={{
+            fontSize: "30px",
+            fontWeight: "bold",
+            color: Colors.secondary,
+          }}
+        >
+          {score}
+        </div>
+      </div>
+      <div
+        className="position-relative rounded d-flex justify-content-center align-items-center"
+        style={{
+          width: width - 70 + "px",
+          height: width / 3 + "px",
+          backgroundColor: Colors.primary,
+        }}
+      >
+        <div className="d-flex">
+          {
+            // Selected element is larger
+            hand.getHand().map((piece, index) => {
+              const selected = hand.getSelected() === index;
+              const scale = selected ? bigScale : smallScale;
+              return (
+                <HandUI
+                  skinID={skinID}
+                  maxWidth={width * bigScale}
+                  squareSize={width * scale}
+                  image={pieceColor + piece}
+                  onClick={() => onClick(white, index)}
+                  key={index}
+                  animate={selected && animate}
+                />
+              );
+            })
+          }
+        </div>
       </div>
     </div>
   );
