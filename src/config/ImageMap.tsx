@@ -40,6 +40,7 @@ import nBlackSquare from "../assets/bS-neon.png";
  * Maps a string to its image. ex. get("WhitePawn") returns its corresponding image
  */
 const ImageMap = new Map([
+  // DEFAULT
   ["WhitePawn", WhitePawn],
   ["WhiteRook", WhiteRook],
   ["WhiteBishop", WhiteBishop],
@@ -59,6 +60,7 @@ const ImageMap = new Map([
   ["WhiteSquare", WhiteSquare],
   ["BlackSquare", BlackSquare],
 
+  // NEON
   ["nWhitePawn", nWhitePawn],
   ["nWhiteRook", nWhiteRook],
   ["nWhiteBishop", nWhiteBishop],
