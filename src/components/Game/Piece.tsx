@@ -5,6 +5,7 @@ import { useState, useRef } from "react";
 
 interface Props {
   boardSize: [number, number];
+
   flipped: boolean;
   handleBoardClick?: (i: number, j: number) => void;
   onHover: () => void;
@@ -49,6 +50,7 @@ function Piece({
 
   // Triggers when piece moves
   if (incomingPosition !== position.current) {
+    offHover();
     position.current = incomingPosition;
     setTimeout(() => {
       setAnimate(true);

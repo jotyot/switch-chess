@@ -34,11 +34,10 @@ function Board({
   const squareSize = width / numCols;
   const playerMoves = PieceMoves.movesFromBoardState(boardState, true, true);
 
+  const empty = [...Array(numRows)].map(() => Array(numCols).fill(false));
   let highlights = PieceMoves.movesToMap(playerMoves, [numRows, numCols]);
   if (flipped) highlights = highlights.map((row) => row.reverse()).reverse();
-  const [guides, setGuides] = useState(
-    [...Array(numRows)].map(() => Array(numCols).fill(false))
-  );
+  const [guides, setGuides] = useState(empty);
 
   const whiteSkinID = whitePlayer ? playerSkinID : otherSkinID;
   const blackSkinID = whitePlayer ? otherSkinID : playerSkinID;
@@ -104,9 +103,7 @@ function Board({
         flipped={flipped}
         boardSize={[numRows, numCols]}
         onHover={() => showGuides(true)}
-        offHover={() =>
-          setGuides([...Array(numRows)].map(() => Array(numCols).fill(false)))
-        }
+        offHover={() => setGuides(empty)}
         handleBoardClick={
           captureable(white.getPos()) ? handleBoardClick : undefined
         }
@@ -118,9 +115,7 @@ function Board({
         flipped={flipped}
         boardSize={[numRows, numCols]}
         onHover={() => showGuides(false)}
-        offHover={() =>
-          setGuides([...Array(numRows)].map(() => Array(numCols).fill(false)))
-        }
+        offHover={() => setGuides(empty)}
         handleBoardClick={
           captureable(black.getPos()) ? handleBoardClick : undefined
         }
