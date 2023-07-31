@@ -28,8 +28,9 @@ function App() {
         }}
       >
         <OpponentCard
-          onClick={() => {
-            setPlay(!play);
+          resetGame={() => {
+            setPlay(false);
+            setTimeout(() => setPlay(true), 1);
           }}
           opponent={opponent}
           setOpponent={setOpponent}

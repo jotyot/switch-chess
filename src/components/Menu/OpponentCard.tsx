@@ -13,7 +13,7 @@ import GameTips from "./GameTips";
 
 interface Props {
   width?: number;
-  onClick: () => void;
+  resetGame: () => void;
   opponent: Opponent;
   setOpponent: (o: Opponent) => void;
   skin: Skin;
@@ -24,7 +24,7 @@ interface Props {
 
 function OpponentCard({
   width = 360,
-  onClick,
+  resetGame,
   opponent,
   setOpponent,
   skin,
@@ -37,8 +37,8 @@ function OpponentCard({
 
   const [open, setOpen] = useState(true);
   function toggleGame() {
+    if (open) resetGame();
     setOpen(!open);
-    open ? setTimeout(onClick, 0) : setTimeout(onClick, 500);
   }
 
   const groups = ["Bots", "Other"];
