@@ -42,7 +42,7 @@ import rWhiteBishop from "../assets/wB-rich.png";
 import rWhiteKnight from "../assets/wKn-rich.png";
 import rWhiteQueen from "../assets/wQ-rich.png";
 import rWhiteKing from "../assets/wK-rich.png";
-import rWhiteSuperPawn from "../assets/wSP-rich.png";
+import rWhiteSuperPawn from "../assets/wSP-rich.gif";
 
 import rBlackPawn from "../assets/bP-rich.png";
 import rBlackRook from "../assets/bR-rich.png";
@@ -50,7 +50,7 @@ import rBlackBishop from "../assets/bB-rich.png";
 import rBlackKnight from "../assets/bKn-rich.png";
 import rBlackQueen from "../assets/bQ-rich.png";
 import rBlackKing from "../assets/bK-rich.png";
-import rBlackSuperPawn from "../assets/bSP-rich.png";
+import rBlackSuperPawn from "../assets/bSP-rich.gif";
 
 import rWhiteSquare from "../assets/wS-rich.png";
 import rBlackSquare from "../assets/bS-rich.png";

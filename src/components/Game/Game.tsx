@@ -101,6 +101,7 @@ function Game({
         winScore
       ).makeAIMove();
     setSuperPawn(boardState.current.hasSuperPawn());
+    setTimeout(() => setSuperPawn(boardState.current.hasSuperPawn()), 750);
   }
 
   /**
