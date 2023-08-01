@@ -26,8 +26,8 @@ function App() {
     >
       <div
         style={{
-          height: "700px",
-          minHeight: "700px",
+          height: "690px",
+          minHeight: "690px",
           overflow: "hidden",
           userSelect: "none",
         }}

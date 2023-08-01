@@ -35,7 +35,7 @@ function OpponentCard({
   setPiece,
 }: Props) {
   const closeHeight = 40;
-  const openHeight = 690;
+  const openHeight = 680;
 
   const [open, setOpen] = useState(true);
   function toggleGame() {
