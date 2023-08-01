@@ -51,7 +51,7 @@ function HandUI({
       <div
         className="d-flex justify-content-center rounded position-relative align-items-center"
         style={{
-          backgroundColor: Colors.secondary,
+          backgroundColor: Colors.tertiary,
           height: squareSize + "px",
           width: squareSize + "px",
           ...transition,

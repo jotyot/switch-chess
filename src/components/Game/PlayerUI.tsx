@@ -38,6 +38,11 @@ function PlayerUI({ score, white, width, hand, onClick, skinID }: Props) {
 
   hand.setAnimation(animation);
 
+  const transition = {
+    transitionProperty: "all",
+    transitionDuration: "0.5s",
+  };
+
   return (
     <div className="d-flex justify-content-center position-relative my-2 ">
       <div
@@ -47,13 +52,16 @@ function PlayerUI({ score, white, width, hand, onClick, skinID }: Props) {
           width: 63 + "px",
           height: width / 3 + "px",
           backgroundColor: Colors.primary,
+          borderStyle: "solid",
+          borderWidth: "3px",
+          borderColor: Colors.dark,
         }}
       >
         <div
           style={{
             fontSize: "30px",
             fontWeight: "bold",
-            color: Colors.secondary,
+            color: Colors.tertiary,
           }}
         >
           {score}
@@ -64,7 +72,11 @@ function PlayerUI({ score, white, width, hand, onClick, skinID }: Props) {
         style={{
           width: width - 70 + "px",
           height: width / 3 + "px",
-          backgroundColor: Colors.primary,
+          backgroundColor: white ? Colors.light : Colors.dark,
+          borderStyle: "solid",
+          borderWidth: "3px",
+          borderColor: white ? Colors.dark : Colors.light,
+          ...transition,
         }}
       >
         <div className="d-flex">

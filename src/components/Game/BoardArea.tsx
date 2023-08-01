@@ -44,6 +44,9 @@ function BoardArea({
           width: width + "px",
           height: width + "px",
           backgroundColor: whitePlayer ? Colors.light : Colors.dark,
+          borderStyle: "solid",
+          borderWidth: "3px",
+          borderColor: whitePlayer ? Colors.dark : Colors.light,
           ...transition,
         }}
       >
@@ -65,11 +68,12 @@ function BoardArea({
           ))}
         </div>
         <div
-          className="position-relative rounded"
+          className="position-relative"
           style={{
             width: border + "px",
             height: border + "px",
             backgroundColor: whitePlayer ? Colors.dark : Colors.light,
+            borderRadius: "0px 0px 0px 5px",
             ...transition,
           }}
         >
@@ -86,16 +90,16 @@ function BoardArea({
           </div>
           <div
             className="d-flex align-items-center"
-            style={{ marginTop: borderWidth + "px" }}
+            style={{ marginTop: borderWidth - 2 + "px" }}
           >
             {letters.map((a) => (
               <div
                 className="d-flex justify-content-center"
                 style={{
-                  fontSize: 15 + "px",
+                  fontSize: 14 + "px",
                   fontWeight: "bold",
                   color: whitePlayer ? Colors.dark : Colors.light,
-                  width: border - borderWidth / 2,
+                  width: (border - 6) / 4 + "px",
                   ...transition,
                 }}
               >

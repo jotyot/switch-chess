@@ -1,11 +1,11 @@
 // From npm color-names
 
 const Colors = {
-  primary: "lightcoral",
+  primary: "salmon",
   secondary: "linen",
   tertiary: "mintcream",
-  light: "lightgray",
-  dark: "darkslategray",
+  light: "#DDDDDD",
+  dark: "#444444",
 };
 
 export default Colors;

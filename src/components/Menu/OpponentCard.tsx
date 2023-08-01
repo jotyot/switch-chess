@@ -58,12 +58,15 @@ function OpponentCard({
         backgroundColor: Colors.secondary,
         transitionProperty: "height, padding-top",
         transitionDuration: ".5s",
-        paddingTop: closeHeight / 2 - 14 + "px",
+        paddingTop: "2px",
         overflow: "hidden",
+        borderStyle: "solid",
+        borderWidth: "3px",
+        borderColor: Colors.dark,
       }}
     >
       <div
-        className="text-center position-relative hover"
+        className="d-flex hover justify-content-center"
         style={{
           fontSize: "20px",
           fontWeight: "bold",
