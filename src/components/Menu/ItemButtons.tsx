@@ -21,24 +21,22 @@ function ItemButtons<T extends object>({
     ...Array(groups.length - 1).fill(true),
   ]);
   const [prompt, setPrompt] = useState(false);
+  const codes = ["neon", "notroyal"];
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    let code: string;
-    if (event.key === "Enter") {
-      code = event.currentTarget.value;
-      if (code === "neon") {
+    let input: string;
+    if (event.key !== "Enter") return;
+
+    input = event.currentTarget.value;
+    for (let i = 0; i < codes.length; i++)
+      if (input === codes[i]) {
         let newLocks = locks;
-        newLocks[1] = false;
+        newLocks[i + 1] = false;
         setLocks(newLocks);
         setPrompt(false);
+        setSelectedItem(i + 1);
+        setSelected(groups[i + 1]);
       }
-      if (code === "notroyal") {
-        let newLocks = locks;
-        newLocks[2] = false;
-        setLocks(newLocks);
-        setPrompt(false);
-      }
-    }
   };
 
   return (
