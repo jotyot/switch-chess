@@ -30,6 +30,7 @@ function BoardArea({
   if (!flipped) numbers = numbers.reverse();
   const alphabet = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split("");
   let letters = alphabet.slice(0, numRows);
+  if (flipped) letters = letters.reverse();
 
   const transition = {
     transitionProperty: "all",

@@ -51,17 +51,19 @@ function PlayerUI({ score, white, width, hand, onClick, skinID }: Props) {
           marginRight: 7 + "px",
           width: 63 + "px",
           height: width / 3 + "px",
-          backgroundColor: Colors.primary,
+          backgroundColor: white ? Colors.light : Colors.dark,
           borderStyle: "solid",
           borderWidth: "3px",
-          borderColor: Colors.dark,
+          borderColor: white ? Colors.dark : Colors.light,
+          ...transition,
         }}
       >
         <div
           style={{
             fontSize: "30px",
             fontWeight: "bold",
-            color: Colors.tertiary,
+            color: white ? Colors.dark : Colors.light,
+            ...transition,
           }}
         >
           {score}
@@ -72,10 +74,10 @@ function PlayerUI({ score, white, width, hand, onClick, skinID }: Props) {
         style={{
           width: width - 70 + "px",
           height: width / 3 + "px",
-          backgroundColor: white ? Colors.light : Colors.dark,
+          backgroundColor: Colors.primary,
           borderStyle: "solid",
           borderWidth: "3px",
-          borderColor: white ? Colors.dark : Colors.light,
+          borderColor: Colors.dark,
           ...transition,
         }}
       >
