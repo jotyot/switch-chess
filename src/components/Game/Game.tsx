@@ -150,7 +150,6 @@ function Game({
    * @param piece What piece got captured
    */
   function newRound(winner: boolean, piece: string): void {
-    setSuperPawn(false);
     if (playerSwap.current) winner = !winner;
 
     let scoreMod = PiecePoints.get(piece) || [0, 0];
@@ -159,6 +158,7 @@ function Game({
     scores.current[1] += scoreMod[1];
 
     setTimeout(() => {
+      setSuperPawn(false);
       if (Math.max(...scores.current) >= winScore) {
         const [score1, score2] = scores.current;
         gameWinner.current = score1 > score2 ? "Player 1" : "Player 2";
