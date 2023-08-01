@@ -74,6 +74,8 @@ class AIPlayer {
       // else just capture
       else return captureMoves;
     } // else just return a safe move
+    console.log("playerSafeMoves");
+    console.log(playerSafeMoves);
     return playerSafeMoves;
   }
 
@@ -130,6 +132,8 @@ class AIPlayer {
       other.getPos(),
       other.getPiece()
     );
+    console.log("checkmater");
+    console.log(outMoves);
     if (outMoves.length < 1) outMoves = moves;
     return outMoves;
   }
@@ -160,7 +164,7 @@ class AIPlayer {
         pieceMove[0],
         move,
         this.board.getBoardSize(),
-        this.board.getWhiteTurn()
+        isWhite
       );
       const otherMoves = PieceMoves.moves(
         otherPiece,
@@ -178,7 +182,10 @@ class AIPlayer {
         isWhite,
         false
       );
-      if (this.safeMoves(otherMoves, nextMoves).length < 1)
+      if (
+        otherMoves.length > 0 &&
+        this.safeMoves(otherMoves, nextMoves).length < 1
+      )
         checkmates.push(pieceMove);
     }
     return checkmates;
@@ -205,6 +212,8 @@ class AIPlayer {
           .length < 1
       );
     });
+    console.log("mateDefensiveMoves");
+    console.log(mateDefensiveMoves);
     return mateDefensiveMoves.length > 0 ? mateDefensiveMoves : moves;
   }
 

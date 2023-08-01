@@ -101,7 +101,7 @@ function Game({
         winScore
       ).makeAIMove();
     setSuperPawn(boardState.current.hasSuperPawn());
-    setTimeout(() => setSuperPawn(boardState.current.hasSuperPawn()), 750);
+    setTimeout(() => setSuperPawn(boardState.current.hasSuperPawn()), 1000);
   }
 
   /**
@@ -122,6 +122,7 @@ function Game({
    * Remakes the board with new boardstate and new hands, but score is preserved
    */
   function resetBoard(): void {
+    setSuperPawn(false);
     displayFlip.current = !displayFlip.current;
     playerSwap.current = !playerSwap.current;
 
@@ -158,7 +159,6 @@ function Game({
     scores.current[1] += scoreMod[1];
 
     setTimeout(() => {
-      setSuperPawn(false);
       if (Math.max(...scores.current) >= winScore) {
         const [score1, score2] = scores.current;
         gameWinner.current = score1 > score2 ? "Player 1" : "Player 2";
