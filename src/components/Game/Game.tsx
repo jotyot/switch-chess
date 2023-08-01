@@ -12,6 +12,7 @@ interface Props {
   opponent: Opponent;
   playerSkinID: string;
   otherSkinID?: string;
+  setSuperPawn: (b: boolean) => void;
 }
 
 /**
@@ -19,7 +20,12 @@ interface Props {
  * A functional game with its own score, etc. Play against AI or on same device player
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */
-function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
+function Game({
+  opponent,
+  playerSkinID,
+  otherSkinID = "",
+  setSuperPawn,
+}: Props) {
   otherSkinID = opponent.skin.id;
   const width = 360;
   const [numRows, numCols] = [4, 4];
@@ -94,6 +100,7 @@ function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
         scores.current,
         winScore
       ).makeAIMove();
+    setSuperPawn(boardState.current.hasSuperPawn());
   }
 
   /**
@@ -142,6 +149,7 @@ function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
    * @param piece What piece got captured
    */
   function newRound(winner: boolean, piece: string): void {
+    setSuperPawn(false);
     if (playerSwap.current) winner = !winner;
 
     let scoreMod = PiecePoints.get(piece) || [0, 0];

@@ -11,14 +11,17 @@ function App() {
   const [skin, setSkin] = useState(Skins[0]);
   const [play, setPlay] = useState(true);
   const [piece, setPiece] = useState("Pawn");
+  const [superPawn, setSuperPawn] = useState(false);
   const gameOpponenet = useRef(opponent.name);
 
   return (
     <div
       style={{
-        backgroundColor: Colors.tertiary,
+        backgroundColor: superPawn ? Colors.dark : Colors.tertiary,
         minHeight: "100vh",
         overflow: "hidden",
+        transitionProperty: "all",
+        transitionDuration: "0.5s",
       }}
     >
       <div
@@ -43,7 +46,13 @@ function App() {
           setPiece={setPiece}
           currentOpponent={gameOpponenet.current}
         />
-        {play && <Game opponent={opponent} playerSkinID={skin.id} />}
+        {play && (
+          <Game
+            opponent={opponent}
+            playerSkinID={skin.id}
+            setSuperPawn={setSuperPawn}
+          />
+        )}
       </div>
     </div>
   );

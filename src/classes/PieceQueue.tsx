@@ -16,19 +16,10 @@ class PieceQueue {
   public static getRandomPiece = () =>
     PossiblePieces[~~(Math.random() * PossiblePieces.length)];
 
-  /**
-   * 10 pieces, but never have 2 knights in a row
-   * @returns array of string
-   */
   public static shuffledPieces = () => {
-    let array = [PieceQueue.getRandomPiece()];
-    for (let i = 1; i < 10; i++) {
-      let piece = PieceQueue.getRandomPiece();
-      while (array[i - 1] === "Knight" && piece === "Knight")
-        piece = PieceQueue.getRandomPiece();
-      array[i] = piece;
-    }
-    return array;
+    return PossiblePieces.slice(0)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 4);
   };
 }
 
