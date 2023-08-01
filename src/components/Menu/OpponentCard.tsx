@@ -35,7 +35,7 @@ function OpponentCard({
   setPiece,
 }: Props) {
   const closeHeight = 40;
-  const openHeight = 680;
+  const openHeight = 663;
 
   const [open, setOpen] = useState(true);
   function toggleGame() {
@@ -105,25 +105,28 @@ function OpponentCard({
           )}
           <div
             className="text-center mt-2 mx-4"
-            style={{ fontSize: "15px", height: "60px" }}
+            style={{ fontSize: "13px", height: "120px" }}
           >
             {opponent.description}
           </div>
-          <div
-            className="text-center position-relative mt-5"
-            style={{ fontSize: "20px" }}
-          >
-            {"Skins"}
+
+          <div style={{ marginTop: 100 + "px" }}>
+            <div
+              className="text-center position-relative"
+              style={{ fontSize: "20px" }}
+            >
+              {"Skins"}
+            </div>
+            <ItemButtons
+              groups={Skins}
+              selectedItem={selectedSkin}
+              setSelectedItem={setSelectedSkin}
+              setSelected={setSkin}
+            />
+            <PieceDisplay skinID={skin.id} piece={piece} setPiece={setPiece} />
+            <PointsInfo piece={piece} />
+            <GameTips />
           </div>
-          <ItemButtons
-            groups={Skins}
-            selectedItem={selectedSkin}
-            setSelectedItem={setSelectedSkin}
-            setSelected={setSkin}
-          />
-          <PieceDisplay skinID={skin.id} piece={piece} setPiece={setPiece} />
-          <PointsInfo piece={piece} />
-          <GameTips />
         </div>
       }
     </div>

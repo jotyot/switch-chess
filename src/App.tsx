@@ -26,8 +26,8 @@ function App() {
     >
       <div
         style={{
-          height: "690px",
-          minHeight: "690px",
+          height: "672px",
+          minHeight: "672px",
           overflow: "hidden",
           userSelect: "none",
         }}
@@ -53,6 +53,24 @@ function App() {
             setSuperPawn={setSuperPawn}
           />
         )}
+      </div>
+      <div
+        className="container position-relative rounded mt-2 d-flex justify-content-center align-items-center"
+        style={{
+          width: 360 + "px",
+          height: 40 + "px",
+          backgroundColor: Colors.secondary,
+          transitionProperty: "height",
+          transitionDuration: ".5s",
+          overflow: "hidden",
+          borderStyle: "solid",
+          borderWidth: "3px",
+          borderColor: Colors.dark,
+          fontSize: "16px",
+          fontWeight: "bold",
+        }}
+      >
+        Andy Cho / Jonathan Tran
       </div>
     </div>
   );

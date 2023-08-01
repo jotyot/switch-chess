@@ -7,7 +7,7 @@ interface Props {
 function PointsInfo({ piece }: Props) {
   const [p, o] = PiecePoints.get(piece) || [0, 0];
   return (
-    <div>
+    <div style={{ fontSize: "13px" }}>
       <div className="d-flex justify-content-center mt-3">
         {"capturing a " + piece.toLowerCase() + " gives"}
       </div>

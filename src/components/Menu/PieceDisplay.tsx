@@ -19,7 +19,7 @@ function PieceDisplay({ skinID, piece, setPiece }: Props) {
     "SuperPawn",
   ];
   const selected = useRef(pieces.indexOf(piece));
-  const squareSize = 100;
+  const squareSize = 80;
 
   function cyclePiece(add: boolean) {
     add
@@ -31,7 +31,10 @@ function PieceDisplay({ skinID, piece, setPiece }: Props) {
   }
 
   return (
-    <div className="d-flex position-relative justify-content-center mt-4 align-items-center">
+    <div
+      className="d-flex position-relative justify-content-center align-items-center"
+      style={{ marginTop: "30px" }}
+    >
       <ArrowButton
         text="<<"
         onClick={() => {
