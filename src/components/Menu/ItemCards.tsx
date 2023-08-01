@@ -24,6 +24,7 @@ function ItemCards<T>({
       {list.map((opp, i) => (
         <div
           className="d-flex justify-content-center"
+          key={i}
           style={{
             width: size + "px",
             height: size + "px",

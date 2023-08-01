@@ -36,6 +36,25 @@ import nBlackSuperPawn from "../assets/bSP-neon.gif";
 import nWhiteSquare from "../assets/wS-neon.png";
 import nBlackSquare from "../assets/bS-neon.png";
 
+import rWhitePawn from "../assets/wP-rich.png";
+import rWhiteRook from "../assets/wR-rich.png";
+import rWhiteBishop from "../assets/wB-rich.png";
+import rWhiteKnight from "../assets/wKn-rich.png";
+import rWhiteQueen from "../assets/wQ-rich.png";
+import rWhiteKing from "../assets/wK-rich.png";
+import rWhiteSuperPawn from "../assets/wSP-rich.png";
+
+import rBlackPawn from "../assets/bP-rich.png";
+import rBlackRook from "../assets/bR-rich.png";
+import rBlackBishop from "../assets/bB-rich.png";
+import rBlackKnight from "../assets/bKn-rich.png";
+import rBlackQueen from "../assets/bQ-rich.png";
+import rBlackKing from "../assets/bK-rich.png";
+import rBlackSuperPawn from "../assets/bSP-rich.png";
+
+import rWhiteSquare from "../assets/wS-rich.png";
+import rBlackSquare from "../assets/bS-rich.png";
+
 /**
  * Maps a string to its image. ex. get("WhitePawn") returns its corresponding image
  */
@@ -79,6 +98,26 @@ const ImageMap = new Map([
 
   ["nWhiteSquare", nWhiteSquare],
   ["nBlackSquare", nBlackSquare],
+
+  // ROYAL
+  ["rWhitePawn", rWhitePawn],
+  ["rWhiteRook", rWhiteRook],
+  ["rWhiteBishop", rWhiteBishop],
+  ["rWhiteKnight", rWhiteKnight],
+  ["rWhiteQueen", rWhiteQueen],
+  ["rWhiteKing", rWhiteKing],
+  ["rWhiteSuperPawn", rWhiteSuperPawn],
+
+  ["rBlackPawn", rBlackPawn],
+  ["rBlackRook", rBlackRook],
+  ["rBlackBishop", rBlackBishop],
+  ["rBlackKnight", rBlackKnight],
+  ["rBlackQueen", rBlackQueen],
+  ["rBlackKing", rBlackKing],
+  ["rBlackSuperPawn", rBlackSuperPawn],
+
+  ["rWhiteSquare", rWhiteSquare],
+  ["rBlackSquare", rBlackSquare],
 ]);
 
 export default ImageMap;

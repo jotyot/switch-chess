@@ -13,6 +13,8 @@ function ItemButtons<T extends object>({
   setSelected,
   groups,
 }: Props<T>) {
+  const width = 240;
+
   return (
     <div className="d-flex justify-content-center mt-2">
       <div className="btn-group">
@@ -22,7 +24,7 @@ function ItemButtons<T extends object>({
             style={{
               backgroundColor:
                 i === selectedItem ? Colors.primary : Colors.tertiary,
-              width: "120px",
+              width: width / groups.length + "px",
             }}
             onClick={() => {
               setSelectedItem(i);
@@ -30,7 +32,9 @@ function ItemButtons<T extends object>({
             }}
             key={i}
           >
-            {"name" in item && typeof item.name === "string" ? item.name : "no"}
+            {"name" in item && typeof item.name === "string"
+              ? item.name
+              : "error"}
           </div>
         ))}
       </div>

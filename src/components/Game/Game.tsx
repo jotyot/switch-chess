@@ -20,17 +20,18 @@ interface Props {
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */
 function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
+  otherSkinID = opponent.skin.id;
   const width = 360;
   const [numRows, numCols] = [4, 4];
   const handSize = 2;
-  const winningTotal = 10;
+  const winScore = 10;
 
   const isAI = (obj: any): obj is AIOpponent => "traits" in obj;
 
   // idk how else to rerender the board since i cant tell the useState that the boardState changed
   const [render, setRender] = useState([0]);
 
-  const scores = useRef([0, 0]);
+  const scores = useRef<[number, number]>([0, 0]);
   const gameWinner = useRef("White");
 
   /** .CURRENT */ const gameOver = useRef(false);
@@ -89,7 +90,9 @@ function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
         boardState,
         playerSwap.current ? whiteHand : blackHand,
         playerSwap.current ? blackHand : whiteHand,
-        opponent.traits
+        opponent.traits,
+        scores.current,
+        winScore
       ).makeAIMove();
   }
 
@@ -125,7 +128,9 @@ function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
         boardState,
         whiteHand,
         blackHand,
-        opponent.traits
+        opponent.traits,
+        scores.current,
+        winScore
       ).makeAIMove();
     }
   }
@@ -141,10 +146,11 @@ function Game({ opponent, playerSkinID, otherSkinID = "" }: Props) {
 
     let scoreMod = PiecePoints.get(piece) || [0, 0];
     scoreMod = winner ? scoreMod : [scoreMod[1], scoreMod[0]];
-    scores.current = scores.current.map((num, i) => num + scoreMod[i]);
+    scores.current[0] += scoreMod[0];
+    scores.current[1] += scoreMod[1];
 
     setTimeout(() => {
-      if (Math.max(...scores.current) >= winningTotal) {
+      if (Math.max(...scores.current) >= winScore) {
         const [score1, score2] = scores.current;
         gameWinner.current = score1 > score2 ? "Player 1" : "Player 2";
         if (score1 === score2) gameWinner.current = "";

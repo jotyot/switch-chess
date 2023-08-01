@@ -5,7 +5,7 @@ import GroupSelect from "./GroupSelect";
 import ItemCards from "./ItemCards";
 import { Other, SpecialBots } from "../../config/Opponents";
 import Skin from "../../classes/Skin";
-import Skins from "../../config/Skins";
+import { Skins } from "../../config/Skins";
 import ItemButtons from "./ItemButtons";
 import PieceDisplay from "./PieceDisplay";
 import PointsInfo from "./PointsInfo";

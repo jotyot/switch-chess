@@ -13,17 +13,23 @@ class AIPlayer {
   private traits: AITraits;
   private AISelectDelay = 300;
   private AIMoveDelay = 700;
+  private score: [number, number];
+  private winScore: number;
 
   constructor(
     board: React.MutableRefObject<BoardState>,
     hand: React.MutableRefObject<Hand>,
     otherHand: React.MutableRefObject<Hand>,
-    traits: AITraits
+    traits: AITraits,
+    score: [number, number],
+    winScore: number
   ) {
     this.board = board.current;
     this.hand = hand.current;
     this.otherHand = otherHand.current;
     this.traits = traits;
+    this.score = score;
+    this.winScore = winScore;
   }
 
   /**
@@ -56,10 +62,34 @@ class AIPlayer {
       const [r, c] = pieceMove[1];
       return r === or && c === oc;
     });
-    // if we can capture, return the capturing set, otherwise return the safemoves
-    return captureMoves.length > 0 ? captureMoves : playerSafeMoves;
+
+    // if can capture
+    if (captureMoves.length > 0) {
+      // if capturing will make lose, remove the move from the set
+      if (this.noCapture())
+        return playerSafeMoves.filter((pieceMove) => {
+          const [r, c] = pieceMove[1];
+          return !(r === or && c === oc);
+        });
+      // else just capture
+      else return captureMoves;
+    } // else just return a safe move
+    return playerSafeMoves;
   }
 
+  /**
+   * if by capturing the piece, the other player will win, returns true
+   * @returns true/false
+   */
+  private noCapture(): boolean {
+    const other = this.board.getWhiteTurn()
+      ? this.board.getBlack()
+      : this.board.getWhite();
+    const otherScore = this.score[0];
+    const captureScore = (PiecePoints.get(other.getPiece()) || [0, 0])[1];
+
+    return otherScore + captureScore >= this.winScore;
+  }
   /**
    * gets all the playerMoves that don't overlap with otherMoves
    * @param playerMoves array of players possible moves

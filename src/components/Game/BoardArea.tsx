@@ -55,6 +55,7 @@ function BoardArea({
           {numbers.map((v) => (
             <div
               className="d-flex align-items-center justify-content-center"
+              key={v}
               style={{
                 fontSize: 15 + "px",
                 fontWeight: "bold",
@@ -96,6 +97,7 @@ function BoardArea({
             {letters.map((a) => (
               <div
                 className="d-flex justify-content-center"
+                key={a}
                 style={{
                   fontSize: 14 + "px",
                   fontWeight: "bold",

@@ -10,5 +10,10 @@ const Neon: Skin = {
   id: "n",
 };
 
-const Skins = [Classic, Neon];
-export default Skins;
+const Royal: Skin = {
+  name: "Royal",
+  id: "r",
+};
+
+const Skins = [Classic, Neon, Royal];
+export { Skins, Classic, Neon, Royal };
