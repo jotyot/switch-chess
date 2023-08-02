@@ -1,8 +1,10 @@
+import { Opponent } from "../../classes/Opponent";
 import Colors from "../../config/Colors";
 
 interface Props {
   width: number;
-  winner: string; // winner ? white : black
+  status: "win" | "lose" | "draw";
+  opponent: Opponent;
   onClick: () => void;
 }
 
@@ -13,33 +15,73 @@ interface Props {
  * @param onClick function thatexecutes when you press the button
  * @returns A JSX element of the replay button
  */
-function ReplayButton({ winner, width, onClick }: Props) {
+function ReplayButton({ status, opponent, width, onClick }: Props) {
+  const title = () => {
+    switch (status) {
+      case "draw":
+        return "Draw";
+      case "win":
+        return opponent.name === "offline" ? "Player 1 Wins" : "Victory";
+      case "lose":
+        return opponent.name === "offline" ? "Player 2 Wins" : "Defeat";
+    }
+  };
+
   return (
     <div
-      className="container position-absolute translate-middle start-50 top-50 rounded"
+      className="position-absolute translate-middle start-50 top-50 rounded"
       style={{
         width: width + "px",
-        height: width / 3 + "px",
-        backgroundColor: Colors.primary,
+        height: width / 1.5 + "px",
+        backgroundColor: Colors.secondary,
+        borderStyle: "solid",
+        borderWidth: "3px",
+        borderColor: Colors.dark,
+        overflow: "hidden",
       }}
     >
       <div
-        className="position-absolute translate-middle-y top-50 mx-1"
-        style={{ fontSize: "25px" }}
+        className="d-flex position-relative justify-content-center"
+        style={{ fontSize: "30px", fontWeight: "bold" }}
       >
-        {winner ? winner + " Wins" : "Draw"}
+        {title()}
       </div>
-      <button
-        className="position-absolute translate-middle-y top-50 end-0 rounded btn mx-3 text-center fs-1 fw-bold"
-        style={{
-          width: width / 4,
-          height: width / 4,
-          backgroundColor: Colors.secondary,
-        }}
-        onClick={onClick}
+      <div
+        className="d-flex position-relative justify-content-center text-center"
+        style={{ fontSize: "15px" }}
       >
-        ↺
-      </button>
+        {status === "win" ? opponent.message : "another go?"}
+      </div>
+      <div
+        className="d-flex position-relative justify-content-center mt-2"
+        style={{
+          width: "100%",
+          height: "100%",
+          backgroundColor: Colors.primary,
+          borderTopStyle: "solid",
+          borderWidth: "1px",
+          borderColor: Colors.dark,
+        }}
+      >
+        <div className="mt-3">
+          <div
+            className="rounded btn d-flex align-items-center justify-content-center"
+            style={{
+              width: width / 2,
+              height: width / 5,
+              backgroundColor: Colors.secondary,
+              fontSize: "15px",
+              fontWeight: "bold",
+              borderStyle: "solid",
+              borderWidth: "1px",
+              borderColor: Colors.dark,
+            }}
+            onClick={onClick}
+          >
+            play again
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

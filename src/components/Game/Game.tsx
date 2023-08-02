@@ -16,7 +16,10 @@ interface Props {
 }
 
 /**
- *
+ * @param opponent Opponent class
+ * @param playerSkinID the id property of Skin class
+ * @param otherSkinID = "" the id property of Skin class
+ * @param setSuperPawn function in App to set the screen turning dark
  * A functional game with its own score, etc. Play against AI or on same device player
  * @returns A collection of board and playerUI JSX elements that constitute a game.
  */
@@ -38,8 +41,8 @@ function Game({
   const [render, setRender] = useState([0]);
 
   const scores = useRef<[number, number]>([0, 0]);
-  const gameWinner = useRef("White");
 
+  const winStatus = useRef<"win" | "lose" | "draw">("win");
   /** .CURRENT */ const gameOver = useRef(false);
   /** .CURRENT */ const displayFlip = useRef(false);
   /** .CURRENT */ const playerSwap = useRef(false);
@@ -161,8 +164,8 @@ function Game({
     setTimeout(() => {
       if (Math.max(...scores.current) >= winScore) {
         const [score1, score2] = scores.current;
-        gameWinner.current = score1 > score2 ? "Player 1" : "Player 2";
-        if (score1 === score2) gameWinner.current = "";
+        winStatus.current = score1 > score2 ? "win" : "lose";
+        if (score1 === score2) winStatus.current = "draw";
         gameOver.current = true;
         reRender();
       } else resetBoard();
@@ -243,7 +246,8 @@ function Game({
         <ReplayButton
           onClick={resetGame}
           width={(width * 2) / 3}
-          winner={gameWinner.current}
+          status={winStatus.current}
+          opponent={opponent}
         />
       )}
     </div>

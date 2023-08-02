@@ -4,7 +4,7 @@ const Colors = {
   primary: "salmon",
   secondary: "linen",
   tertiary: "mintcream",
-  light: "#DDDDDD",
+  light: "#EEEEEE",
   dark: "#444444",
 };
 
