@@ -332,6 +332,15 @@ class AIPlayer {
 
   /** Generates an AI move and moves the pieces on the board accordingly after a delay. */
   public makeAIMove(): void {
+    if (
+      !(
+        this.board.getWhiteTurn()
+          ? this.board.getWhite()
+          : this.board.getBlack()
+      ).getAlive()
+    )
+      return;
+
     let moves = this.basic();
 
     if (this.traits.checkmater) moves = this.checkmater(moves);
