@@ -42,7 +42,7 @@ function ItemButtons<T extends object>({
   return (
     <div>
       <PasswordPrompt out={prompt} onKeyDown={handleKeyDown} />
-      <div className="d-flex justify-content-center mt-2">
+      <div className="d-flex justify-content-center">
         <div className="btn-group">
           {groups.map((item, i) => (
             <div

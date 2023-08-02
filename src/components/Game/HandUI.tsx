@@ -56,6 +56,9 @@ function HandUI({
           width: squareSize + "px",
           ...transition,
           transitionDuration: "0.05s",
+          borderStyle: "solid",
+          borderWidth: "3px",
+          borderColor: Colors.dark,
         }}
         onClick={onClick}
       >

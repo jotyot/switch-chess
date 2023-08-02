@@ -58,6 +58,7 @@ function OpponentCard({
         backgroundColor: Colors.secondary,
         transitionProperty: "height, padding-top",
         transitionDuration: ".5s",
+        transitionTimingFunction: "ease-in-out",
         paddingTop: "2px",
         overflow: "hidden",
         borderStyle: "solid",
@@ -77,58 +78,49 @@ function OpponentCard({
         {opponent.name}
       </div>
 
-      {
-        <div>
-          <GroupSelect
-            groups={groups}
-            selectedGroup={selectedGroup}
-            setSelectedGroup={setSelectedGroup}
+      <div>
+        <GroupSelect
+          groups={groups}
+          selectedGroup={selectedGroup}
+          setSelectedGroup={setSelectedGroup}
+        />
+        {groups[selectedGroup] === "Bots" && (
+          <ItemCards<Opponent>
+            list={SpecialBots}
+            setSelected={setOpponent}
+            selectedItem={selectedOpponent}
+            setSelectedItem={setSelectedOpponent}
+            toggleGame={toggleGame}
           />
-          {groups[selectedGroup] === "Bots" && (
-            <ItemCards<Opponent>
-              list={SpecialBots}
-              setSelected={setOpponent}
-              selectedItem={selectedOpponent}
-              setSelectedItem={setSelectedOpponent}
-              toggleGame={toggleGame}
-            />
-          )}
-          {groups[selectedGroup] === "PvP" && (
-            <ItemCards<Opponent>
-              list={Other}
-              setSelected={setOpponent}
-              selectedItem={selectedOpponent}
-              setSelectedItem={setSelectedOpponent}
-              toggleGame={toggleGame}
-              offset={SpecialBots.length}
-            />
-          )}
-          <div
-            className="text-center mt-2 mx-4"
-            style={{ fontSize: "13px", height: "120px" }}
-          >
-            {opponent.description}
-          </div>
-
-          <div style={{ marginTop: 100 + "px" }}>
-            <div
-              className="text-center position-relative"
-              style={{ fontSize: "20px" }}
-            >
-              {"Skins"}
-            </div>
-            <ItemButtons
-              groups={Skins}
-              selectedItem={selectedSkin}
-              setSelectedItem={setSelectedSkin}
-              setSelected={setSkin}
-            />
-            <PieceDisplay skinID={skin.id} piece={piece} setPiece={setPiece} />
-            <PointsInfo piece={piece} />
-            <GameTips />
-          </div>
+        )}
+        {groups[selectedGroup] === "PvP" && (
+          <ItemCards<Opponent>
+            list={Other}
+            setSelected={setOpponent}
+            selectedItem={selectedOpponent}
+            setSelectedItem={setSelectedOpponent}
+            toggleGame={toggleGame}
+            offset={SpecialBots.length}
+          />
+        )}
+        <div
+          className="text-center mt-2 mx-4"
+          style={{ fontSize: "13px", height: "120px" }}
+        >
+          {opponent.description}
         </div>
-      }
+        <div style={{ marginTop: 120 + "px" }}>
+          <ItemButtons
+            groups={Skins}
+            selectedItem={selectedSkin}
+            setSelectedItem={setSelectedSkin}
+            setSelected={setSkin}
+          />
+          <PieceDisplay skinID={skin.id} piece={piece} setPiece={setPiece} />
+          <PointsInfo piece={piece} />
+          <GameTips />
+        </div>
+      </div>
     </div>
   );
 }
