@@ -342,10 +342,11 @@ class AIPlayer {
       return;
 
     let moves = this.basic();
+    if (this.dangerCheck()) moves = this.minimizeLoss(moves);
 
     if (this.traits.checkmater) moves = this.checkmater(moves);
     if (this.traits.mateDefensive) moves = this.mateDefensive(moves);
-    if (this.dangerCheck()) moves = this.minimizeLoss(moves);
+
     if (this.traits.switchAverse) moves = this.switchAverse(moves);
     const pieceMove = this.randomMove(moves);
 
