@@ -17,6 +17,9 @@ function GroupSelect({ selectedGroup, setSelectedGroup, groups }: Props) {
               backgroundColor:
                 i === selectedGroup ? Colors.primary : Colors.tertiary,
               width: "120px",
+              borderStyle: "solid",
+              borderWidth: "1px",
+              borderColor: Colors.dark,
             }}
             onClick={() => setSelectedGroup(i)}
             key={i}

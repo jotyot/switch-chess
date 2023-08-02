@@ -55,6 +55,9 @@ function ItemButtons<T extends object>({
                     ? Colors.light
                     : Colors.tertiary,
                 width: width / groups.length + "px",
+                borderStyle: "solid",
+                borderWidth: "1px",
+                borderColor: Colors.dark,
               }}
               onClick={
                 locks[i]

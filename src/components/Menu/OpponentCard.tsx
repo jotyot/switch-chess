@@ -2,7 +2,7 @@ import { Opponent } from "../../classes/Opponent";
 import Colors from "../../config/Colors";
 import { useState } from "react";
 import GroupSelect from "./GroupSelect";
-import ItemCards from "./ItemCards";
+import ItemIcons from "./ItemIcons";
 import { Other, SpecialBots } from "../../config/Opponents";
 import Skin from "../../classes/Skin";
 import { Skins } from "../../config/Skins";
@@ -10,6 +10,7 @@ import ItemButtons from "./ItemButtons";
 import PieceDisplay from "./PieceDisplay";
 import PointsInfo from "./PointsInfo";
 import GameTips from "./GameTips";
+import { BotIcons, OtherIcons } from "../../config/Icons";
 
 interface Props {
   width?: number;
@@ -85,22 +86,24 @@ function OpponentCard({
           setSelectedGroup={setSelectedGroup}
         />
         {groups[selectedGroup] === "Bots" && (
-          <ItemCards<Opponent>
+          <ItemIcons<Opponent>
             list={SpecialBots}
             setSelected={setOpponent}
             selectedItem={selectedOpponent}
             setSelectedItem={setSelectedOpponent}
             toggleGame={toggleGame}
+            icons={BotIcons}
           />
         )}
         {groups[selectedGroup] === "PvP" && (
-          <ItemCards<Opponent>
+          <ItemIcons<Opponent>
             list={Other}
             setSelected={setOpponent}
             selectedItem={selectedOpponent}
             setSelectedItem={setSelectedOpponent}
             toggleGame={toggleGame}
             offset={SpecialBots.length}
+            icons={OtherIcons}
           />
         )}
         <div
