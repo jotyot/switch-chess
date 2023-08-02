@@ -42,7 +42,7 @@ function ItemIcons<T>({
               height: (i + offset === selectedItem ? size : small) + "px",
               backgroundColor: icons[i].color,
               transitionProperty: "height, width, opacity",
-              transitionDuration: "0.05s, 0.05s, 0.2s",
+              transitionDuration: "0.1s, 0.1s, 0.2s",
               overflow: "hidden",
               borderStyle: "solid",
               borderWidth: "1px",
@@ -60,7 +60,7 @@ function ItemIcons<T>({
                 width: (i + offset === selectedItem ? size : small) + "px",
                 opacity: i + offset === selectedItem ? "1" : "0.5",
                 transitionProperty: "height, width, opacity",
-                transitionDuration: "0.05s, 0.05s, 0.2s",
+                transitionDuration: "0.1s, 0.1s, 0.2s",
               }}
             ></img>
           </div>

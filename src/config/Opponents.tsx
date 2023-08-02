@@ -19,7 +19,7 @@ const Online: Opponent = {
 const Fool: AIOpponent = {
   name: "The Fool",
   description: `Switches pretty often, with little logic to it.
-    Won't throw but doesn't know what its doing.`,
+    Won't throw but doesn't know what its doing. Start here.`,
   skin: Classic,
   message: "that was basically the tutorial",
   traits: {
