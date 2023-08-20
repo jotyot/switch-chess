@@ -18,7 +18,9 @@ class PieceQueue {
 
   public static shuffledPieces = () => {
     return PossiblePieces.slice(0)
-      .sort(() => 0.5 - Math.random())
+      .map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value)
       .slice(0, 4);
   };
 }
