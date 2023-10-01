@@ -15,7 +15,7 @@ function GroupSelect({ selectedGroup, setSelectedGroup, groups }: Props) {
             className="btn"
             style={{
               backgroundColor:
-                i === selectedGroup ? Colors.primary : Colors.tertiary,
+                i === selectedGroup ? Colors.gold : Colors.tertiary,
               width: "120px",
               borderStyle: "solid",
               borderWidth: "1px",
