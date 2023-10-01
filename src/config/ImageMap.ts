@@ -55,6 +55,8 @@ import rBlackSuperPawn from "../assets/bSP-rich.gif";
 import rWhiteSquare from "../assets/wS-rich.png";
 import rBlackSquare from "../assets/bS-rich.png";
 
+import logo from "../assets/logo.png";
+
 /**
  * Maps a string to its image. ex. get("WhitePawn") returns its corresponding image
  */
@@ -118,6 +120,8 @@ const ImageMap = new Map([
 
   ["rWhiteSquare", rWhiteSquare],
   ["rBlackSquare", rBlackSquare],
+
+  ["logo", logo],
 ]);
 
 export default ImageMap;

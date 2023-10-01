@@ -27,6 +27,17 @@ function ReplayButton({ status, opponent, width, onClick }: Props) {
     }
   };
 
+  const color = () => {
+    switch (status) {
+      case "draw":
+        return Colors.tertiary;
+      case "win":
+        return Colors.cyan;
+      case "lose":
+        return Colors.pink;
+    }
+  };
+
   return (
     <div
       className="position-absolute translate-middle start-50 top-50 rounded"
@@ -57,7 +68,7 @@ function ReplayButton({ status, opponent, width, onClick }: Props) {
         style={{
           width: "100%",
           height: "100%",
-          backgroundColor: Colors.primary,
+          backgroundColor: color(),
           borderTopStyle: "solid",
           borderWidth: "1px",
           borderColor: Colors.dark,

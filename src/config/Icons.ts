@@ -1,31 +1,26 @@
 import Icon from "../classes/Icons";
+import Colors from "./Colors";
 
 const FoolIcon: Icon = {
-  color: "#4CE0B3",
+  color: Colors.gold,
   imageName: "WhitePawn",
 };
 
 const ChariotIcon: Icon = {
-  color: "#6D98BA",
+  color: Colors.cyan,
   imageName: "nBlackKnight",
 };
 
 const EmperorIcon: Icon = {
-  color: "#B8336A",
+  color: "#d82375",
   imageName: "rBlackKing",
 };
 
 const OfflineIcon: Icon = {
-  color: "red",
+  color: "#f9b2dd",
   imageName: "",
 };
 
-const OnlineIcon: Icon = {
-  color: "green",
-  imageName: "",
-};
+const BotIcons = [OfflineIcon, FoolIcon, ChariotIcon, EmperorIcon];
 
-const BotIcons = [FoolIcon, ChariotIcon, EmperorIcon];
-const OtherIcons = [OfflineIcon, OnlineIcon];
-
-export { BotIcons, OtherIcons };
+export { BotIcons };

@@ -15,7 +15,7 @@ function ItemButtons<T extends object>({
   setSelected,
   groups,
 }: Props<T>) {
-  const width = 240;
+  const width = 260;
   const [locks, setLocks] = useState<boolean[]>([
     false,
     ...Array(groups.length - 1).fill(true),
@@ -50,7 +50,7 @@ function ItemButtons<T extends object>({
               style={{
                 backgroundColor:
                   i === selectedItem
-                    ? Colors.primary
+                    ? Colors.gold
                     : locks[i]
                     ? Colors.light
                     : Colors.tertiary,

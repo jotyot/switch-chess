@@ -7,6 +7,7 @@ import ReplayButton from "./ReplayButton";
 import PiecePoints from "../../config/PiecePoints";
 import { AIOpponent, Opponent } from "../../classes/Opponent";
 import BoardArea from "./BoardArea";
+import Colors from "../../config/Colors";
 
 interface Props {
   opponent: Opponent;
@@ -192,6 +193,7 @@ function Game({
       white={true}
       hand={whiteHand.current}
       onClick={handleHandClick}
+      color={playerSwap.current ? Colors.pink : Colors.cyan}
     />
   );
 
@@ -203,6 +205,7 @@ function Game({
       white={false}
       hand={blackHand.current}
       onClick={handleHandClick}
+      color={playerSwap.current ? Colors.cyan : Colors.pink}
     />
   );
 

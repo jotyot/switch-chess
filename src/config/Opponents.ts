@@ -1,19 +1,12 @@
 import { AIOpponent, Opponent } from "../classes/Opponent";
 import { Classic, Neon, Royal } from "./Skins";
 
-const Offline: Opponent = {
-  name: "Offline",
-  description: `No AI nor online multiplayer. Play with yourself I guess, 
+const None: Opponent = {
+  name: "None",
+  description: `No AI. Play with yourself I guess, 
   or god forbid you get someone to play in person on the same device.`,
   skin: Classic,
   message: "",
-};
-
-const Online: Opponent = {
-  name: "Online",
-  description: `coming soon maybe no promises`,
-  skin: Classic,
-  message: "i told u this isn't done",
 };
 
 const Fool: AIOpponent = {
@@ -54,7 +47,6 @@ const Emperor: AIOpponent = {
   },
 };
 
-const SpecialBots = [Fool, Chariot, Emperor];
-const Other = [Offline, Online];
+const SpecialBots = [None, Fool, Chariot, Emperor];
 
-export { SpecialBots, Other };
+export { SpecialBots };

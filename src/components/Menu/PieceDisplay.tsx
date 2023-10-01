@@ -33,7 +33,7 @@ function PieceDisplay({ skinID, piece, setPiece }: Props) {
   return (
     <div
       className="d-flex position-relative justify-content-center align-items-center"
-      style={{ marginTop: "30px" }}
+      style={{ marginTop: "20px" }}
     >
       <ArrowButton
         text="<<"

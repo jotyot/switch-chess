@@ -25,7 +25,7 @@ function ItemIcons<T>({
   const small = 60;
 
   return (
-    <div className="d-flex justify-content-center position-relative mt-3">
+    <div className="d-flex justify-content-center position-relative mt-4">
       {list.map((opp, i) => (
         <div
           className="d-flex justify-content-center align-items-center"

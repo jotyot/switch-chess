@@ -1,16 +1,16 @@
 import { Opponent } from "../../classes/Opponent";
 import Colors from "../../config/Colors";
 import { useState } from "react";
-import GroupSelect from "./GroupSelect";
 import ItemIcons from "./ItemIcons";
-import { Other, SpecialBots } from "../../config/Opponents";
+import { SpecialBots } from "../../config/Opponents";
 import Skin from "../../classes/Skin";
 import { Skins } from "../../config/Skins";
 import ItemButtons from "./ItemButtons";
 import PieceDisplay from "./PieceDisplay";
 import PointsInfo from "./PointsInfo";
 import GameTips from "./GameTips";
-import { BotIcons, OtherIcons } from "../../config/Icons";
+import { BotIcons } from "../../config/Icons";
+import Logo from "./Logo";
 
 interface Props {
   width?: number;
@@ -44,9 +44,7 @@ function OpponentCard({
     setOpen(!open);
   }
 
-  const groups = ["Bots", "PvP"];
-  const [selectedGroup, setSelectedGroup] = useState(0);
-  const [selectedOpponent, setSelectedOpponent] = useState(0);
+  const [selectedOpponent, setSelectedOpponent] = useState(1);
 
   const [selectedSkin, setSelectedSkin] = useState(0);
 
@@ -80,39 +78,23 @@ function OpponentCard({
       </div>
 
       <div>
-        <GroupSelect
-          groups={groups}
-          selectedGroup={selectedGroup}
-          setSelectedGroup={setSelectedGroup}
+        <ItemIcons<Opponent>
+          list={SpecialBots}
+          setSelected={setOpponent}
+          selectedItem={selectedOpponent}
+          setSelectedItem={setSelectedOpponent}
+          toggleGame={toggleGame}
+          icons={BotIcons}
         />
-        {groups[selectedGroup] === "Bots" && (
-          <ItemIcons<Opponent>
-            list={SpecialBots}
-            setSelected={setOpponent}
-            selectedItem={selectedOpponent}
-            setSelectedItem={setSelectedOpponent}
-            toggleGame={toggleGame}
-            icons={BotIcons}
-          />
-        )}
-        {groups[selectedGroup] === "PvP" && (
-          <ItemIcons<Opponent>
-            list={Other}
-            setSelected={setOpponent}
-            selectedItem={selectedOpponent}
-            setSelectedItem={setSelectedOpponent}
-            toggleGame={toggleGame}
-            offset={SpecialBots.length}
-            icons={OtherIcons}
-          />
-        )}
+
         <div
-          className="text-center mt-2 mx-4"
-          style={{ fontSize: "13px", height: "120px" }}
+          className="text-center mt-4 mx-4"
+          style={{ fontSize: "15px", height: "120px" }}
         >
           {opponent.description}
         </div>
-        <div style={{ marginTop: 120 + "px" }}>
+        <Logo />
+        <div style={{ marginTop: 60 + "px" }}>
           <ItemButtons
             groups={Skins}
             selectedItem={selectedSkin}

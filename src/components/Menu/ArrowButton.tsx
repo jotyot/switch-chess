@@ -9,9 +9,9 @@ function ArrowButton({ text, onClick }: Props) {
     <div
       className="position-relative mx-2 d-flex justify-content-center rounded align-items-center hover btn"
       style={{
-        width: "40px",
-        height: "40px",
-        backgroundColor: Colors.primary,
+        width: "30px",
+        height: "80px",
+        backgroundColor: Colors.gold,
         fontWeight: "bold",
       }}
       onClick={onClick}

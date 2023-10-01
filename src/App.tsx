@@ -7,7 +7,7 @@ import { Skins } from "./config/Skins";
 import Colors from "./config/Colors";
 
 function App() {
-  const [opponent, setOpponent] = useState<Opponent>(SpecialBots[0]);
+  const [opponent, setOpponent] = useState<Opponent>(SpecialBots[1]);
   const [skin, setSkin] = useState(Skins[0]);
   const [play, setPlay] = useState(true);
   const [piece, setPiece] = useState("Pawn");
