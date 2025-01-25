@@ -12,7 +12,7 @@ function App() {
   const [play, setPlay] = useState(true);
   const [piece, setPiece] = useState("Pawn");
   const [superPawn, setSuperPawn] = useState(false);
-  const gameOpponenet = useRef(opponent.name);
+  const gameOpponent = useRef(opponent.name);
 
   return (
     <div
@@ -34,7 +34,7 @@ function App() {
       >
         <OpponentCard
           resetGame={() => {
-            gameOpponenet.current = opponent.name;
+            gameOpponent.current = opponent.name;
             setPlay(false);
             setTimeout(() => setPlay(true), 1);
           }}
@@ -44,7 +44,7 @@ function App() {
           setSkin={setSkin}
           piece={piece}
           setPiece={setPiece}
-          currentOpponent={gameOpponenet.current}
+          currentOpponent={gameOpponent.current}
         />
         {play && (
           <Game

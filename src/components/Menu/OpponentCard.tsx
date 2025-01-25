@@ -38,7 +38,7 @@ function OpponentCard({
   const closeHeight = 40;
   const openHeight = 663;
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   function toggleGame() {
     if (open && currentOpponent !== opponent.name) resetGame();
     setOpen(!open);
